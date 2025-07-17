@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary: #3f37c9;
+      --success: #28a745;
+      --pending: #ffc107;
+      --rejected: #dc3545;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #6c757d;
+      --border: #e9ecef;
+      --shadow: rgba(149, 157, 165, 0.2);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f5ff 0%, #e6eeff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo i {
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      padding: 8px 15px;
+      border-radius: 30px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .user-profile img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-title {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-title i {
+      color: var(--primary);
+    }
+
+    .stats-summary {
+      display: flex;
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--primary-light);
+      padding: 15px 25px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 150px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .tab:hover {
+      background: #f0f4ff;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Content Panels */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* History Cards */
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .history-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 20px var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .history-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px var(--shadow);
+    }
+
+    .recharge-card {
+      border-left: 4px solid var(--primary);
+    }
+
+    .withdraw-card {
+      border-left: 4px solid var(--success);
+    }
+
+    .investment-card {
+      border-left: 4px solid #ff6b00;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      font-size: 20px;
+    }
+
+    .card-date {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .card-content {
+      margin: 15px 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .info-label {
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .info-value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .status-badge {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .status-approved {
+      background: rgba(40, 167, 69, 0.15);
+      color: var(--success);
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.15);
+      color: #e0a800;
+    }
+
+    .status-rejected {
+      background: rgba(220, 53, 69, 0.15);
+      color: var(--rejected);
+    }
+
+    .amount {
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .recharge-amount {
+      color: var(--primary);
+      background: rgba(67, 97, 238, 0.05);
+    }
+
+    .withdraw-amount {
+      color: var(--success);
+      background: rgba(40, 167, 69, 0.05);
+    }
+
+    .investment-amount {
+      color: #ff6b00;
+      background: rgba(255, 107, 0, 0.05);
+    }
+
+    /* Empty State */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px var(--shadow);
+    }
+
+    .empty-state i {
+      font-size: 60px;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: var(--text-light);
+      max-width: 500px;
+      margin: 0 auto 20px;
+    }
+
+    /* Loading Spinner */
+    .spinner-container {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(67, 97, 238, 0.2);
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      
+      .stats-summary {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      
+      .tabs {
+        flex-wrap: wrap;
+      }
+      
+      .tab {
+        flex: 1 0 33%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-history"></i>
+        <h1>Transaction History</h1>
+      </div>
+      
+      <div class="user-profile">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+        <span id="userName">User</span>
+      </div>
+    </header>
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <h2>Your Financial History</h2>
+      </div>
+      
+      <div class="stats-summary">
+        <div class="stat-card">
+          <div class="stat-value" id="totalRecharges">0</div>
+          <div class="stat-label">Recharges</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalWithdraws">0</div>
+          <div class="stat-label">Withdrawals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalInvestments">0</div>
+          <div class="stat-label">Investments</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+      <div class="tab active" data-tab="recharges">Recharges</div>
+      <div class="tab" data-tab="withdraws">Withdrawals</div>
+      <div class="tab" data-tab="investments">Investments</div>
+    </div>
+    
+    <!-- Recharges Tab -->
+    <div class="tab-content active" id="recharges-tab">
+      <div class="history-grid" id="rechargeHistory">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading recharge history...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Withdrawals Tab -->
+    <div class="tab-content" id="withdraws-tab">
+      <div class="history-grid" id="withdrawHistory">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading withdrawal history...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Investments Tab -->
+    <div class="tab-content" id="investments-tab">
+      <div class="history-grid" id="investmentHistory">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading investment history...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+      storageBucket: "grow-3e3a1.firebasestorage.app",
+      messagingSenderId: "285304522946",
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+      measurementId: "G-Q7DPY3BF6C"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    
+    // DOM Elements
+    const userNameEl = document.getElementById("userName");
+    const totalRechargesEl = document.getElementById("totalRecharges");
+    const totalWithdrawsEl = document.getElementById("totalWithdraws");
+    const totalInvestmentsEl = document.getElementById("totalInvestments");
+    
+    // Tab functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+      });
+    });
+    
+    // Format date
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    
+    // Format currency
+    function formatCurrency(amount) {
+      return '₹' + amount.toLocaleString('en-IN');
+    }
+    
+    // Get status class
+    function getStatusClass(status) {
+      switch(status.toLowerCase()) {
+        case 'approved': return 'status-approved';
+        case 'pending': return 'status-pending';
+        case 'rejected': return 'status-rejected';
+        default: return 'status-pending';
+      }
+    }
+    
+    // Load user data
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      
+      const uid = user.uid;
+      
+      // Load user name
+      db.ref("users/" + uid + "/name").once("value", snap => {
+        if (snap.exists()) {
+          userNameEl.textContent = snap.val();
+        }
+      });
+      
+      // Load recharge history
+      loadRechargeHistory(uid);
+      
+      // Load withdraw history
+      loadWithdrawHistory(uid);
+      
+      // Load investment history
+      loadInvestmentHistory(uid);
+    });
+    
+    // Load recharge history
+    function loadRechargeHistory(uid) {
+      const container = document.getElementById("rechargeHistory");
+      container.innerHTML = '<div class="spinner-container"><div class="spinner"></div><p>Loading recharge history...</p></div>';
+      
+      db.ref("users/" + uid + "/history/recharges").once("value", snap => {
+        container.innerHTML = '';
+        let count = 0;
+        
+        if (snap.exists()) {
+          Object.entries(snap.val()).forEach(([id, data]) => {
+            count++;
+            createRechargeCard(id, data);
+          });
+        }
+        
+        totalRechargesEl.textContent = count;
+        
+        if (count === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-wallet"></i>
+              <h3>No Recharge History</h3>
+              <p>You haven't made any recharge transactions yet.</p>
+            </div>
+          `;
+        }
+      });
+    }
+    
+    // Create recharge card
+    function createRechargeCard(id, data) {
+      const container = document.getElementById("rechargeHistory");
+      const card = document.createElement("div");
+      card.className = "history-card recharge-card";
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fas fa-arrow-circle-down"></i>
+            <span>Recharge</span>
+          </div>
+          <div class="card-date">${formatDate(data.timestamp || data.date)}</div>
+        </div>
+        
+        <div class="amount recharge-amount">${formatCurrency(data.amount)}</div>
+        
+        <div class="card-content">
+          <div class="info-row">
+            <span class="info-label">Status:</span>
+            <span class="info-value"><span class="status-badge ${getStatusClass(data.status)}">${data.status}</span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Transaction ID:</span>
+            <span class="info-value">${id.substring(0, 8)}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Payment Method:</span>
+            <span class="info-value">${data.method || 'UPI'}</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+    
+    // Load withdraw history
+    function loadWithdrawHistory(uid) {
+      const container = document.getElementById("withdrawHistory");
+      container.innerHTML = '<div class="spinner-container"><div class="spinner"></div><p>Loading withdrawal history...</p></div>';
+      
+      db.ref("users/" + uid + "/history/withdraws").once("value", snap => {
+        container.innerHTML = '';
+        let count = 0;
+        
+        if (snap.exists()) {
+          Object.entries(snap.val()).forEach(([id, data]) => {
+            count++;
+            createWithdrawCard(id, data);
+          });
+        }
+        
+        totalWithdrawsEl.textContent = count;
+        
+        if (count === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-money-check-alt"></i>
+              <h3>No Withdrawal History</h3>
+              <p>You haven't made any withdrawal requests yet.</p>
+            </div>
+          `;
+        }
+      });
+    }
+    
+    // Create withdraw card
+    function createWithdrawCard(id, data) {
+      const container = document.getElementById("withdrawHistory");
+      const card = document.createElement("div");
+      card.className = "history-card withdraw-card";
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fas fa-arrow-circle-up"></i>
+            <span>Withdrawal</span>
+          </div>
+          <div class="card-date">${formatDate(data.timestamp || data.date)}</div>
+        </div>
+        
+        <div class="amount withdraw-amount">${formatCurrency(data.amount)}</div>
+        
+        <div class="card-content">
+          <div class="info-row">
+            <span class="info-label">Status:</span>
+            <span class="info-value"><span class="status-badge ${getStatusClass(data.status)}">${data.status}</span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Transaction ID:</span>
+            <span class="info-value">${id.substring(0, 8)}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">UPI ID:</span>
+            <span class="info-value">${data.upi || 'N/A'}</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+    
+    // Load investment history
+    function loadInvestmentHistory(uid) {
+      const container = document.getElementById("investmentHistory");
+      container.innerHTML = '<div class="spinner-container"><div class="spinner"></div><p>Loading investment history...</p></div>';
+      
+      db.ref("users/" + uid + "/investments").once("value", snap => {
+        container.innerHTML = '';
+        let count = 0;
+        
+        if (snap.exists()) {
+          Object.entries(snap.val()).forEach(([id, data]) => {
+            count++;
+            createInvestmentCard(id, data);
+          });
+        }
+        
+        totalInvestmentsEl.textContent = count;
+        
+        if (count === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-chart-line"></i>
+              <h3>No Investment History</h3>
+              <p>You haven't made any investments yet.</p>
+            </div>
+          `;
+        }
+      });
+    }
+    
+    // Create investment card
+    function createInvestmentCard(id, data) {
+      const container = document.getElementById("investmentHistory");
+      const card = document.createElement("div");
+      card.className = "history-card investment-card";
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fas fa-seedling"></i>
+            <span>Investment</span>
+          </div>
+          <div class="card-date">${formatDate(data.timestamp || data.date)}</div>
+        </div>
+        
+        <div class="amount investment-amount">${formatCurrency(data.amount)}</div>
+        
+        <div class="card-content">
+          <div class="info-row">
+            <span class="info-label">Daily Income:</span>
+            <span class="info-value">${formatCurrency(data.dailyIncome)}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Days Left:</span>
+            <span class="info-value">${data.daysLeft} days</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Total Earned:</span>
+            <span class="info-value">${formatCurrency(data.earned || 0)}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Transaction ID:</span>
+            <span class="info-value">${id.substring(0, 8)}</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+  </script>
+</body>
+</html>

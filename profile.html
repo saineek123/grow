@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f2f2f2;
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #0072ff;
+      margin-bottom: 20px;
+    }
+    .info {
+      margin-bottom: 10px;
+    }
+    .info p {
+      margin: 5px 0;
+    }
+    .back {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .back a {
+      text-decoration: none;
+      color: #0072ff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>My Profile</h2>
+    <div class="info">
+      <p><strong>Name:</strong> <span id="name">User Name</span></p>
+      <p><strong>Email:</strong> <span id="email">user@example.com</span></p>
+      <p><strong>Phone:</strong> <span id="phone">+91XXXXXXXXXX</span></p>
+    </div>
+    <div class="back">
+      <a href="index.html">← Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    // Replace with actual data from Firebase
+    document.getElementById("name").innerText = localStorage.getItem("username") || "User Name";
+    document.getElementById("email").innerText = "user@example.com";
+    document.getElementById("phone").innerText = "XXXXXXXXXX";
+  </script>
+
+</body>
+</html>

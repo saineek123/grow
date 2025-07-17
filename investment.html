@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Plans</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary: #3f37c9;
+      --success: #28a745;
+      --warning: #ff9800;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #6c757d;
+      --border: #e9ecef;
+      --shadow: rgba(149, 157, 165, 0.2);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f5ff 0%, #e6eeff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo i {
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      padding: 8px 15px;
+      border-radius: 30px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .user-profile img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-title {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-title i {
+      color: var(--primary);
+    }
+
+    .wallet-summary {
+      display: flex;
+      gap: 20px;
+    }
+
+    .wallet-card {
+      background: var(--primary-light);
+      padding: 15px 25px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 150px;
+    }
+
+    .wallet-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .wallet-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Investment Plans */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .plan-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 20px var(--shadow);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(67, 97, 238, 0.2);
+    }
+
+    .plan-card.popular::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: 15px;
+      right: -35px;
+      background: var(--warning);
+      color: white;
+      padding: 5px 35px;
+      font-size: 12px;
+      font-weight: 600;
+      transform: rotate(45deg);
+    }
+
+    .plan-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+      color: var(--primary);
+    }
+
+    .plan-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .plan-amount {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 25px;
+      color: var(--text);
+    }
+
+    .plan-details {
+      width: 100%;
+      margin-bottom: 25px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-label {
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .detail-value {
+      font-weight: 600;
+    }
+
+    .btn-invest {
+      width: 100%;
+      padding: 15px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-invest:hover {
+      background: var(--secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-invest:active {
+      transform: translateY(0);
+    }
+
+    .return-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--success);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      transform: rotate(15deg);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success {
+      border-left: 4px solid var(--success);
+    }
+
+    .toast-error {
+      border-left: 4px solid #dc3545;
+    }
+
+    .toast-icon {
+      font-size: 24px;
+    }
+
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+
+    .toast-error .toast-icon {
+      color: #dc3545;
+    }
+
+    .toast-content h4 {
+      margin-bottom: 5px;
+    }
+
+    .toast-content p {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* Investment Stats */
+    .stats-section {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 20px var(--shadow);
+    }
+
+    .stats-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--primary-light);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      
+      .wallet-summary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .wallet-summary {
+        flex-wrap: wrap;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-chart-line"></i>
+        <h1>Investment Platform</h1>
+      </div>
+      
+      <div class="user-profile">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+        <span id="userName">User</span>
+      </div>
+    </header>
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title">
+        <i class="fas fa-piggy-bank"></i>
+        <h2>Investment Plans</h2>
+      </div>
+      
+      <div class="wallet-summary">
+        <div class="wallet-card">
+          <div class="wallet-value" id="walletTotal">₹0</div>
+          <div class="wallet-label">Total Balance</div>
+        </div>
+        <div class="wallet-card">
+          <div class="wallet-value" id="walletRecharge">₹0</div>
+          <div class="wallet-label">Recharge Balance</div>
+        </div>
+        <div class="wallet-card">
+          <div class="wallet-value" id="activeInvestments">0</div>
+          <div class="wallet-label">Active Investments</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stats-section">
+      <div class="stats-title">
+        <i class="fas fa-chart-pie"></i>
+        <h3>Your Investment Stats</h3>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalInvested">₹0</div>
+          <div class="stat-label">Total Invested</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="dailyIncome">₹0</div>
+          <div class="stat-label">Daily Income</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalEarned">₹0</div>
+          <div class="stat-label">Total Earned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="activeDays">0</div>
+          <div class="stat-label">Active Days</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="plans-grid">
+      <!-- Basic Plan -->
+      <div class="plan-card">
+        <div class="return-badge">18%</div>
+        <div class="plan-icon">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <h3 class="plan-title">Basic Plan</h3>
+        <div class="plan-amount">₹100</div>
+        
+        <div class="plan-details">
+          <div class="detail-row">
+            <span class="detail-label">Daily Income</span>
+            <span class="detail-value">₹2</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Duration</span>
+            <span class="detail-value">90 Days</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total Return</span>
+            <span class="detail-value">₹180</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">ROI</span>
+            <span class="detail-value">80%</span>
+          </div>
+        </div>
+        
+        <button class="btn-invest" onclick="invest(100, 2, 90)">
+          <i class="fas fa-lock"></i> Invest Now
+        </button>
+      </div>
+      
+      <!-- Popular Plan -->
+      <div class="plan-card popular">
+        <div class="return-badge">24%</div>
+        <div class="plan-icon">
+          <i class="fas fa-tree"></i>
+        </div>
+        <h3 class="plan-title">Premium Plan</h3>
+        <div class="plan-amount">₹500</div>
+        
+        <div class="plan-details">
+          <div class="detail-row">
+            <span class="detail-label">Daily Income</span>
+            <span class="detail-value">₹12</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Duration</span>
+            <span class="detail-value">90 Days</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total Return</span>
+            <span class="detail-value">₹1,080</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">ROI</span>
+            <span class="detail-value">116%</span>
+          </div>
+        </div>
+        
+        <button class="btn-invest" onclick="invest(500, 12, 90)">
+          <i class="fas fa-crown"></i> Invest Now
+        </button>
+      </div>
+      
+      <!-- Advanced Plan -->
+      <div class="plan-card">
+        <div class="return-badge">30%</div>
+        <div class="plan-icon">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <h3 class="plan-title">Advanced Plan</h3>
+        <div class="plan-amount">₹1,000</div>
+        
+        <div class="plan-details">
+          <div class="detail-row">
+            <span class="detail-label">Daily Income</span>
+            <span class="detail-value">₹25</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Duration</span>
+            <span class="detail-value">90 Days</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total Return</span>
+            <span class="detail-value">₹2,250</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">ROI</span>
+            <span class="detail-value">125%</span>
+          </div>
+        </div>
+        
+        <button class="btn-invest" onclick="invest(1000, 25, 90)">
+          <i class="fas fa-rocket"></i> Invest Now
+        </button>
+      </div>
+    </div>
+    
+    <div class="toast" id="toast">
+      <div class="toast-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="toast-content">
+        <h4>Investment Successful!</h4>
+        <p>Your investment has been processed successfully</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+      storageBucket: "grow-3e3a1.firebasestorage.app",
+      messagingSenderId: "285304522946",
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+      measurementId: "G-Q7DPY3BF6C"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    
+    // DOM Elements
+    const userNameEl = document.getElementById("userName");
+    const walletTotalEl = document.getElementById("walletTotal");
+    const walletRechargeEl = document.getElementById("walletRecharge");
+    const activeInvestmentsEl = document.getElementById("activeInvestments");
+    const totalInvestedEl = document.getElementById("totalInvested");
+    const dailyIncomeEl = document.getElementById("dailyIncome");
+    const totalEarnedEl = document.getElementById("totalEarned");
+    const activeDaysEl = document.getElementById("activeDays");
+    const toastEl = document.getElementById("toast");
+    
+    // Show toast notification
+    function showToast(message, isSuccess = true) {
+      if (message) {
+        toastEl.querySelector('h4').textContent = message;
+      }
+      
+      // Update toast style based on success/error
+      toastEl.classList.remove('toast-success', 'toast-error');
+      toastEl.classList.add(isSuccess ? 'toast-success' : 'toast-error');
+      
+      // Update icon
+      const icon = toastEl.querySelector('.toast-icon i');
+      icon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+      
+      // Show toast
+      toastEl.classList.add('show');
+      setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Format currency
+    function formatCurrency(amount) {
+      return '₹' + amount.toLocaleString('en-IN');
+    }
+    
+    // Load user data
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      
+      const uid = user.uid;
+      
+      // Load user name
+      db.ref("users/" + uid + "/name").once("value", snap => {
+        if (snap.exists()) {
+          userNameEl.textContent = snap.val();
+        }
+      });
+      
+      // Load wallet data
+      db.ref("users/" + uid + "/wallet").on("value", snap => {
+        if (snap.exists()) {
+          const wallet = snap.val();
+          walletTotalEl.textContent = formatCurrency(wallet.total || 0);
+          walletRechargeEl.textContent = formatCurrency(wallet.recharge || 0);
+        }
+      });
+      
+      // Load investment data
+      db.ref("users/" + uid + "/investments").on("value", snap => {
+        let count = 0;
+        let totalInvested = 0;
+        let totalDailyIncome = 0;
+        
+        if (snap.exists()) {
+          count = Object.keys(snap.val()).length;
+          Object.values(snap.val()).forEach(investment => {
+            totalInvested += investment.amount || 0;
+            totalDailyIncome += investment.dailyIncome || 0;
+          });
+        }
+        
+        activeInvestmentsEl.textContent = count;
+        totalInvestedEl.textContent = formatCurrency(totalInvested);
+        dailyIncomeEl.textContent = formatCurrency(totalDailyIncome);
+      });
+    });
+    
+    // Invest function
+    function invest(amount, dailyIncome, days) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("Please login first", false);
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+        return;
+      }
+
+      const uid = user.uid;
+      const walletRef = db.ref("users/" + uid + "/wallet");
+
+      walletRef.once("value", snapshot => {
+        const wallet = snapshot.val();
+        if (!wallet || wallet.recharge < amount) {
+          showToast("❌ Insufficient recharge balance", false);
+          return;
+        }
+
+        // Deduct recharge balance and update total
+        const newRecharge = wallet.recharge - amount;
+        const newTotal = newRecharge + (wallet.bonus || 0) + (wallet.winning || 0);
+
+        walletRef.update({
+          recharge: newRecharge,
+          total: newTotal
+        });
+
+        // Save investment
+        const investId = db.ref().push().key;
+        db.ref("users/" + uid + "/investments/" + investId).set({
+          amount: amount,
+          dailyIncome: dailyIncome,
+          daysLeft: days,
+          startDate: new Date().toISOString()
+        });
+
+        showToast(`✅ ₹${amount} investment successful!`);
+      });
+    }
+  </script>
+</body>
+</html>

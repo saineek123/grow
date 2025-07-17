@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invite & Earn</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary: #3f37c9;
+      --success: #28a745;
+      --warning: #ff9800;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #6c757d;
+      --border: #e9ecef;
+      --shadow: rgba(149, 157, 165, 0.2);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f5ff 0%, #e6eeff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo i {
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      padding: 8px 15px;
+      border-radius: 30px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .user-profile img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      background: white;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 20px var(--shadow);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="85" fill="none" stroke="white" stroke-width="0.5" stroke-dasharray="5,5" opacity="0.1"/></svg>');
+      background-size: 400px;
+      opacity: 0.2;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero p {
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto 30px;
+      opacity: 0.9;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Referral Card */
+    .referral-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 20px var(--shadow);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .referral-card h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .code-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .referral-code {
+      background: var(--primary-light);
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--primary);
+      border: 2px dashed var(--primary);
+      flex-grow: 1;
+      max-width: 400px;
+      word-break: break-all;
+      text-align: center;
+    }
+
+    .btn-copy {
+      padding: 15px 25px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-copy:hover {
+      background: var(--secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-copy:active {
+      transform: translateY(0);
+    }
+
+    .share-title {
+      margin: 30px 0 15px;
+      font-size: 18px;
+      color: var(--text-light);
+    }
+
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .share-btn {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .whatsapp { background: #25D366; }
+    .facebook { background: #3b5998; }
+    .telegram { background: #0088cc; }
+    .twitter { background: #1DA1F2; }
+
+    /* Sher Ka Option */
+    .sher-section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 20px var(--shadow);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .sher-section h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .sher-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .sher-option {
+      background: var(--primary-light);
+      border-radius: 15px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .sher-option:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+      border-color: var(--primary);
+    }
+
+    .sher-option h4 {
+      font-size: 20px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .sher-option p {
+      color: var(--text-light);
+    }
+
+    /* Stats Section */
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 20px var(--shadow);
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(67, 97, 238, 0.2);
+    }
+
+    .stat-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 30px;
+      color: var(--primary);
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 18px;
+      color: var(--text-light);
+    }
+
+    /* Referral List */
+    .referral-list {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 20px var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .referral-list h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--primary-light);
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-light);
+    }
+
+    .referral-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .referral-item:last-child {
+      border-bottom: none;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .user-name {
+      font-weight: 500;
+    }
+
+    .user-date {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .user-status {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .status-active {
+      background: rgba(40, 167, 69, 0.15);
+      color: var(--success);
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.15);
+      color: #e0a800;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success {
+      border-left: 4px solid var(--success);
+    }
+
+    .toast-icon {
+      font-size: 24px;
+      color: var(--success);
+    }
+
+    .toast-content h4 {
+      margin-bottom: 5px;
+    }
+
+    .toast-content p {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h2 {
+        font-size: 28px;
+      }
+      
+      .hero p {
+        font-size: 16px;
+      }
+      
+      .code-container {
+        flex-direction: column;
+      }
+      
+      .referral-code {
+        width: 100%;
+      }
+      
+      .btn-copy {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-gift"></i>
+        <h1>Invite & Earn</h1>
+      </div>
+      
+      <div class="user-profile">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+        <span id="userName">User</span>
+      </div>
+    </header>
+    
+    <div class="hero">
+      <h2>Invite Friends & Earn Rewards!</h2>
+      <p>Share your referral code with friends and earn ₹100 for each successful referral. Start earning today!</p>
+    </div>
+    
+    <div class="referral-card">
+      <h3>Your Referral Code</h3>
+      <div class="code-container">
+        <div class="referral-code" id="refCode">ABCD1234</div>
+        <button class="btn-copy" onclick="copyCode()">
+          <i class="fas fa-copy"></i> Copy Code
+        </button>
+      </div>
+      
+      <p class="share-title">Share via:</p>
+      <div class="share-buttons">
+        <div class="share-btn whatsapp" onclick="shareVia('whatsapp')">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="share-btn facebook" onclick="shareVia('facebook')">
+          <i class="fab fa-facebook-f"></i>
+        </div>
+        <div class="share-btn telegram" onclick="shareVia('telegram')">
+          <i class="fab fa-telegram-plane"></i>
+        </div>
+        <div class="share-btn twitter" onclick="shareVia('twitter')">
+          <i class="fab fa-twitter"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sher Ka Option Section -->
+    <div class="sher-section">
+      <h3><i class="fas fa-lion"></i> Sher Ka Option</h3>
+      <div class="sher-container">
+        <div class="sher-option" onclick="selectSherOption('option1')">
+          <h4>Sher Plan</h4>
+          <p>Earn ₹500 for every 5 friends who sign up using your code</p>
+        </div>
+        
+        <div class="sher-option" onclick="selectSherOption('option2')">
+          <h4>Premium Sher</h4>
+          <p>Get ₹1000 when 10 friends join through your referral</p>
+        </div>
+        
+        <div class="sher-option" onclick="selectSherOption('option3')">
+          <h4>Royal Sher</h4>
+          <p>Receive ₹2000 bonus when 20 friends sign up with your code</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value" id="totalReferrals">12</div>
+        <div class="stat-label">Total Referrals</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-rupee-sign"></i>
+        </div>
+        <div class="stat-value" id="totalEarnings">₹1,200</div>
+        <div class="stat-label">Total Earnings</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-gift"></i>
+        </div>
+        <div class="stat-value" id="pendingRewards">₹300</div>
+        <div class="stat-label">Pending Rewards</div>
+      </div>
+    </div>
+    
+    <div class="referral-list">
+      <h3>Your Referrals</h3>
+      <div class="list-header">
+        <span>User</span>
+        <span>Status</span>
+      </div>
+      
+      <div class="referral-item">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="user-name">Rahul Sharma</div>
+            <div class="user-date">Joined: 15 Jul 2023</div>
+          </div>
+        </div>
+        <div class="user-status status-active">Active</div>
+      </div>
+      
+      <div class="referral-item">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="user-name">Priya Patel</div>
+            <div class="user-date">Joined: 12 Jul 2023</div>
+          </div>
+        </div>
+        <div class="user-status status-active">Active</div>
+      </div>
+      
+      <div class="referral-item">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="user-name">Amit Singh</div>
+            <div class="user-date">Joined: 10 Jul 2023</div>
+          </div>
+        </div>
+        <div class="user-status status-pending">Pending</div>
+      </div>
+      
+      <div class="referral-item">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="user-name">Neha Gupta</div>
+            <div class="user-date">Joined: 5 Jul 2023</div>
+          </div>
+        </div>
+        <div class="user-status status-active">Active</div>
+      </div>
+    </div>
+    
+    <div class="toast" id="toast">
+      <div class="toast-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="toast-content">
+        <h4>Code Copied!</h4>
+        <p>Your referral code has been copied to clipboard</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+      storageBucket: "grow-3e3a1.appspot.com",
+      messagingSenderId: "285304522946",
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const refCodeEl = document.getElementById("refCode");
+    const userNameEl = document.getElementById("userName");
+    const toastEl = document.getElementById("toast");
+    const totalReferralsEl = document.getElementById("totalReferrals");
+    const totalEarningsEl = document.getElementById("totalEarnings");
+    const pendingRewardsEl = document.getElementById("pendingRewards");
+
+    auth.onAuthStateChanged(user => {
+      if (!user) return (window.location.href = "login.html");
+
+      const uid = user.uid;
+      refCodeEl.textContent = uid.substring(0, 8).toUpperCase();
+
+      db.ref("users/" + uid + "/name").once("value").then(snap => {
+        if (snap.exists()) {
+          userNameEl.textContent = snap.val();
+        }
+      });
+
+      loadReferralStats(uid);
+      loadReferralList(uid);
+    });
+
+    function loadReferralStats(uid) {
+      db.ref("users/" + uid + "/referrals").once("value").then(snap => {
+        if (snap.exists()) {
+          const referralUIDs = Object.keys(snap.val());
+          const total = referralUIDs.length;
+          const earnings = total * 100;
+          const pending = total * 20;
+
+          totalReferralsEl.textContent = total;
+          totalEarningsEl.textContent = `₹${earnings}`;
+          pendingRewardsEl.textContent = `₹${pending}`;
+        } else {
+          totalReferralsEl.textContent = "0";
+          totalEarningsEl.textContent = "₹0";
+          pendingRewardsEl.textContent = "₹0";
+        }
+      });
+    }
+
+    function loadReferralList(uid) {
+      const listContainer = document.querySelector(".referral-list");
+      const existingItems = listContainer.querySelectorAll(".referral-item");
+      existingItems.forEach(el => el.remove());
+
+      db.ref("users/" + uid + "/referrals").once("value").then(snap => {
+        if (!snap.exists()) return;
+
+        Object.keys(snap.val()).forEach(refUid => {
+          db.ref("users/" + refUid).once("value").then(userSnap => {
+            if (userSnap.exists()) {
+              const data = userSnap.val();
+              const name = data.name || "Unknown";
+              const timestamp = data.createdAt || Date.now();
+              const date = new Date(timestamp).toLocaleDateString("en-IN", {
+                day: "2-digit", month: "short", year: "numeric"
+              });
+
+              const status = data.referredBy === uid ? "Active" : "Pending";
+
+              const html = `
+              <div class="referral-item">
+                <div class="user-info">
+                  <div class="user-avatar"><i class="fas fa-user"></i></div>
+                  <div>
+                    <div class="user-name">${name}</div>
+                    <div class="user-date">Joined: ${date}</div>
+                  </div>
+                </div>
+                <div class="user-status ${status === "Active" ? "status-active" : "status-pending"}">${status}</div>
+              </div>
+              `;
+              listContainer.insertAdjacentHTML("beforeend", html);
+            }
+          });
+        });
+      });
+    }
+
+    function copyCode() {
+      const code = refCodeEl.textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("Referral code copied to clipboard!");
+      });
+    }
+
+    function showToast(message) {
+      toastEl.querySelector('h4').textContent = message.split("!")[0] + "!";
+      toastEl.querySelector('p').textContent = message.split("!")[1] || "Your referral code has been copied to clipboard";
+
+      toastEl.classList.add('show');
+      setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 3000);
+    }
+
+    function shareVia(platform) {
+      const code = refCodeEl.textContent;
+      const message = `Join using my referral code ${code} and get ₹100 bonus! Sign up now: https://example.com?ref=${code}`;
+
+      let url = "";
+      switch(platform) {
+        case 'whatsapp': url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`; break;
+        case 'facebook': url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://example.com')}&quote=${encodeURIComponent(message)}`; break;
+        case 'telegram': url = `https://t.me/share/url?url=${encodeURIComponent('https://example.com')}&text=${encodeURIComponent(message)}`; break;
+        case 'twitter': url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`; break;
+      }
+      window.open(url, '_blank', 'width=600,height=400');
+    }
+
+    function selectSherOption(option) {
+      let message = "";
+      switch(option) {
+        case 'option1': message = "Sher Plan selected! Earn ₹500 for every 5 friends who sign up"; break;
+        case 'option2': message = "Premium Sher activated! Get ₹1000 when 10 friends join"; break;
+        case 'option3': message = "Royal Sher chosen! Receive ₹2000 bonus for 20 signups"; break;
+      }
+      showToast(message);
+    }
+  </script>
+</body>
+</html>

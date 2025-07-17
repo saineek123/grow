@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Recharge Approvals</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary: #3f37c9;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --dark: #2b2d42;
+      --light: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #6c757d;
+      --border: #e9ecef;
+      --shadow: rgba(149, 157, 165, 0.2);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f5ff 0%, #e6eeff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo i {
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      padding: 8px 15px;
+      border-radius: 30px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .user-profile img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-title {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-title i {
+      color: var(--primary);
+    }
+
+    .stats-summary {
+      display: flex;
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--primary-light);
+      padding: 15px 25px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Recharge Cards */
+    .recharge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .recharge-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 20px var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid var(--primary);
+    }
+
+    .recharge-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .user-id {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .recharge-id {
+      font-size: 14px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .card-content {
+      margin: 20px 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .info-label {
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .info-value {
+      font-weight: 600;
+    }
+
+    .amount {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin: 20px 0;
+      padding: 10px;
+      background: rgba(67, 97, 238, 0.05);
+      border-radius: 10px;
+    }
+
+    .card-footer {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-approve {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-approve:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+
+    .btn-reject {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-reject:hover {
+      background: #c82333;
+      transform: translateY(-2px);
+    }
+
+    .btn-view {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-view:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    .status-badge {
+      position: absolute;
+      top: 20px;
+      right: -30px;
+      background: var(--primary);
+      color: white;
+      padding: 5px 30px;
+      font-size: 12px;
+      font-weight: 600;
+      transform: rotate(45deg);
+    }
+
+    /* Empty State */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px var(--shadow);
+    }
+
+    .empty-state i {
+      font-size: 60px;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: var(--text-light);
+      max-width: 500px;
+      margin: 0 auto 20px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success {
+      border-left: 4px solid #28a745;
+    }
+
+    .toast-icon {
+      font-size: 24px;
+      color: #28a745;
+    }
+
+    .toast-content h4 {
+      margin-bottom: 5px;
+    }
+
+    .toast-content p {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* Loading Spinner */
+    .spinner-container {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(67, 97, 238, 0.2);
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .recharge-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      
+      .stats-summary {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      
+      .header-actions {
+        justify-content: center;
+      }
+      
+      .dashboard-title {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-bolt"></i>
+        <h1>Admin Dashboard</h1>
+      </div>
+      
+      <div class="header-actions">
+        <div class="user-profile">
+          <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Admin">
+          <span>Admin User</span>
+        </div>
+      </div>
+    </header>
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title">
+        <i class="fas fa-wallet"></i>
+        <h2>Recharge Approvals</h2>
+      </div>
+      
+      <div class="stats-summary">
+        <div class="stat-card">
+          <div class="stat-value" id="pendingCount">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="todayApproved">0</div>
+          <div class="stat-label">Today Approved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalAmount">₹0</div>
+          <div class="stat-label">Total Pending</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="recharge-grid" id="rechargeList">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <p>Loading recharge requests...</p>
+      </div>
+    </div>
+    
+    <div class="toast" id="toast">
+      <div class="toast-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="toast-content">
+        <h4>Recharge Approved</h4>
+        <p>The recharge request has been successfully approved</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+      storageBucket: "grow-3e3a1.firebasestorage.app",
+      messagingSenderId: "285304522946",
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+      measurementId: "G-Q7DPY3BF6C"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
+    // DOM Elements
+    const rechargeListDiv = document.getElementById("rechargeList");
+    const pendingCountEl = document.getElementById("pendingCount");
+    const todayApprovedEl = document.getElementById("todayApproved");
+    const totalAmountEl = document.getElementById("totalAmount");
+    const toastEl = document.getElementById("toast");
+    
+    // Global variables
+    let pendingCount = 0;
+    let todayApproved = 0;
+    let totalAmount = 0;
+    
+    // Show toast notification
+    function showToast(message) {
+      if (message) {
+        toastEl.querySelector('h4').textContent = message;
+      }
+      toastEl.classList.add('show');
+      setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Format date
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    
+    // Format currency
+    function formatCurrency(amount) {
+      return '₹' + amount.toLocaleString('en-IN');
+    }
+    
+    // Load recharge requests
+    function loadRechargeRequests() {
+      rechargeListDiv.innerHTML = '<div class="spinner-container"><div class="spinner"></div><p>Loading recharge requests...</p></div>';
+      
+      pendingCount = 0;
+      totalAmount = 0;
+      todayApproved = 0;
+      
+      // Reset stats
+      pendingCountEl.textContent = '0';
+      todayApprovedEl.textContent = '0';
+      totalAmountEl.textContent = '₹0';
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      db.ref("users").once("value", snapshot => {
+        rechargeListDiv.innerHTML = '';
+        
+        let hasPendingRequests = false;
+        
+        snapshot.forEach(userSnap => {
+          const uid = userSnap.key;
+          const userData = userSnap.val();
+          const recharges = userData.history?.recharges;
+          
+          if (recharges) {
+            Object.entries(recharges).forEach(([rechargeId, data]) => {
+              if (data.status === "pending") {
+                hasPendingRequests = true;
+                pendingCount++;
+                totalAmount += data.amount || 0;
+                
+                createRechargeCard(uid, userData, rechargeId, data);
+              }
+              
+              // Count today's approved recharges
+              if (data.status === "approved") {
+                const rechargeDate = new Date(data.timestamp || data.date);
+                if (rechargeDate >= today) {
+                  todayApproved++;
+                }
+              }
+            });
+          }
+        });
+        
+        // Update stats
+        pendingCountEl.textContent = pendingCount;
+        todayApprovedEl.textContent = todayApproved;
+        totalAmountEl.textContent = formatCurrency(totalAmount);
+        
+        // Show empty state if no pending requests
+        if (!hasPendingRequests) {
+          rechargeListDiv.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-check-circle"></i>
+              <h3>No Pending Recharge Requests</h3>
+              <p>All recharge requests have been processed. Well done!</p>
+              <button class="btn btn-view" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i> Refresh
+              </button>
+            </div>
+          `;
+        }
+      });
+    }
+    
+    // Create recharge card
+    function createRechargeCard(uid, userData, rechargeId, data) {
+      const card = document.createElement("div");
+      card.className = "recharge-card";
+      card.innerHTML = `
+        <div class="status-badge">PENDING</div>
+        <div class="card-header">
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+              <div class="user-name">${userData.name || userData.phone || 'User'}</div>
+              <div class="user-id">ID: ${uid.substring(0, 8)}</div>
+            </div>
+          </div>
+          <div class="recharge-id">#${rechargeId.substring(0, 6)}</div>
+        </div>
+        
+        <div class="card-content">
+          <div class="info-row">
+            <span class="info-label">Phone:</span>
+            <span class="info-value">${userData.phone || 'N/A'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Date:</span>
+            <span class="info-value">${formatDate(data.timestamp || data.date)}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Payment Method:</span>
+            <span class="info-value">${data.method || 'UPI'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Transaction ID:</span>
+            <span class="info-value">${data.transactionId || 'N/A'}</span>
+          </div>
+        </div>
+        
+        <div class="amount">${formatCurrency(data.amount)}</div>
+        
+        <div class="card-footer">
+          <button class="btn btn-approve" onclick="approveRecharge('${uid}', '${rechargeId}', ${data.amount})">
+            <i class="fas fa-check"></i> Approve
+          </button>
+          <button class="btn btn-reject" onclick="rejectRecharge('${uid}', '${rechargeId}')">
+            <i class="fas fa-times"></i> Reject
+          </button>
+          <button class="btn btn-view" onclick="viewUser('${uid}')">
+            <i class="fas fa-eye"></i> View
+          </button>
+        </div>
+      `;
+      
+      rechargeListDiv.appendChild(card);
+    }
+    
+    // Approve recharge
+    function approveRecharge(uid, rechargeId, amount) {
+      if (!confirm(`Approve recharge of ${formatCurrency(amount)} for user ${uid}?`)) {
+        return;
+      }
+      
+      const userWalletRef = db.ref("users/" + uid + "/wallet");
+      const rechargeRef = db.ref("users/" + uid + "/history/recharges/" + rechargeId);
+      
+      userWalletRef.once("value", snap => {
+        const wallet = snap.val() || {};
+        const newRecharge = (wallet.recharge || 0) + amount;
+        const newTotal = newRecharge + (wallet.bonus || 0) + (wallet.winning || 0);
+        
+        // Update wallet
+        userWalletRef.update({
+          recharge: newRecharge,
+          total: newTotal
+        });
+        
+        // Update recharge status
+        rechargeRef.update({ 
+          status: "approved",
+          approvedAt: new Date().getTime()
+        });
+        
+        // Show success toast
+        showToast(`Recharge Approved`);
+        
+        // Reload after 1.5 seconds to show updated list
+        setTimeout(() => {
+          loadRechargeRequests();
+        }, 1500);
+      });
+    }
+    
+    // Reject recharge
+    function rejectRecharge(uid, rechargeId) {
+      if (!confirm(`Reject this recharge request?`)) {
+        return;
+      }
+      
+      const rechargeRef = db.ref("users/" + uid + "/history/recharges/" + rechargeId);
+      
+      // Update recharge status
+      rechargeRef.update({ 
+        status: "rejected",
+        rejectedAt: new Date().getTime()
+      });
+      
+      // Show message
+      showToast(`Recharge Rejected`);
+      
+      // Reload after 1.5 seconds to show updated list
+      setTimeout(() => {
+        loadRechargeRequests();
+      }, 1500);
+    }
+    
+    // View user details (placeholder)
+    function viewUser(uid) {
+      alert(`View user details for ID: ${uid}\nThis would open the user profile in a real application.`);
+    }
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRechargeRequests();
+    });
+  </script>
+</body>
+</html>

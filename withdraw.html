@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Withdrawal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, #1a2a6c, #b21f1f);
+      color: white;
+      padding: 25px 40px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .content {
+      display: flex;
+      padding: 30px;
+      gap: 30px;
+    }
+    
+    .withdraw-section {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .balance-section {
+      flex: 1;
+      min-width: 300px;
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #1a2a6c;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .section-title i {
+      font-size: 1.5rem;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #444;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    input:focus, select:focus {
+      border-color: #1a2a6c;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+    }
+    
+    .method-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .method-btn {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .method-btn i {
+      font-size: 1.8rem;
+      color: #1a2a6c;
+    }
+    
+    .method-btn:hover {
+      border-color: #1a2a6c;
+    }
+    
+    .method-btn.active {
+      border-color: #1a2a6c;
+      background: #1a2a6c;
+      color: white;
+    }
+    
+    .method-btn.active i {
+      color: white;
+    }
+    
+    .bank-details, .upi-details {
+      display: none;
+    }
+    
+    .active-method {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .btn {
+      background: linear-gradient(90deg, #1a2a6c, #b21f1f);
+      color: white;
+      border: none;
+      padding: 16px 30px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn:active {
+      transform: translateY(-1px);
+    }
+    
+    #msg {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 600;
+      display: none;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      display: block;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      display: block;
+    }
+    
+    .balance-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .balance-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a2a6c;
+      margin: 15px 0;
+    }
+    
+    .balance-label {
+      color: #666;
+      font-size: 1.1rem;
+    }
+    
+    .info-box {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-top: 25px;
+    }
+    
+    .info-title {
+      font-size: 1.3rem;
+      color: #1a2a6c;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .info-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .info-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .info-list i {
+      color: #1a2a6c;
+      font-size: 1.2rem;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: #f1f3f5;
+      color: #666;
+      font-size: 0.9rem;
+      border-top: 1px solid #e9ecef;
+    }
+    
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 10px;
+      background: #e8f4f8;
+      border-radius: 8px;
+    }
+    
+    .security-badge i {
+      color: #1a2a6c;
+      font-size: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-money-bill-wave"></i> Secure Withdrawal</h1>
+      <p>Withdraw your funds quickly and securely using your preferred method</p>
+    </div>
+    
+    <div class="content">
+      <div class="withdraw-section">
+        <h2 class="section-title"><i class="fas fa-wallet"></i> Withdraw Funds</h2>
+        
+        <div class="method-selector">
+          <div class="method-btn active" data-method="upi">
+            <i class="fas fa-mobile-alt"></i>
+            <span>UPI Transfer</span>
+          </div>
+          <div class="method-btn" data-method="bank">
+            <i class="fas fa-university"></i>
+            <span>Bank Transfer</span>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="amount">Withdrawal Amount (₹)</label>
+          <input type="number" id="amount" placeholder="Enter amount">
+        </div>
+        
+        <div id="upi-details" class="upi-details active-method">
+          <div class="input-group">
+            <label for="upi-id">UPI ID</label>
+            <input type="text" id="upi-id" placeholder="yourname@upi">
+          </div>
+        </div>
+        
+        <div id="bank-details" class="bank-details">
+          <div class="input-group">
+            <label for="account-name">Account Holder Name</label>
+            <input type="text" id="account-name" placeholder="As per bank records">
+          </div>
+          
+          <div class="input-group">
+            <label for="account-number">Account Number</label>
+            <input type="text" id="account-number" placeholder="Enter account number">
+          </div>
+          
+          <div class="input-group">
+            <label for="ifsc-code">IFSC Code</label>
+            <input type="text" id="ifsc-code" placeholder="Bank's IFSC code">
+          </div>
+          
+          <div class="input-group">
+            <label for="bank-name">Bank Name</label>
+            <input type="text" id="bank-name" placeholder="Bank name">
+          </div>
+        </div>
+        
+        <button class="btn" onclick="submitWithdraw()">
+          <i class="fas fa-paper-plane"></i> Request Withdrawal
+        </button>
+        
+        <div id="msg"></div>
+        
+        <div class="security-badge">
+          <i class="fas fa-shield-alt"></i>
+          <span>Your financial details are securely encrypted</span>
+        </div>
+      </div>
+      
+      <div class="balance-section">
+        <div class="balance-card">
+          <div class="balance-label">Available Balance</div>
+          <div class="balance-amount">₹ 12,546.00</div>
+          <div class="balance-label">Withdrawable: ₹ 10,250.00</div>
+        </div>
+        
+        <div class="info-box">
+          <h3 class="info-title"><i class="fas fa-info-circle"></i> Withdrawal Information</h3>
+          <ul class="info-list">
+            <li><i class="fas fa-check-circle"></i> Minimum withdrawal: ₹ 100</li>
+            <li><i class="fas fa-check-circle"></i> Processing fee: 2% (max ₹ 25)</li>
+            <li><i class="fas fa-check-circle"></i> UPI transfers completed in 2 hours</li>
+            <li><i class="fas fa-check-circle"></i> Bank transfers take 24-48 hours</li>
+            <li><i class="fas fa-check-circle"></i> Daily limit: ₹ 50,000 per day</li>
+          </ul>
+        </div>
+        
+        <div class="info-box">
+          <h3 class="info-title"><i class="fas fa-history"></i> Recent Transactions</h3>
+          <ul class="info-list">
+            <li><i class="fas fa-rupee-sign"></i> ₹ 2,500 - UPI - Completed</li>
+            <li><i class="fas fa-rupee-sign"></i> ₹ 1,200 - Bank - Processing</li>
+            <li><i class="fas fa-rupee-sign"></i> ₹ 3,000 - UPI - Completed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>© 2023 Secure Withdrawals. All transactions are secured with 256-bit encryption.</p>
+    </div>
+  </div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+      storageBucket: "grow-3e3a1.firebasestorage.app",
+      messagingSenderId: "285304522946",
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+      measurementId: "G-Q7DPY3BF6C"
+    };
+    
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  // 🟢 Submit withdrawal to Firebase
+  function submitWithdraw() {
+    const amount = parseInt(document.getElementById("amount").value.trim());
+    const msgBox = document.getElementById("msg");
+    msgBox.className = '';
+    msgBox.textContent = '';
+
+    if (!amount || amount < 100) {
+      msgBox.textContent = '❌ Minimum withdrawal amount is ₹100.';
+      msgBox.classList.add('error');
+      return;
+    }
+
+    const method = document.querySelector('.method-btn.active').getAttribute('data-method');
+    const withdrawData = {
+      amount,
+      method,
+      timestamp: Date.now(),
+      status: "Pending"
+    };
+
+    if (method === "upi") {
+      const upiId = document.getElementById("upi-id").value.trim();
+      if (!upiId || !upiId.includes('@')) {
+        msgBox.textContent = '❌ Please enter a valid UPI ID.';
+        msgBox.classList.add('error');
+        return;
+      }
+      withdrawData.upi = upiId;
+    } else {
+      const accountName = document.getElementById("account-name").value.trim();
+      const accountNumber = document.getElementById("account-number").value.trim();
+      const ifsc = document.getElementById("ifsc-code").value.trim();
+      const bankName = document.getElementById("bank-name").value.trim();
+
+      if (!accountName || !accountNumber || !ifsc || !bankName) {
+        msgBox.textContent = '❌ Please fill all bank details.';
+        msgBox.classList.add('error');
+        return;
+      }
+
+      withdrawData.accountName = accountName;
+      withdrawData.accountNumber = accountNumber;
+      withdrawData.ifsc = ifsc;
+      withdrawData.bankName = bankName;
+    }
+
+    // ✅ Authenticated user?
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        msgBox.textContent = '❌ Please log in to withdraw.';
+        msgBox.classList.add('error');
+        return;
+      }
+
+      const userId = user.uid;
+      const withdrawRef = db.ref("withdraws/" + userId).push();
+
+      withdrawRef.set(withdrawData).then(() => {
+        msgBox.textContent = '✅ Withdrawal request submitted.';
+        msgBox.classList.add('success');
+
+        document.getElementById("amount").value = '';
+        document.getElementById("upi-id").value = '';
+        document.getElementById("account-name").value = '';
+        document.getElementById("account-number").value = '';
+        document.getElementById("ifsc-code").value = '';
+        document.getElementById("bank-name").value = '';
+      }).catch(error => {
+        msgBox.textContent = '❌ Error: ' + error.message;
+        msgBox.classList.add('error');
+      });
+    });
+  }
+
+  // 🟢 Method UI switch
+  const methodButtons = document.querySelectorAll('.method-btn');
+  const upiSection = document.getElementById('upi-details');
+  const bankSection = document.getElementById('bank-details');
+
+  methodButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      methodButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const method = button.getAttribute('data-method');
+      if (method === 'upi') {
+        upiSection.classList.add('active-method');
+        bankSection.classList.remove('active-method');
+      } else {
+        bankSection.classList.add('active-method');
+        upiSection.classList.remove('active-method');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
+
