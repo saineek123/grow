@@ -482,9 +482,11 @@
         </div>
       </div>
 
-      <div class="success-msg" id="successMsg">
-        <i class="fas fa-check-circle"></i> Recharge request sent! Waiting for admin approval.
+      <div id="successMsg"
+        style="display: none; color: green; font-weight: bold; text-align: center; margin-top: 10px;">
+        ✅ Recharge Request Submitted Successfully! Wait for Approval.
       </div>
+
     </div>
   </div>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -560,7 +562,6 @@
 
       try {
         await db.ref(`users/${userId}/rechargeRequests`).push(rechargeRequest);
-
         await firestore.collection("transactions").add({
           userId: userId,
           type: "recharge",
@@ -571,10 +572,11 @@
           id: utr
         });
 
+        // Show success message to user
         document.getElementById("successMsg").style.display = "block";
-        document.getElementById("paymentSection").style.display = "none";
+
+        // Optional: reset form after submission
         document.getElementById("rechargeForm").reset();
-        document.getElementById("successMsg").scrollIntoView({ behavior: "smooth" });
 
       } catch (err) {
         console.error(err);
