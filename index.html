@@ -361,57 +361,6 @@
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
         
-        /* Recent Transactions */
-        .transactions {
-            margin-bottom: 30px;
-        }
-        
-        .transaction-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .transaction-icon {
-            background: rgba(56, 189, 248, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-        }
-        
-        .transaction-details {
-            flex: 1;
-        }
-        
-        .transaction-title {
-            font-weight: 600;
-            color: #f8fafc;
-        }
-        
-        .transaction-time {
-            font-size: 13px;
-            color: #94a3b8;
-        }
-        
-        .transaction-amount {
-            font-weight: 700;
-        }
-        
-        .income {
-            color: #4ade80;
-        }
-        
-        .expense {
-            color: #f87171;
-        }
-        
         /* Floating action button */
         .fab {
             position: fixed;
@@ -678,6 +627,172 @@
             90% { opacity: 1; top: 20px; }
             100% { opacity: 0; top: 0; }
         }
+        
+        /* Form elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            background: rgba(30, 41, 59, 0.7);
+            color: #f8fafc;
+            font-size: 16px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(to right, #60a5fa, #93c5fd);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .error-message {
+            color: #f87171;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        /* Modal for transactions */
+        .transaction-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .transaction-content {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+        }
+        
+        .transaction-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .transaction-header h2 {
+            color: #f8fafc;
+            font-size: 24px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: rgba(30, 41, 59, 0.7);
+            border: none;
+            color: #94a3b8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+        }
+        
+        .tab-button:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .tab-button:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .transaction-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .transaction-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .transaction-list-icon {
+            background: rgba(56, 189, 248, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .transaction-list-details {
+            flex: 1;
+        }
+        
+        .transaction-list-title {
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        
+        .transaction-list-time {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        
+        .transaction-list-amount {
+            font-weight: 700;
+        }
+        
+        .income {
+            color: #4ade80;
+        }
+        
+        .expense {
+            color: #f87171;
+        }
     </style>
 </head>
 <body>
@@ -765,7 +880,7 @@
                 <i class="fas fa-exchange-alt"></i>
                 <span>Transfer</span>
             </div>
-            <div class="action-button" onclick="showTransactionHistory()">
+            <div class="action-button" onclick="showTransactionModal()">
                 <i class="fas fa-history"></i>
                 <span>History</span>
             </div>
@@ -817,16 +932,6 @@
         
         <div class="products-grid" id="productsContainer">
             <!-- Products will be loaded dynamically -->
-        </div>
-        
-        <!-- Recent Transactions -->
-        <div class="section-title" style="margin-top: 30px;">
-            <h2>Recent Transactions</h2>
-            <a href="#" onclick="viewAllTransactions()">View All <i class="fas fa-arrow-right"></i></a>
-        </div>
-        
-        <div class="transactions" id="transactionsContainer">
-            <!-- Transactions will be loaded dynamically -->
         </div>
     </div>
     
@@ -893,247 +998,542 @@
         </div>
     </div>
     
-  <script>
-  // Firebase configuration
-  const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-  };
+    <!-- Deposit Modal -->
+    <div class="investment-modal" id="depositModal">
+        <div class="investment-content">
+            <div class="investment-header">
+                <h2>Deposit Funds</h2>
+                <button class="close-btn" onclick="closeDepositModal()">&times;</button>
+            </div>
+            <div class="investment-form">
+                <div class="form-group">
+                    <label for="depositAmount">Amount ($)</label>
+                    <input type="number" id="depositAmount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="depositMethod">Payment Method</label>
+                    <select id="depositMethod">
+                        <option value="credit_card">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank_transfer">Bank Transfer</option>
+                        <option value="crypto">Crypto Wallet</option>
+                    </select>
+                </div>
+                <div class="error-message" id="depositError"></div>
+                <button class="btn" onclick="processDeposit()">Deposit Now</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Withdraw Modal -->
+    <div class="investment-modal" id="withdrawModal">
+        <div class="investment-content">
+            <div class="investment-header">
+                <h2>Withdraw Funds</h2>
+                <button class="close-btn" onclick="closeWithdrawModal()">&times;</button>
+            </div>
+            <div class="investment-form">
+                <div class="form-group">
+                    <label for="withdrawAmount">Amount ($)</label>
+                    <input type="number" id="withdrawAmount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="withdrawMethod">Withdrawal Method</label>
+                    <select id="withdrawMethod">
+                        <option value="bank_account">Bank Account</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="crypto">Crypto Wallet</option>
+                    </select>
+                </div>
+                <div class="error-message" id="withdrawError"></div>
+                <button class="btn" onclick="processWithdrawal()">Withdraw Now</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transfer Modal -->
+    <div class="investment-modal" id="transferModal">
+        <div class="investment-content">
+            <div class="investment-header">
+                <h2>Transfer Funds</h2>
+                <button class="close-btn" onclick="closeTransferModal()">&times;</button>
+            </div>
+            <div class="investment-form">
+                <div class="form-group">
+                    <label for="transferAmount">Amount ($)</label>
+                    <input type="number" id="transferAmount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="recipientId">Recipient ID</label>
+                    <input type="text" id="recipientId" placeholder="Enter member ID">
+                </div>
+                <div class="error-message" id="transferError"></div>
+                <button class="btn" onclick="processTransfer()">Transfer Now</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transaction History Modal -->
+    <div class="transaction-modal" id="transactionModal">
+        <div class="transaction-content">
+            <div class="transaction-header">
+                <h2>Transaction History</h2>
+                <button class="close-btn" onclick="closeTransactionModal()">&times;</button>
+            </div>
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="changeTransactionTab('all')">All</button>
+                <button class="tab-button" onclick="changeTransactionTab('deposit')">Deposits</button>
+                <button class="tab-button" onclick="changeTransactionTab('withdraw')">Withdrawals</button>
+                <button class="tab-button" onclick="changeTransactionTab('investment')">Investments</button>
+            </div>
+            <div class="transaction-list" id="transactionList">
+                <!-- Transactions will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+        authDomain: "grow-3e3a1.firebaseapp.com",
+        databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+        projectId: "grow-3e3a1",
+    };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const auth = firebase.auth();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
 
-  let currentUser = null;
-  let currentUserData = null;
-  let currentProduct = null;
+    let currentUser = null;
+    let currentUserData = null;
+    let currentProduct = null;
+    let transactions = [];
 
-  auth.onAuthStateChanged((user) => {
-      if (user) {
-          currentUser = user;
-          loadUserData(user.uid);
-          loadProducts();
-          loadTransactions(user.uid);
-      } else {
-          const localUID = localStorage.getItem("userId");
-          if (localUID) {
-              loadUserData(localUID);
-              loadProducts();
-              loadTransactions(localUID);
-          } else {
-              window.location.href = "login.html";
-          }
-      }
-  });
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUser = user;
+            loadUserData(user.uid);
+            loadProducts();
+        } else {
+            const localUID = localStorage.getItem("userId");
+            if (localUID) {
+                loadUserData(localUID);
+                loadProducts();
+            } else {
+                window.location.href = "login.html";
+            }
+        }
+    });
 
-  function loadUserData(uid) {
-      showLoading(true);
-      const userRef = db.ref("users/" + uid);
-      userRef.on("value", snap => {
-          const data = snap.val() || {};
-          currentUserData = data;
+    function loadUserData(uid) {
+        showLoading(true);
+        const userRef = db.ref("users/" + uid);
+        userRef.on("value", snap => {
+            const data = snap.val() || {};
+            currentUserData = data;
 
-          document.getElementById("userName").textContent = data.name || "No Name";
-          document.getElementById("memberId").textContent = data.memberId || "N/A";
-          document.getElementById("vipLevel").textContent = data.vipLevel || "VIP Level 1";
-          document.getElementById("userAvatar").textContent = getInitials(data.name || "JD");
+            document.getElementById("userName").textContent = data.name || "No Name";
+            document.getElementById("memberId").textContent = data.memberId || "N/A";
+            document.getElementById("vipLevel").textContent = data.vipLevel || "VIP Level 1";
+            document.getElementById("userAvatar").textContent = getInitials(data.name || "JD");
 
-          document.getElementById("availableBalance").textContent = `$${(data.availableBalance || 0).toFixed(2)}`;
-          document.getElementById("investedAmount").textContent = `$${(data.invested || 0).toFixed(2)}`;
-          document.getElementById("dailyChange").innerHTML = `<i class="fas fa-arrow-up"></i> $${(data.dailyChange || 0).toFixed(2)} today`;
-          document.getElementById("investmentChange").innerHTML = `<i class="fas fa-chart-line"></i> +${(data.investmentChange || 0).toFixed(1)}%`;
+            document.getElementById("availableBalance").textContent = `$${(data.availableBalance || 0).toFixed(2)}`;
+            document.getElementById("investedAmount").textContent = `$${(data.invested || 0).toFixed(2)}`;
+            document.getElementById("dailyChange").innerHTML = `<i class="fas fa-arrow-up"></i> $${(data.dailyChange || 0).toFixed(2)} today`;
+            document.getElementById("investmentChange").innerHTML = `<i class="fas fa-chart-line"></i> +${(data.investmentChange || 0).toFixed(1)}%`;
 
-          document.getElementById("totalEarnings").textContent = `$${(data.totalEarnings || 0).toFixed(2)}`;
-          document.getElementById("referralEarnings").textContent = `$${(data.referralEarnings || 0).toFixed(2)}`;
+            document.getElementById("totalEarnings").textContent = `$${(data.totalEarnings || 0).toFixed(2)}`;
+            document.getElementById("referralEarnings").textContent = `$${(data.referralEarnings || 0).toFixed(2)}`;
 
-          document.getElementById("portfolioValue").textContent = `$${(data.portfolioValue || 0).toFixed(2)}`;
-          document.getElementById("earnedAmount").textContent = `+$${(data.earnedAmount || 0).toFixed(2)}`;
-          document.getElementById("totalInvested").textContent = `$${(data.totalInvested || 0).toFixed(2)}`;
-          document.getElementById("growthPercent").textContent = `+${(data.growthPercent || 0).toFixed(1)}%`;
+            document.getElementById("portfolioValue").textContent = `$${(data.portfolioValue || 0).toFixed(2)}`;
+            document.getElementById("earnedAmount").textContent = `+$${(data.earnedAmount || 0).toFixed(2)}`;
+            document.getElementById("totalInvested").textContent = `$${(data.totalInvested || 0).toFixed(2)}`;
+            document.getElementById("growthPercent").textContent = `+${(data.growthPercent || 0).toFixed(1)}%`;
 
-          document.getElementById("notificationBadge").textContent = data.notifications || 0;
+            document.getElementById("notificationBadge").textContent = data.notifications || 0;
+            
+            // Load transactions
+            if (data.transactions) {
+                transactions = Object.values(data.transactions);
+            } else {
+                transactions = [];
+            }
 
-          showLoading(false);
-      });
-  }
+            showLoading(false);
+        });
+    }
 
-  function getInitials(name) {
-      if (!name) return "JD";
-      const names = name.split(" ");
-      return names.map(n => n[0]).join("").toUpperCase().substring(0, 2);
-  }
+    function getInitials(name) {
+        if (!name) return "JD";
+        const names = name.split(" ");
+        return names.map(n => n[0]).join("").toUpperCase().substring(0, 2);
+    }
 
-  function loadProducts() {
-      const productsRef = db.ref("products");
-      productsRef.on("value", snap => {
-          const products = snap.val() || {};
-          const container = document.getElementById("productsContainer");
-          container.innerHTML = '';
-          let count = 0;
-          for (const key in products) {
-              if (count >= 2) break;
-              const product = products[key];
-              const card = document.createElement('div');
-              card.className = 'product-card';
-              card.innerHTML = `
-                  ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
-                  <div class="product-title">${product.name}</div>
-                  <div class="product-income">
-                      <div class="income-item">
-                          <div class="income-value">${product.dailyIncome}</div>
-                          <div class="income-label">Daily Income</div>
-                      </div>
-                      <div class="income-item">
-                          <div class="income-value">${product.duration}</div>
-                          <div class="income-label">Duration</div>
-                      </div>
-                  </div>
-                  <div class="product-footer">
-                      <div class="product-price">$${product.minInvestment}</div>
-                      <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
-                  </div>
-              `;
-              container.appendChild(card);
-              count++;
-          }
-      });
-  }
+    function loadProducts() {
+        const productsRef = db.ref("products");
+        productsRef.on("value", snap => {
+            const products = snap.val() || {};
+            const container = document.getElementById("productsContainer");
+            container.innerHTML = '';
+            for (const key in products) {
+                const product = products[key];
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-income">
+                        <div class="income-item">
+                            <div class="income-value">${product.dailyIncome}</div>
+                            <div class="income-label">Daily Income</div>
+                        </div>
+                        <div class="income-item">
+                            <div class="income-value">${product.duration}</div>
+                            <div class="income-label">Duration</div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">$${product.minInvestment}</div>
+                        <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        });
+    }
 
-  function loadTransactions(uid) {
-      const transactionsRef = db.ref("users/" + uid + "/transactions");
-      transactionsRef.on("value", snap => {
-          const transactions = snap.val() || {};
-          const container = document.getElementById("transactionsContainer");
-          container.innerHTML = '';
-          const sortedTransactions = Object.values(transactions).sort((a, b) => 
-              new Date(b.date) - new Date(a.date)
-          ).slice(0, 4);
-          sortedTransactions.forEach(transaction => {
-              const isIncome = transaction.type === "income";
-              const amountClass = isIncome ? 'income' : 'expense';
-              const amountSign = isIncome ? '+' : '-';
-              const absAmount = Math.abs(transaction.amount);
+    function showInvestmentModal(productId) {
+        const productsRef = db.ref("products/" + productId);
+        productsRef.once("value").then(snap => {
+            const product = snap.val();
+            if (!product) return;
 
-              const now = new Date();
-              const transDate = new Date(transaction.date);
-              const isToday = transDate.toDateString() === now.toDateString();
-              const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
+            currentProduct = product;
+            currentProduct.id = productId;
 
-              let dateString;
-              if (isToday) {
-                  dateString = `Today, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-              } else if (isYesterday) {
-                  dateString = `Yesterday, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-              } else {
-                  dateString = transDate.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
-              }
+            document.getElementById('investmentTitle').textContent = product.name;
+            document.getElementById('modalDailyIncome').textContent = `$${product.dailyIncome}`;
+            document.getElementById('modalDuration').textContent = product.duration;
+            document.getElementById('modalMinInvestment').textContent = `$${product.minInvestment}`;
+            document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
+            document.getElementById('investmentAmount').value = product.minInvestment;
 
-              const item = document.createElement('div');
-              item.className = 'transaction-item';
-              item.innerHTML = `
-                  <div class="transaction-icon" style="background: ${isIncome ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'}">
-                      <i class="fas ${transaction.icon || 'fa-exchange-alt'}"></i>
-                  </div>
-                  <div class="transaction-details">
-                      <div class="transaction-title">${transaction.title}</div>
-                      <div class="transaction-time">${dateString}</div>
-                  </div>
-                  <div class="transaction-amount ${amountClass}">${amountSign}$${absAmount.toFixed(2)}</div>
-              `;
-              container.appendChild(item);
-          });
-      });
-  }
+            const investButton = document.getElementById('investButton');
+            investButton.textContent = product.minInvestment > 0 ? `Invest $${product.minInvestment}` : 'Start Free Trial';
 
-  function showInvestmentModal(productId) {
-      const productsRef = db.ref("products/" + productId);
-      productsRef.once("value").then(snap => {
-          const product = snap.val();
-          if (!product) return;
+            document.getElementById('investmentModal').style.display = 'flex';
+        });
+    }
 
-          currentProduct = product;
-          currentProduct.id = productId;
+    function closeInvestmentModal() {
+        document.getElementById('investmentModal').style.display = 'none';
+        document.getElementById('investmentError').style.display = 'none';
+    }
 
-          document.getElementById('investmentTitle').textContent = product.name;
-          document.getElementById('modalDailyIncome').textContent = `$${product.dailyIncome}`;
-          document.getElementById('modalDuration').textContent = product.duration;
-          document.getElementById('modalMinInvestment').textContent = `$${product.minInvestment}`;
-          document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
-          document.getElementById('investmentAmount').value = product.minInvestment;
+    function confirmInvestment() {
+        if (!currentUser || !currentUserData || !currentProduct) return;
+        const amountInput = document.getElementById('investmentAmount');
+        const amount = parseFloat(amountInput.value);
+        const errorElement = document.getElementById('investmentError');
+        if (!amount || amount <= 0) {
+            errorElement.textContent = 'Please enter a valid investment amount';
+            errorElement.style.display = 'block';
+            return;
+        }
 
-          const investButton = document.getElementById('investButton');
-          investButton.textContent = product.minInvestment > 0 ? `Invest $${product.minInvestment}` : 'Start Free Trial';
+        if (amount > currentUserData.availableBalance) {
+            errorElement.textContent = 'Insufficient funds. Please deposit more money.';
+            errorElement.style.display = 'block';
+            return;
+        }
 
-          investmentModal.style.display = 'flex';
-      });
-  }
+        showLoading(true);
+        const transactionId = 'trans' + new Date().getTime();
+        const transaction = {
+            title: `Investment: ${currentProduct.name}`,
+            amount: -amount,
+            type: "expense",
+            date: new Date().toISOString(),
+            icon: "fa-arrow-up",
+            category: "investment"
+        };
 
-  function closeInvestmentModal() {
-      investmentModal.style.display = 'none';
-      document.getElementById('investmentError').style.display = 'none';
-  }
+        const updates = {};
+        updates[`users/${currentUser.uid}/availableBalance`] = currentUserData.availableBalance - amount;
+        updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
+        updates[`users/${currentUser.uid}/totalInvested`] = (currentUserData.totalInvested || 0) + amount;
+        updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
 
-  function confirmInvestment() {
-      if (!currentUser || !currentUserData || !currentProduct) return;
-      const amountInput = document.getElementById('investmentAmount');
-      const amount = parseFloat(amountInput.value);
-      const errorElement = document.getElementById('investmentError');
-      if (!amount || amount <= 0) {
-          errorElement.textContent = 'Please enter a valid investment amount';
-          errorElement.style.display = 'block';
-          return;
-      }
+        db.ref().update(updates).then(() => {
+            showLoading(false);
+            closeInvestmentModal();
+            showSuccessMessage("Investment successful!");
+            loadUserData(currentUser.uid);
+        }).catch(error => {
+            showLoading(false);
+            errorElement.textContent = 'Investment failed: ' + error.message;
+            errorElement.style.display = 'block';
+        });
+    }
 
-      if (amount > currentUserData.availableBalance) {
-          errorElement.textContent = 'Insufficient funds. Please deposit more money.';
-          errorElement.style.display = 'block';
-          return;
-      }
+    function showDepositModal() {
+        document.getElementById('depositModal').style.display = 'flex';
+    }
 
-      showLoading(true);
-      const transactionId = 'trans' + new Date().getTime();
-      const transaction = {
-          title: `Investment: ${currentProduct.name}`,
-          amount: -amount,
-          type: "expense",
-          date: new Date().toISOString(),
-          icon: "fa-arrow-up"
-      };
+    function closeDepositModal() {
+        document.getElementById('depositModal').style.display = 'none';
+        document.getElementById('depositError').style.display = 'none';
+    }
 
-      const updates = {};
-      updates[`users/${currentUser.uid}/availableBalance`] = currentUserData.availableBalance - amount;
-      updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
-      updates[`users/${currentUser.uid}/totalInvested`] = (currentUserData.totalInvested || 0) + amount;
-      updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+    function processDeposit() {
+        const amountInput = document.getElementById('depositAmount');
+        const amount = parseFloat(amountInput.value);
+        const errorElement = document.getElementById('depositError');
+        
+        if (!amount || amount <= 0) {
+            errorElement.textContent = 'Please enter a valid deposit amount';
+            errorElement.style.display = 'block';
+            return;
+        }
 
-      db.ref().update(updates).then(() => {
-          showLoading(false);
-          closeInvestmentModal();
-          showSuccessMessage("Investment successful!");
-          loadUserData(currentUser.uid);
-          loadTransactions(currentUser.uid);
-      }).catch(error => {
-          showLoading(false);
-          errorElement.textContent = 'Investment failed: ' + error.message;
-          errorElement.style.display = 'block';
-      });
-  }
+        showLoading(true);
+        const transactionId = 'trans' + new Date().getTime();
+        const transaction = {
+            title: "Deposit Funds",
+            amount: amount,
+            type: "income",
+            date: new Date().toISOString(),
+            icon: "fa-arrow-down",
+            category: "deposit"
+        };
 
-  function showSuccessMessage(message) {
-      const successElement = document.getElementById('successMessage');
-      successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-      successElement.style.display = 'block';
-      setTimeout(() => {
-          successElement.style.display = 'none';
-      }, 3000);
-  }
+        const updates = {};
+        updates[`users/${currentUser.uid}/availableBalance`] = (currentUserData.availableBalance || 0) + amount;
+        updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
 
-  function showLoading(show) {
-      document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
-  }
+        db.ref().update(updates).then(() => {
+            showLoading(false);
+            closeDepositModal();
+            showSuccessMessage("Deposit successful! Funds added to your account.");
+            loadUserData(currentUser.uid);
+        }).catch(error => {
+            showLoading(false);
+            errorElement.textContent = 'Deposit failed: ' + error.message;
+            errorElement.style.display = 'block';
+        });
+    }
+
+    function showWithdrawModal() {
+        document.getElementById('withdrawModal').style.display = 'flex';
+    }
+
+    function closeWithdrawModal() {
+        document.getElementById('withdrawModal').style.display = 'none';
+        document.getElementById('withdrawError').style.display = 'none';
+    }
+
+    function processWithdrawal() {
+        const amountInput = document.getElementById('withdrawAmount');
+        const amount = parseFloat(amountInput.value);
+        const errorElement = document.getElementById('withdrawError');
+        
+        if (!amount || amount <= 0) {
+            errorElement.textContent = 'Please enter a valid withdrawal amount';
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        if (amount > currentUserData.availableBalance) {
+            errorElement.textContent = 'Insufficient funds. You cannot withdraw more than your available balance.';
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        showLoading(true);
+        const transactionId = 'trans' + new Date().getTime();
+        const transaction = {
+            title: "Withdrawal Request",
+            amount: -amount,
+            type: "expense",
+            date: new Date().toISOString(),
+            icon: "fa-arrow-up",
+            category: "withdrawal"
+        };
+
+        const updates = {};
+        updates[`users/${currentUser.uid}/availableBalance`] = currentUserData.availableBalance - amount;
+        updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+        db.ref().update(updates).then(() => {
+            showLoading(false);
+            closeWithdrawModal();
+            showSuccessMessage("Withdrawal request submitted successfully!");
+            loadUserData(currentUser.uid);
+        }).catch(error => {
+            showLoading(false);
+            errorElement.textContent = 'Withdrawal failed: ' + error.message;
+            errorElement.style.display = 'block';
+        });
+    }
+
+    function showTransferModal() {
+        document.getElementById('transferModal').style.display = 'flex';
+    }
+
+    function closeTransferModal() {
+        document.getElementById('transferModal').style.display = 'none';
+        document.getElementById('transferError').style.display = 'none';
+    }
+
+    function processTransfer() {
+        const amountInput = document.getElementById('transferAmount');
+        const amount = parseFloat(amountInput.value);
+        const recipientId = document.getElementById('recipientId').value.trim();
+        const errorElement = document.getElementById('transferError');
+        
+        if (!amount || amount <= 0) {
+            errorElement.textContent = 'Please enter a valid transfer amount';
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        if (amount > currentUserData.availableBalance) {
+            errorElement.textContent = 'Insufficient funds. You cannot transfer more than your available balance.';
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        if (!recipientId) {
+            errorElement.textContent = 'Please enter recipient member ID';
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        showLoading(true);
+        const transactionId = 'trans' + new Date().getTime();
+        const transaction = {
+            title: `Transfer to ${recipientId}`,
+            amount: -amount,
+            type: "expense",
+            date: new Date().toISOString(),
+            icon: "fa-exchange-alt",
+            category: "transfer"
+        };
+
+        const updates = {};
+        updates[`users/${currentUser.uid}/availableBalance`] = currentUserData.availableBalance - amount;
+        updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+        db.ref().update(updates).then(() => {
+            showLoading(false);
+            closeTransferModal();
+            showSuccessMessage(`Transfer of $${amount.toFixed(2)} to ${recipientId} completed!`);
+            loadUserData(currentUser.uid);
+        }).catch(error => {
+            showLoading(false);
+            errorElement.textContent = 'Transfer failed: ' + error.message;
+            errorElement.style.display = 'block';
+        });
+    }
+
+    function showTransactionModal() {
+        document.getElementById('transactionModal').style.display = 'flex';
+        renderTransactions('all');
+    }
+
+    function closeTransactionModal() {
+        document.getElementById('transactionModal').style.display = 'none';
+    }
+
+    function changeTransactionTab(category) {
+        // Update active tab
+        const tabs = document.querySelectorAll('.tab-button');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        tabs.forEach(tab => {
+            if (tab.textContent.toLowerCase().includes(category)) {
+                tab.classList.add('active');
+            }
+        });
+        
+        // Render transactions for the selected category
+        renderTransactions(category);
+    }
+
+    function renderTransactions(category) {
+        const container = document.getElementById('transactionList');
+        container.innerHTML = '';
+        
+        let filteredTransactions = transactions;
+        if (category !== 'all') {
+            filteredTransactions = transactions.filter(t => t.category === category);
+        }
+        
+        // Sort by date (newest first)
+        filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        if (filteredTransactions.length === 0) {
+            container.innerHTML = '<div class="no-transactions">No transactions found</div>';
+            return;
+        }
+        
+        filteredTransactions.forEach(transaction => {
+            const isIncome = transaction.type === "income";
+            const amountClass = isIncome ? 'income' : 'expense';
+            const amountSign = isIncome ? '+' : '-';
+            const absAmount = Math.abs(transaction.amount);
+
+            const now = new Date();
+            const transDate = new Date(transaction.date);
+            const isToday = transDate.toDateString() === now.toDateString();
+            const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
+
+            let dateString;
+            if (isToday) {
+                dateString = `Today, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            } else if (isYesterday) {
+                dateString = `Yesterday, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            } else {
+                dateString = transDate.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+            }
+
+            const item = document.createElement('div');
+            item.className = 'transaction-list-item';
+            item.innerHTML = `
+                <div class="transaction-list-icon" style="background: ${isIncome ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'}">
+                    <i class="fas ${transaction.icon || 'fa-exchange-alt'}"></i>
+                </div>
+                <div class="transaction-list-details">
+                    <div class="transaction-list-title">${transaction.title}</div>
+                    <div class="transaction-list-time">${dateString}</div>
+                </div>
+                <div class="transaction-list-amount ${amountClass}">${amountSign}$${absAmount.toFixed(2)}</div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function showSuccessMessage(message) {
+        const successElement = document.getElementById('successMessage');
+        successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        successElement.style.display = 'block';
+        setTimeout(() => {
+            successElement.style.display = 'none';
+        }, 3000);
+    }
+
+    function showLoading(show) {
+        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+    }
+
+    function showSettings() {
+        alert("Settings page would open here");
+    }
+
+    function viewAllProducts() {
+        alert("All investment products would be displayed here");
+    }
 </script>
 
 </body>
