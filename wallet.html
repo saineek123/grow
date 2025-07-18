@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Wallet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --secondary: #9c27b0;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --bg-dark: #121212;
+      --card-bg: rgba(30, 30, 30, 0.8);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-light: #ffffff;
+      --text-gray: #b0b0b0;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .wallet-header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .wallet-header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #00bcd4, #9c27b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .wallet-header p {
+      color: var(--text-gray);
+      font-size: 1rem;
+    }
+
+    .wallet-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      padding: 30px 25px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0,188,212,0.1) 0%, transparent 70%);
+      z-index: -1;
+    }
+
+    .total-balance {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .total-label {
+      color: var(--text-gray);
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .total-amount {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffffff, #e0f7fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .balance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .balance-card {
+      background: var(--glass-bg);
+      border-radius: 12px;
+      padding: 15px 10px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .balance-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .balance-icon {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .recharge .balance-icon { color: var(--primary); }
+    .bonus .balance-icon { color: var(--warning); }
+    .winning .balance-icon { color: var(--success); }
+
+    .balance-label {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      margin-bottom: 5px;
+    }
+
+    .balance-amount {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-align: center;
+      color: var(--text-light);
+    }
+
+    .btn-recharge {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    }
+
+    .btn-withdraw {
+      background: linear-gradient(135deg, var(--secondary), #7b1fa2);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .transaction-history {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      padding: 25px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-title h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .view-all {
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .transaction-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(5px);
+    }
+
+    .transaction-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-right: 15px;
+    }
+
+    .recharge-icon {
+      background: rgba(0, 188, 212, 0.15);
+      color: var(--primary);
+    }
+
+    .withdraw-icon {
+      background: rgba(156, 39, 176, 0.15);
+      color: var(--secondary);
+    }
+
+    .winning-icon {
+      background: rgba(76, 175, 80, 0.15);
+      color: var(--success);
+    }
+
+    .transaction-details {
+      flex: 1;
+    }
+
+    .transaction-title {
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .transaction-date {
+      font-size: 0.8rem;
+      color: var(--text-gray);
+    }
+
+    .transaction-amount {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .credit {
+      color: var(--success);
+    }
+
+    .debit {
+      color: var(--danger);
+    }
+
+    .no-transactions {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-gray);
+      font-style: italic;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--danger);
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    @media (max-width: 480px) {
+      .total-amount {
+        font-size: 2.4rem;
+      }
+      
+      .balance-grid {
+        gap: 10px;
+      }
+      
+      .balance-card {
+        padding: 12px 8px;
+      }
+      
+      .balance-icon {
+        font-size: 1.5rem;
+      }
+      
+      .balance-label {
+        font-size: 0.8rem;
+      }
+      
+      .balance-amount {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .balance-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animation for values */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="wallet-header">
+      <h1><i class="fas fa-wallet"></i> My Wallet</h1>
+      <p>Manage your funds and transactions</p>
+    </div>
+
+    <div class="wallet-card">
+      <div class="total-balance">
+        <div class="total-label">Total Balance</div>
+        <div class="total-amount" id="total">₹0.00</div>
+      </div>
+
+      <div class="balance-grid">
+        <div class="balance-card recharge">
+          <div class="balance-icon"><i class="fas fa-rupee-sign"></i></div>
+          <div class="balance-label">Recharge</div>
+          <div class="balance-amount" id="recharge">₹0.00</div>
+        </div>
+        
+        <div class="balance-card bonus">
+          <div class="balance-icon"><i class="fas fa-gift"></i></div>
+          <div class="balance-label">Bonus</div>
+          <div class="balance-amount" id="bonus">₹0.00</div>
+        </div>
+        
+        <div class="balance-card winning">
+          <div class="balance-icon"><i class="fas fa-trophy"></i></div>
+          <div class="balance-label">Winning</div>
+          <div class="balance-amount" id="winning">₹0.00</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-recharge" id="btnRecharge">
+          <i class="fas fa-plus-circle"></i> Recharge
+        </button>
+        <button class="btn btn-withdraw" id="btnWithdraw">
+          <i class="fas fa-money-bill-wave"></i> Withdraw
+        </button>
+      </div>
+    </div>
+
+    <div class="transaction-history">
+      <div class="section-title">
+        <h2><i class="fas fa-history"></i> Recent Transactions</h2>
+        <a href="transaction-history.html" class="view-all">View All</a>
+      </div>
+      
+      <div class="transaction-list" id="transactionList">
+        <!-- Transactions will be added here by JavaScript -->
+        <div class="no-transactions">No recent transactions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<script>
+ const firebaseConfig = {
+            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+            authDomain: "grow-3e3a1.firebaseapp.com",
+            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+            projectId: "grow-3e3a1",
+            storageBucket: "grow-3e3a1.appspot.com",
+            messagingSenderId: "285304522946",
+            appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+        };
+  // ✅ 2. Initialize
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  const db = firebase.database();
+  const auth = firebase.auth();
+
+  // ✅ 3. Refs
+  const rechargeEl = document.getElementById('recharge');
+  const bonusEl = document.getElementById('bonus');
+  const winningEl = document.getElementById('winning');
+  const totalEl = document.getElementById('total');
+  const txnList = document.getElementById('transactionList');
+
+  // ✅ 4. Sign in & set localStorage
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      const userId = user.uid;
+      localStorage.setItem("userId", userId);
+
+      // ✅ Check wallet exists
+      const walletRef = db.ref(`users/${userId}/wallet`);
+      walletRef.once("value").then(snap => {
+        if (!snap.exists()) {
+          walletRef.set({ recharge: 1000, bonus: 100, winning: 0 });
+        }
+      });
+
+      // ✅ Live wallet listener
+      walletRef.on("value", snap => {
+        const w = snap.val() || {};
+        const recharge = w.recharge || 0;
+        const bonus = w.bonus || 0;
+        const winning = w.winning || 0;
+        const total = recharge + bonus + winning;
+
+        rechargeEl.textContent = `₹${recharge.toFixed(2)}`;
+        bonusEl.textContent = `₹${bonus.toFixed(2)}`;
+        winningEl.textContent = `₹${winning.toFixed(2)}`;
+        totalEl.textContent = `₹${total.toFixed(2)}`;
+
+        pulse(rechargeEl.parentElement);
+        pulse(bonusEl.parentElement);
+        pulse(winningEl.parentElement);
+        pulse(totalEl);
+      });
+
+      // ✅ Recent transactions
+      db.ref(`users/${userId}/transactions`).limitToLast(3).on("value", snap => {
+        const txns = snap.val();
+        txnList.innerHTML = '';
+        if (txns) {
+          Object.entries(txns).reverse().forEach(([id, txn]) => {
+            const el = document.createElement('div');
+            el.className = 'transaction-item';
+            const iconCls = txn.type === 'withdraw'
+              ? 'withdraw-icon'
+              : txn.type === 'winning'
+                ? 'winning-icon'
+                : 'recharge-icon';
+            const icon = txn.type === 'withdraw'
+              ? '<i class="fas fa-arrow-up"></i>'
+              : txn.type === 'winning'
+                ? '<i class="fas fa-trophy"></i>'
+                : '<i class="fas fa-arrow-down"></i>';
+            const amountCls = txn.type === 'withdraw' ? 'debit' : 'credit';
+            const date = txn.timestamp ? new Date(txn.timestamp).toLocaleString() : '';
+
+            el.innerHTML = `
+              <div class="transaction-icon ${iconCls}">${icon}</div>
+              <div class="transaction-details">
+                <div class="transaction-title">${txn.description || txn.type}</div>
+                <div class="transaction-date">${date}</div>
+              </div>
+              <div class="transaction-amount ${amountCls}">
+                ${txn.type === 'withdraw' ? '-' : '+'}₹${txn.amount}
+              </div>
+            `;
+            txnList.appendChild(el);
+          });
+        } else {
+          txnList.innerHTML = `<div class="no-transactions">No recent transactions</div>`;
+        }
+      });
+
+    } else {
+      // ✅ Not logged in? Do anonymous sign in.
+      auth.signInAnonymously().catch(console.error);
+    }
+  });
+
+  // ✅ Utility
+  function pulse(el) {
+    el.classList.add('pulse');
+    setTimeout(() => el.classList.remove('pulse'), 500);
+  }
+
+  document.getElementById('btnRecharge').onclick = () => location.href = "recharge.html";
+  document.getElementById('btnWithdraw').onclick = () => location.href = "withdraw.html";
+</script>
+
+
+
+</body>
+</html>
