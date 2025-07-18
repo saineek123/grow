@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Platform</title>
+    <title>WealthGrow | Investment Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
             background: linear-gradient(135deg, #0f172a, #1e293b);
             color: #e2e8f0;
@@ -27,7 +21,7 @@
             padding: 60px 0 70px;
             overflow-x: hidden;
         }
-
+        
         /* Top Navigation */
         .top-nav {
             position: fixed;
@@ -40,14 +34,14 @@
             z-index: 100;
             padding: 10px 0;
         }
-
+        
         .top-nav-container {
             display: flex;
             justify-content: space-around;
             max-width: 600px;
             margin: 0 auto;
         }
-
+        
         .top-nav-item {
             display: flex;
             flex-direction: column;
@@ -57,259 +51,95 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-
-        .top-nav-item:hover,
-        .top-nav-item.active {
+        
+        .top-nav-item:hover, .top-nav-item.active {
             background: rgba(56, 189, 248, 0.15);
         }
-
+        
         .top-nav-item i {
             font-size: 20px;
             color: #60a5fa;
             margin-bottom: 5px;
         }
-
+        
         .top-nav-item span {
             font-size: 12px;
             font-weight: 600;
             color: #94a3b8;
         }
-
+        
         .top-nav-item.active span {
             color: #38bdf8;
         }
-
+        
         /* Main Content */
         .container {
             max-width: 500px;
             margin: 60px auto 20px;
             padding: 20px;
         }
-
+        
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
         }
-
-        .header-left h1 {
-            font-size: 26px;
-            color: #f8fafc;
-            font-weight: 700;
-        }
-
-        .header-left p {
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
-        }
-
-        .balance-title {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .balance-amount {
-            font-size: 36px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        .balance-stats {
+        
+        .user-info {
             display: flex;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Investment Products */
-        .section-title {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin: 30px 0 15px;
         }
-
-        .section-title h2 {
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
             font-size: 20px;
-            color: #f8fafc;
-        }
-
-        .section-title a {
-            color: #60a5fa;
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        .product-card {
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid #334155;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: #60a5fa;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .product-badge {
-            background: linear-gradient(to right, #f97316, #f59e0b);
+            font-weight: bold;
             color: white;
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 15px;
         }
-
-        .product-title {
+        
+        .user-details h2 {
             font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
             color: #f8fafc;
-        }
-
-        .product-income {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .income-item {
-            text-align: center;
-        }
-
-        .income-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #4ade80;
-        }
-
-        .income-label {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        .product-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #334155;
-        }
-
-        .product-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: #f8fafc;
-        }
-
-        .product-button {
-            background: linear-gradient(to right, #3b82f6, #60a5fa);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 30px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .product-button:hover {
-            background: linear-gradient(to right, #60a5fa, #93c5fd);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-        }
-
-        /* Bottom Tab Bar */
-        .bottom-tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #334155;
-            z-index: 100;
-            padding: 10px 0;
-        }
-
-        .tab-container {
-            display: flex;
-            justify-content: space-around;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 15px;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .tab-item:hover,
-        .tab-item.active {
-            background: rgba(56, 189, 248, 0.15);
-        }
-
-        .tab-item i {
-            font-size: 22px;
-            color: #94a3b8;
             margin-bottom: 3px;
         }
-
-        .tab-item span {
-            font-size: 12px;
-            font-weight: 600;
+        
+        .user-details p {
             color: #94a3b8;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
         }
-
-        .tab-item.active i,
-        .tab-item.active span {
-            color: #38bdf8;
+        
+        .level-badge {
+            background: linear-gradient(to right, #f59e0b, #f97316);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 8px;
         }
-
-        /* Notification badge */
+        
+        .header-right {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .notification-icon {
+            position: relative;
+            font-size: 22px;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        
         .badge {
             position: absolute;
             top: -5px;
@@ -324,7 +154,261 @@
             justify-content: center;
             align-items: center;
         }
-
+        
+        /* Wallet Summary */
+        .wallet-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .wallet-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            flex: 1;
+            margin: 0 5px;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+        
+        .wallet-card:hover {
+            transform: translateY(-3px);
+            border-color: #60a5fa;
+        }
+        
+        .wallet-title {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .wallet-amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+        
+        .wallet-change {
+            font-size: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .positive {
+            color: #4ade80;
+        }
+        
+        .negative {
+            color: #f87171;
+        }
+        
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
+        }
+        
+        .balance-title {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .balance-amount {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .balance-stats {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Investment Products */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0 15px;
+        }
+        
+        .section-title h2 {
+            font-size: 20px;
+            color: #f8fafc;
+        }
+        
+        .section-title a {
+            color: #60a5fa;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        
+        .product-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #60a5fa;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .product-badge {
+            background: linear-gradient(to right, #f97316, #f59e0b);
+            color: white;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #f8fafc;
+        }
+        
+        .product-income {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .income-item {
+            text-align: center;
+        }
+        
+        .income-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #4ade80;
+        }
+        
+        .income-label {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #334155;
+        }
+        
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+        
+        .product-button {
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .product-button:hover {
+            background: linear-gradient(to right, #60a5fa, #93c5fd);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Recent Transactions */
+        .transactions {
+            margin-bottom: 30px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .transaction-icon {
+            background: rgba(56, 189, 248, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .transaction-details {
+            flex: 1;
+        }
+        
+        .transaction-title {
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        
+        .transaction-time {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        
+        .transaction-amount {
+            font-weight: 700;
+        }
+        
+        .income {
+            color: #4ade80;
+        }
+        
+        .expense {
+            color: #f87171;
+        }
+        
         /* Floating action button */
         .fab {
             position: fixed;
@@ -344,215 +428,139 @@
             z-index: 90;
             transition: all 0.3s ease;
         }
-
+        
         .fab:hover {
             transform: scale(1.1) translateY(-5px);
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5);
         }
-
-        /* Transactions */
-        .transactions {
-            margin-bottom: 30px;
-        }
-
-        .transaction-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 15px;
-            margin-bottom: 10px;
-        }
-
-        .transaction-icon {
-            background: rgba(56, 189, 248, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-        }
-
-        .transaction-details {
-            flex: 1;
-        }
-
-        .transaction-title {
-            font-weight: 600;
-            color: #f8fafc;
-        }
-
-        .transaction-time {
-            font-size: 13px;
-            color: #94a3b8;
-        }
-
-        .transaction-amount {
-            font-weight: 700;
-        }
-
-        .income {
-            color: #4ade80;
-        }
-
-        .expense {
-            color: #f87171;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
+        
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.9);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #334155;
+            z-index: 100;
+            padding: 10px 0;
         }
-
-        .modal-content {
-            background: rgba(30, 41, 59, 0.95);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid #334155;
-            position: relative;
-        }
-
-        .modal-header {
+        
+        .tab-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            padding: 8px 15px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tab-item:hover, .tab-item.active {
+            background: rgba(56, 189, 248, 0.15);
+        }
+        
+        .tab-item i {
+            font-size: 22px;
+            color: #94a3b8;
+            margin-bottom: 3px;
+        }
+        
+        .tab-item span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+        
+        .tab-item.active i, .tab-item.active span {
+            color: #38bdf8;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-bottom: 20px;
         }
-
-        .modal-title {
+        
+        .stat-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #334155;
+        }
+        
+        .stat-card-title {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card-value {
             font-size: 22px;
             font-weight: 700;
             color: #f8fafc;
         }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 24px;
-            cursor: pointer;
-            transition: color 0.3s;
+        
+        .progress-bar {
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
         }
-
-        .close-modal:hover {
-            color: #f87171;
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            border-radius: 3px;
+            width: 65%;
         }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-product {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-product-name {
-            font-size: 24px;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 10px;
-        }
-
-        .modal-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .modal-stat {
-            text-align: center;
-        }
-
-        .modal-stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #f8fafc;
-        }
-
-        .modal-stat-label {
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
-        .modal-input {
-            margin-bottom: 20px;
-        }
-
-        .modal-input label {
-            display: block;
-            margin-bottom: 8px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        .modal-input input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 12px;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid #334155;
-            color: #f8fafc;
-            font-size: 16px;
-        }
-
-        .modal-input input:focus {
-            outline: none;
-            border-color: #60a5fa;
-        }
-
-        .modal-actions {
-            display: flex;
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
+            margin-bottom: 25px;
         }
-
-        .modal-button {
-            flex: 1;
-            padding: 12px;
+        
+        .action-button {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #334155;
             border-radius: 12px;
-            border: none;
-            font-weight: 600;
+            padding: 12px 5px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .invest-button {
-            background: linear-gradient(to right, #3b82f6, #60a5fa);
-            color: white;
-        }
-
-        .invest-button:hover {
-            background: linear-gradient(to right, #60a5fa, #93c5fd);
-        }
-
-        .cancel-button {
-            background: rgba(30, 41, 59, 0.7);
-            color: #94a3b8;
-            border: 1px solid #334155;
-        }
-
-        .cancel-button:hover {
+        
+        .action-button:hover {
             background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
-            border-color: #38bdf8;
+            border-color: #60a5fa;
+        }
+        
+        .action-button i {
+            font-size: 20px;
+            color: #60a5fa;
+            margin-bottom: 5px;
+        }
+        
+        .action-button span {
+            font-size: 12px;
+            color: #94a3b8;
         }
     </style>
 </head>
-
 <body>
     <!-- Top Navigation -->
     <nav class="top-nav">
@@ -575,24 +583,89 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Main Content -->
     <div class="container">
+        <!-- User Header -->
         <div class="header">
-            <div class="header-left">
-                <h1>Investment Platform</h1>
-                <p>Grow your wealth with our premium plans</p>
+            <div class="user-info">
+                <div class="avatar">JD</div>
+                <div class="user-details">
+                    <h2>John Doe</h2>
+                    <p>Member ID: INV-2024-98765 <span class="level-badge">VIP Level 3</span></p>
+                </div>
             </div>
             <div class="header-right">
-                <i class="fas fa-bell" style="font-size: 22px; color: #94a3b8; position: relative;">
+                <div class="notification-icon" onclick="location.href='notifications.html'">
+                    <i class="fas fa-bell"></i>
                     <span class="badge">3</span>
-                </i>
+                </div>
+                <div class="notification-icon" onclick="location.href='settings.html'">
+                    <i class="fas fa-cog"></i>
+                </div>
             </div>
         </div>
-
+        
+        <!-- Wallet Summary -->
+        <div class="wallet-summary">
+            <div class="wallet-card">
+                <div class="wallet-title">Available Balance</div>
+                <div class="wallet-amount">$5,420.50</div>
+                <div class="wallet-change positive">
+                    <i class="fas fa-arrow-up"></i> $240.50 today
+                </div>
+            </div>
+            <div class="wallet-card">
+                <div class="wallet-title">Invested</div>
+                <div class="wallet-amount">$3,250.00</div>
+                <div class="wallet-change positive">
+                    <i class="fas fa-chart-line"></i> +12.5%
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-button" onclick="location.href='deposit.html'">
+                <i class="fas fa-plus-circle"></i>
+                <span>Deposit</span>
+            </div>
+            <div class="action-button" onclick="location.href='withdraw.html'">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Withdraw</span>
+            </div>
+            <div class="action-button" onclick="location.href='transfer.html'">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Transfer</span>
+            </div>
+            <div class="action-button" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </div>
+        </div>
+        
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-card-title">Total Earnings</div>
+                <div class="stat-card-value">$8,240.50</div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-title">Referral Earnings</div>
+                <div class="stat-card-value">$1,520.00</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Balance Card -->
         <div class="balance-card">
-            <div class="balance-title">Total Balance</div>
-            <div class="balance-amount" id="userBalance">$0.00</div>
+            <div class="balance-title">Total Portfolio Value</div>
+            <div class="balance-amount">$8,420.50</div>
             <div class="balance-stats">
                 <div class="stat-item">
                     <div class="stat-value">+$1,240</div>
@@ -608,12 +681,13 @@
                 </div>
             </div>
         </div>
-
+        
+        <!-- Investment Products -->
         <div class="section-title">
             <h2>Investment Products</h2>
             <a href="#" onclick="viewAllProducts()">View All <i class="fas fa-arrow-right"></i></a>
         </div>
-
+        
         <div class="products-grid">
             <!-- Special Offer -->
             <div class="product-card">
@@ -631,11 +705,10 @@
                 </div>
                 <div class="product-footer">
                     <div class="product-price">$80</div>
-                    <button class="product-button"
-                        onclick="showInvestModal('Special Offer', 80, 2142, 2)">Invest</button>
+                    <button class="product-button" onclick="invest('Special Offer')">Invest</button>
                 </div>
             </div>
-
+            
             <!-- Product A -->
             <div class="product-card">
                 <div class="product-title">Product A</div>
@@ -651,139 +724,69 @@
                 </div>
                 <div class="product-footer">
                     <div class="product-price">$0</div>
-                    <button class="product-button" onclick="showInvestModal('Product A', 0, 271, 30)">Invest</button>
-                </div>
-            </div>
-
-            <!-- Product B -->
-            <div class="product-card">
-                <div class="product-title">Product B</div>
-                <div class="product-income">
-                    <div class="income-item">
-                        <div class="income-value">725</div>
-                        <div class="income-label">Daily Income</div>
-                    </div>
-                    <div class="income-item">
-                        <div class="income-value">30 Days</div>
-                        <div class="income-label">Duration</div>
-                    </div>
-                </div>
-                <div class="product-footer">
-                    <div class="product-price">$60</div>
-                    <button class="product-button" onclick="showInvestModal('Product B', 60, 725, 30)">Invest</button>
-                </div>
-            </div>
-
-            <!-- Product C -->
-            <div class="product-card">
-                <div class="product-badge">Premium</div>
-                <div class="product-title">Product C</div>
-                <div class="product-income">
-                    <div class="income-item">
-                        <div class="income-value">1,850</div>
-                        <div class="income-label">Daily Income</div>
-                    </div>
-                    <div class="income-item">
-                        <div class="income-value">45 Days</div>
-                        <div class="income-label">Duration</div>
-                    </div>
-                </div>
-                <div class="product-footer">
-                    <div class="product-price">$250</div>
-                    <button class="product-button" onclick="showInvestModal('Product C', 250, 1850, 45)">Invest</button>
+                    <button class="product-button" onclick="invest('Product A')">Invest</button>
                 </div>
             </div>
         </div>
-
+        
+        <!-- Recent Transactions -->
         <div class="section-title" style="margin-top: 30px;">
             <h2>Recent Transactions</h2>
             <a href="#" onclick="viewAllTransactions()">View All <i class="fas fa-arrow-right"></i></a>
         </div>
-
+        
         <div class="transactions">
-            <div class="transactions" id="transactionsContainer">
-                <!-- Firebase se data yahan ayega -->
-            </div>
-
-            <div class="transaction-icon">
-                <i class="fas fa-arrow-down" style="color: #38bdf8;"></i>
-            </div>
-            <div class="transaction-details">
-                <div class="transaction-title">Investment: Special Offer</div>
-                <div class="transaction-time">Today, 10:45 AM</div>
-            </div>
-            <div class="transaction-amount income">+$2142</div>
-        </div>
-
-        <div class="transaction-item">
-            <div class="transaction-icon" style="background: rgba(248, 113, 113, 0.2);">
-                <i class="fas fa-arrow-up" style="color: #f87171;"></i>
-            </div>
-            <div class="transaction-details">
-                <div class="transaction-title">Withdrawal</div>
-                <div class="transaction-time">Yesterday, 3:22 PM</div>
-            </div>
-            <div class="transaction-amount expense">-$500</div>
-        </div>
-
-        <div class="transaction-item">
-            <div class="transaction-icon" style="background: rgba(74, 222, 128, 0.2);">
-                <i class="fas fa-arrow-down" style="color: #4ade80;"></i>
-            </div>
-            <div class="transaction-details">
-                <div class="transaction-title">Investment: Product C</div>
-                <div class="transaction-time">Yesterday, 10:15 AM</div>
-            </div>
-            <div class="transaction-amount income">+$1850</div>
-        </div>
-    </div>
-    </div>
-
-    <!-- Investment Modal -->
-    <div class="modal" id="investModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Confirm Investment</div>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-product">
-                    <div class="modal-product-name" id="modalProductName">Product Name</div>
+            <div class="transaction-item">
+                <div class="transaction-icon">
+                    <i class="fas fa-arrow-down"></i>
                 </div>
-
-                <div class="modal-stats">
-                    <div class="modal-stat">
-                        <div class="modal-stat-value" id="modalDailyIncome">$0</div>
-                        <div class="modal-stat-label">Daily Income</div>
-                    </div>
-                    <div class="modal-stat">
-                        <div class="modal-stat-value" id="modalDuration">0 Days</div>
-                        <div class="modal-stat-label">Duration</div>
-                    </div>
-                    <div class="modal-stat">
-                        <div class="modal-stat-value" id="modalPrice">$0</div>
-                        <div class="modal-stat-label">Price</div>
-                    </div>
+                <div class="transaction-details">
+                    <div class="transaction-title">Investment: Special Offer</div>
+                    <div class="transaction-time">Today, 10:45 AM</div>
                 </div>
-
-                <div class="modal-input">
-                    <label for="amount">Investment Amount ($)</label>
-                    <input type="number" id="amount" min="1" value="100">
+                <div class="transaction-amount income">+$2142</div>
+            </div>
+            
+            <div class="transaction-item">
+                <div class="transaction-icon" style="background: rgba(248, 113, 113, 0.2);">
+                    <i class="fas fa-arrow-up"></i>
                 </div>
-
-                <div class="modal-actions">
-                    <button class="modal-button cancel-button" onclick="closeModal()">Cancel</button>
-                    <button class="modal-button invest-button" onclick="confirmInvestment()">Confirm</button>
+                <div class="transaction-details">
+                    <div class="transaction-title">Withdrawal</div>
+                    <div class="transaction-time">Yesterday, 3:22 PM</div>
                 </div>
+                <div class="transaction-amount expense">-$500</div>
+            </div>
+            
+            <div class="transaction-item">
+                <div class="transaction-icon" style="background: rgba(74, 222, 128, 0.2);">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="transaction-details">
+                    <div class="transaction-title">Deposit</div>
+                    <div class="transaction-time">Yesterday, 10:15 AM</div>
+                </div>
+                <div class="transaction-amount income">+$1000</div>
+            </div>
+            
+            <div class="transaction-item">
+                <div class="transaction-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="transaction-details">
+                    <div class="transaction-title">Referral Bonus</div>
+                    <div class="transaction-time">Dec 12, 10:15 AM</div>
+                </div>
+                <div class="transaction-amount income">+$120</div>
             </div>
         </div>
     </div>
-
+    
     <!-- Floating Action Button -->
     <div class="fab" onclick="showQuickActions()">
         <i class="fas fa-plus"></i>
     </div>
-
+    
     <!-- Bottom Tab Bar -->
     <nav class="bottom-tab-bar">
         <div class="tab-container">
@@ -805,231 +808,61 @@
             </div>
         </div>
     </nav>
-
+    
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-            authDomain: "grow-3e3a1.firebaseapp.com",
-            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-            projectId: "grow-3e3a1",
-            storageBucket: "grow-3e3a1.appspot.com",
-            messagingSenderId: "285304522946",
-            appId: "1:285304522946:web:c423e49a8e0968ce63535b"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
-
-
-
-
-
-        function loadUserBalance() {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const balanceRef = db.ref(`wallets/${user.uid}/balance`);
-            balanceRef.once('value').then(snapshot => {
-                const balance = snapshot.val() || 0;
-                document.getElementById("userBalance").textContent = `$${balance.toFixed(2)}`;
-            }).catch(error => {
-                console.error("Balance load error:", error);
-                document.getElementById("userBalance").textContent = `$0.00`;
-            });
+        // Function to handle investment button clicks
+        function invest(product) {
+            alert(`You are investing in: ${product}\n\nThis is a demo - in a real app, this would open the investment screen.`);
         }
-
-
-        function loginUser() {
-            const email = document.getElementById("loginEmail").value;
-            const password = document.getElementById("loginPassword").value;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(userCred => {
-                    alert("Login successful!");
-                    document.getElementById("loginSection").style.display = "none";
-                    loadUserBalance();
-                    loadTransactionsFromFirebase();
-                })
-                .catch(error => {
-                    alert("Login failed: " + error.message);
-                });
-        }
-
-        // Transactions Firebase se fetch karo aur HTML me dikhayo
-        function loadTransactionsFromFirebase() {
-            const container = document.getElementById("transactionsContainer");
-            container.innerHTML = "<p>Loading...</p>";
-
-            db.ref("investments").limitToLast(10).on("value", snapshot => {
-                container.innerHTML = "";
-
-                const data = snapshot.val();
-                if (!data) {
-                    container.innerHTML = "<p>No transactions yet.</p>";
-                    return;
-                }
-
-                const entries = Object.values(data).reverse(); // latest on top
-                entries.forEach(entry => {
-                    const div = document.createElement("div");
-                    div.className = "transaction-item";
-                    div.innerHTML = `
-                <div class="transaction-icon">
-                    <i class="fas fa-arrow-down" style="color: #4ade80;"></i>
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Investment: ${entry.product}</div>
-                    <div class="transaction-time">${formatTime(entry.timestamp)}</div>
-                </div>
-                <div class="transaction-amount income">+$${entry.amount}</div>
-            `;
-                    container.appendChild(div);
-                });
-            });
-        }
-
-        // Helper: Date ko readable banaata hai
-        function formatTime(isoString) {
-            const date = new Date(isoString);
-            return date.toLocaleString(); // e.g., 17/07/2025, 10:45 AM
-        }
-
-        // Function to show investment modal
-        function showInvestModal(product, price, dailyIncome, duration) {
-            document.getElementById('modalProductName').textContent = product;
-            document.getElementById('modalDailyIncome').textContent = '$' + dailyIncome;
-            document.getElementById('modalDuration').textContent = duration + ' Days';
-            document.getElementById('modalPrice').textContent = price === 0 ? 'Free' : '$' + price;
-            document.getElementById('amount').value = price || 100;
-            document.getElementById('investModal').style.display = 'flex';
-        }
-
-        // Function to close modal
-        function closeModal() {
-            document.getElementById('investModal').style.display = 'none';
-        }
-
-       function confirmInvestment() {
-    const user = auth.currentUser;
-    if (!user) {
-        alert("Please log in first.");
-        return;
-    }
-
-    const product = document.getElementById('modalProductName').textContent;
-    const amount = Number(document.getElementById('amount').value);
-    const timestamp = new Date().toISOString();
-
-    const userRef = db.ref(`wallets/${user.uid}`);
-
-    // Step 1: Check current balance
-    userRef.once('value').then(snapshot => {
-        const userData = snapshot.val();
-        const currentBalance = userData?.balance || 0;
-
-        if (currentBalance < amount) {
-            alert("Insufficient balance.");
-            return;
-        }
-
-        // Step 2: Deduct balance
-        const newBalance = currentBalance - amount;
-
-        // Step 3: Save investment and update balance
-        const updates = {};
-        const investmentKey = db.ref().child(`investments/${user.uid}`).push().key;
-        updates[`/investments/${user.uid}/${investmentKey}`] = {
-            product,
-            amount,
-            timestamp
-        };
-        updates[`/wallets/${user.uid}/balance`] = newBalance;
-
-        return db.ref().update(updates);
-    }).then(() => {
-        alert(`Invested $${amount} in ${product}`);
-        closeModal();
-        loadUserBalance();
-        loadTransactionsFromFirebase();
-    }).catch(error => {
-        console.error("Error:", error);
-        alert("Something went wrong.");
-    });
-}
-
-
-
-        // Function to view all products
-        function viewAllProducts() {
-            alert("Showing all investment products");
-        }
-
-        function loadTransactionsFromFirebase() {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const container = document.getElementById("transactionsContainer");
-            container.innerHTML = "<p>Loading...</p>";
-
-            db.ref(`investments/${user.uid}`).limitToLast(10).once("value", snapshot => {
-                container.innerHTML = "";
-
-                const data = snapshot.val();
-                if (!data) {
-                    container.innerHTML = "<p>No transactions yet.</p>";
-                    return;
-                }
-
-                const entries = Object.values(data).reverse();
-                entries.forEach(entry => {
-                    const div = document.createElement("div");
-                    div.className = "transaction-item";
-                    div.innerHTML = `
-                <div class="transaction-icon">
-                    <i class="fas fa-arrow-down" style="color: #4ade80;"></i>
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Investment: ${entry.product}</div>
-                    <div class="transaction-time">${formatTime(entry.timestamp)}</div>
-                </div>
-                <div class="transaction-amount income">+$${entry.amount}</div>
-            `;
-                    container.appendChild(div);
-                });
-            });
-        }
-
+        
         // Function to show quick actions
         function showQuickActions() {
             alert("Quick Actions Menu:\n\n• New Investment\n• Recharge Account\n• Withdraw Funds\n• Invite Friends");
         }
-
+        
+        // Function to view all products
+        function viewAllProducts() {
+            alert("Showing all investment products");
+        }
+        
+        // Function to view all transactions
+        function viewAllTransactions() {
+            alert("Showing transaction history");
+        }
+        
         // Add active state to navigation items
         const navItems = document.querySelectorAll('.top-nav-item, .tab-item');
         navItems.forEach(item => {
-            item.addEventListener('click', function () {
+            item.addEventListener('click', function() {
                 // Remove active class from all items
                 navItems.forEach(i => i.classList.remove('active'));
                 // Add active class to clicked item
                 this.classList.add('active');
             });
         });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (event) => {
-            const modal = document.getElementById('investModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Jab page load ho tab transactions fetch karo
-        window.addEventListener('load', () => {
-            loadTransactionsFromFirebase();
-        });
-
+        
+        // Update balance stats periodically
+        function updateStats() {
+            const earned = document.querySelector('.stat-value:nth-child(1)');
+            const invested = document.querySelector('.stat-value:nth-child(2)');
+            const growth = document.querySelector('.stat-value:nth-child(3)');
+            
+            // Simulate small changes
+            const change = (Math.random() * 10).toFixed(2);
+            earned.textContent = `+$${(1240 + parseFloat(change)).toFixed(2)}`;
+            
+            const investedChange = (Math.random() * 5).toFixed(2);
+            invested.textContent = `$${(2850 + parseFloat(investedChange)).toFixed(2)}`;
+            
+            const growthChange = (Math.random() * 0.5).toFixed(2);
+            growth.textContent = `+${(42 + parseFloat(growthChange)).toFixed(2)}%`;
+            
+            // Update every 30 seconds
+            setTimeout(updateStats, 30000);
+        }
+        
+        // Initialize stats update
+        updateStats();
     </script>
 </body>
-
 </html>
