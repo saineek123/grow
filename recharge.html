@@ -3,36 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallet Recharge</title>
+  <title>INVESTPRO - Wallet Recharge</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    :root {
-      --primary: #6a11cb;
-      --secondary: #2575fc;
-      --success: #2ecc71;
-      --warning: #f39c12;
-      --danger: #e74c3c;
-      --dark: #2c3e50;
-      --light: #f8f9fa;
-      --gray: #ecf0f1;
-      --text: #34495e;
+      font-family: 'Poppins', sans-serif;
     }
     
     body {
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+      background: #0a1026;
+      color: #fff;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      color: var(--text);
     }
     
     .container {
@@ -42,54 +33,63 @@
     }
     
     .card {
-      background: white;
+      background: linear-gradient(145deg, #121f3d, #0c2952);
       border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
       overflow: hidden;
       margin-bottom: 30px;
+      border: 1px solid rgba(249, 168, 37, 0.15);
     }
     
     .card-header {
-      padding: 25px 30px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 30px;
+      background: rgba(16, 25, 54, 0.8);
       color: white;
       text-align: center;
       position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .card-header h1 {
       font-size: 28px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #f9a825, #ffca28);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     
     .card-header p {
-      opacity: 0.9;
+      opacity: 0.8;
       max-width: 600px;
       margin: 0 auto;
+      color: #ccc;
+      font-size: 16px;
     }
     
     .qr-container {
-      margin: 20px auto;
+      margin: 25px auto;
       text-align: center;
       max-width: 300px;
     }
     
     .qr-placeholder {
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 15px;
-      background: white;
-      border-radius: 10px;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(249, 168, 37, 0.2);
     }
     
     .qr-placeholder img {
       max-width: 100%;
-      border-radius: 8px;
+      border-radius: 10px;
     }
     
     .card-body {
@@ -100,20 +100,22 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: white;
+      color: #f9a825;
       text-decoration: none;
       margin-bottom: 20px;
-      padding: 8px 16px;
+      padding: 10px 20px;
       border-radius: 30px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(249, 168, 37, 0.1);
       transition: all 0.3s;
       position: absolute;
       left: 20px;
       top: 20px;
+      font-weight: 500;
+      border: 1px solid rgba(249, 168, 37, 0.2);
     }
     
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(249, 168, 37, 0.2);
       transform: translateY(-2px);
     }
     
@@ -127,11 +129,11 @@
     .recharge-steps::before {
       content: '';
       position: absolute;
-      top: 20px;
+      top: 25px;
       left: 0;
       right: 0;
       height: 3px;
-      background: var(--gray);
+      background: rgba(255, 255, 255, 0.1);
       z-index: 1;
     }
     
@@ -144,25 +146,26 @@
     }
     
     .step-icon {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
-      background: var(--gray);
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 10px;
-      font-size: 18px;
+      font-size: 20px;
       color: #777;
     }
     
     .step.active .step-icon {
-      background: var(--primary);
+      background: linear-gradient(135deg, #f9a825, #2a5298);
       color: white;
+      box-shadow: 0 5px 15px rgba(249, 168, 37, 0.3);
     }
     
     .step.completed .step-icon {
-      background: var(--success);
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
       color: white;
     }
     
@@ -170,6 +173,12 @@
       font-size: 14px;
       font-weight: 500;
       text-align: center;
+      color: #aaa;
+    }
+    
+    .step.active .step-label {
+      color: #f9a825;
+      font-weight: 600;
     }
     
     .form-section {
@@ -192,10 +201,10 @@
     
     .form-group label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       font-weight: 600;
-      color: #555;
-      font-size: 15px;
+      color: #f9a825;
+      font-size: 16px;
     }
     
     .input-with-icon {
@@ -204,26 +213,28 @@
     
     .input-with-icon i {
       position: absolute;
-      left: 15px;
+      left: 20px;
       top: 50%;
       transform: translateY(-50%);
-      color: #777;
-      font-size: 18px;
+      color: #f9a825;
+      font-size: 20px;
     }
     
     .form-control {
       width: 100%;
-      padding: 15px 15px 15px 50px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
+      padding: 16px 20px 16px 60px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       font-size: 16px;
       transition: all 0.3s;
       outline: none;
+      background: rgba(16, 25, 54, 0.5);
+      color: white;
     }
     
     .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+      border-color: #f9a825;
+      box-shadow: 0 0 0 3px rgba(249, 168, 37, 0.2);
     }
     
     .amount-options {
@@ -234,67 +245,73 @@
     }
     
     .amount-option {
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
       text-align: center;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
+      background: rgba(16, 25, 54, 0.3);
     }
     
     .amount-option:hover {
-      border-color: var(--primary);
-      background: #f0f5ff;
+      border-color: #f9a825;
+      background: rgba(249, 168, 37, 0.1);
+      transform: translateY(-5px);
     }
     
     .amount-option.selected {
-      border-color: var(--primary);
-      background: #f0f5ff;
-      box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+      border-color: #f9a825;
+      background: rgba(249, 168, 37, 0.15);
+      box-shadow: 0 5px 15px rgba(249, 168, 37, 0.2);
     }
     
     .amount-option .amount {
-      font-size: 20px;
-      color: var(--primary);
-      margin-bottom: 5px;
+      font-size: 22px;
+      color: #f9a825;
+      margin-bottom: 8px;
     }
     
     .amount-option .bonus {
-      font-size: 13px;
-      color: var(--success);
+      font-size: 14px;
+      color: #2ecc71;
       font-weight: 500;
     }
     
     .file-upload {
-      border: 2px dashed #e0e0e0;
-      border-radius: 10px;
-      padding: 30px;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 40px 30px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
-      background: #fafafa;
+      background: rgba(16, 25, 54, 0.3);
     }
     
     .file-upload:hover {
-      border-color: var(--primary);
+      border-color: #f9a825;
+      background: rgba(249, 168, 37, 0.1);
     }
     
     .file-upload i {
-      font-size: 48px;
-      color: #777;
-      margin-bottom: 15px;
+      font-size: 50px;
+      color: #f9a825;
+      margin-bottom: 20px;
     }
     
     .file-upload p {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       font-weight: 500;
+      font-size: 16px;
+      color: #ccc;
     }
     
     .file-upload .btn {
-      background: #e0e0e0;
-      border: none;
-      padding: 8px 20px;
+      background: rgba(249, 168, 37, 0.2);
+      border: 1px solid rgba(249, 168, 37, 0.3);
+      color: #f9a825;
+      padding: 10px 25px;
       border-radius: 30px;
       font-weight: 500;
       cursor: pointer;
@@ -302,17 +319,22 @@
     }
     
     .file-upload .btn:hover {
-      background: #d0d0d0;
+      background: rgba(249, 168, 37, 0.3);
     }
     
     .file-name {
-      margin-top: 15px;
+      margin-top: 20px;
       font-size: 14px;
-      color: #777;
+      color: #aaa;
+      padding: 12px;
+      background: rgba(16, 25, 54, 0.3);
+      border-radius: 8px;
+      border-left: 3px solid #f9a825;
     }
     
     .file-name i {
-      margin-right: 5px;
+      margin-right: 10px;
+      color: #f9a825;
     }
     
     .btn-group {
@@ -325,7 +347,7 @@
       flex: 1;
       padding: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
@@ -337,79 +359,88 @@
     }
     
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+      background: linear-gradient(135deg, #f9a825, #ffca28);
+      color: #000;
+      box-shadow: 0 4px 20px rgba(249, 168, 37, 0.4);
     }
     
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(249, 168, 37, 0.5);
     }
     
     .btn-outline {
       background: transparent;
-      border: 2px solid #e0e0e0;
-      color: #555;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #ccc;
     }
     
     .btn-outline:hover {
-      background: #f5f5f5;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #f9a825;
+      color: #f9a825;
     }
     
     .status-card {
-      background: #f8f9ff;
+      background: rgba(16, 25, 54, 0.5);
       border-radius: 15px;
-      padding: 25px;
+      padding: 30px;
       text-align: center;
       margin: 30px 0;
+      border: 1px solid rgba(249, 168, 37, 0.15);
     }
     
     .status-icon {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 36px;
+      margin: 0 auto 25px;
+      font-size: 40px;
+      background: rgba(243, 156, 18, 0.15);
+      color: #f9a825;
     }
     
     .status-pending .status-icon {
-      background: rgba(243, 156, 18, 0.2);
-      color: var(--warning);
+      background: rgba(243, 156, 18, 0.15);
+      color: #f9a825;
     }
     
     .status-approved .status-icon {
-      background: rgba(46, 204, 113, 0.2);
-      color: var(--success);
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
     }
     
     .status-title {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      color: #f9a825;
     }
     
     .status-desc {
-      color: #777;
-      margin-bottom: 20px;
+      color: #aaa;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.6;
     }
     
     .status-info {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
+      background: rgba(16, 25, 54, 0.8);
+      border-radius: 15px;
+      padding: 25px;
       text-align: left;
-      margin-top: 20px;
+      margin-top: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .info-row:last-child {
@@ -417,11 +448,13 @@
     }
     
     .info-label {
-      color: #777;
+      color: #aaa;
+      font-weight: 500;
     }
     
     .info-value {
       font-weight: 600;
+      color: #f9a825;
     }
     
     .transaction-history {
@@ -429,39 +462,46 @@
     }
     
     .history-title {
-      font-size: 20px;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f0f0;
+      font-size: 22px;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      color: #f9a825;
     }
     
     .history-item {
       display: flex;
       justify-content: space-between;
-      padding: 15px;
-      border-radius: 12px;
-      background: white;
+      padding: 18px;
+      border-radius: 15px;
+      background: rgba(16, 25, 54, 0.5);
       margin-bottom: 15px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-      border-left: 4px solid var(--warning);
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+      border-left: 4px solid #f9a825;
+      transition: all 0.3s;
+    }
+    
+    .history-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(249, 168, 37, 0.2);
     }
     
     .history-item.approved {
-      border-left-color: var(--success);
+      border-left-color: #2ecc71;
     }
     
     .history-item.rejected {
-      border-left-color: var(--danger);
+      border-left-color: #e74c3c;
     }
     
     .history-amount {
       font-weight: 700;
-      font-size: 18px;
+      font-size: 20px;
     }
     
     .history-date {
       font-size: 14px;
-      color: #777;
+      color: #aaa;
     }
     
     .history-status {
@@ -470,26 +510,26 @@
     }
     
     .status-pending {
-      color: var(--warning);
+      color: #f9a825;
     }
     
     .status-approved {
-      color: var(--success);
+      color: #2ecc71;
     }
     
     .status-rejected {
-      color: var(--danger);
+      color: #e74c3c;
     }
     
     .notification {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      background: white;
-      color: #2c3e50;
-      padding: 15px 25px;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      background: rgba(16, 25, 54, 0.95);
+      color: white;
+      padding: 18px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       gap: 15px;
@@ -497,7 +537,8 @@
       transform: translateY(100px);
       opacity: 0;
       transition: all 0.3s ease;
-      border-left: 4px solid var(--primary);
+      border-left: 4px solid #f9a825;
+      backdrop-filter: blur(10px);
     }
     
     .notification.show {
@@ -506,11 +547,11 @@
     }
     
     .notification.success {
-      border-left-color: var(--success);
+      border-left-color: #2ecc71;
     }
     
     .notification.error {
-      border-left-color: var(--danger);
+      border-left-color: #e74c3c;
     }
     
     @media (max-width: 768px) {
@@ -533,6 +574,14 @@
       .qr-placeholder {
         width: 180px;
         height: 180px;
+      }
+      
+      .card-header h1 {
+        font-size: 24px;
+      }
+      
+      .card-header {
+        padding: 25px 20px;
       }
     }
     
@@ -558,6 +607,23 @@
       .amount-options {
         grid-template-columns: 1fr;
       }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+      
+      .card-header {
+        text-align: left;
+      }
+      
+      .qr-container {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -565,11 +631,11 @@
   <div class="container">
     <div class="card">
       <div class="card-header">
-        <a href="dashboard.html" class="back-btn">
-          <i class="fas fa-arrow-left"></i> Back
+        <a href="index.html" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
         <h1>Recharge Your Wallet</h1>
-        <p>Add funds to your account to start investing</p>
+        <p>Add funds to start investing in premium opportunities</p>
         
         <div class="qr-container">
           <div class="qr-placeholder">
@@ -612,7 +678,7 @@
           </div>
           
           <div class="form-group">
-            <label>Quick Select Amount</label>
+            <label>Recommended Amounts</label>
             <div class="amount-options">
               <div class="amount-option" data-amount="500">
                 <div class="amount">₹500</div>
@@ -698,7 +764,7 @@
               <i class="fas fa-clock"></i>
             </div>
             <h2 class="status-title">Recharge Request Submitted!</h2>
-            <p class="status-desc">Your recharge request is pending admin approval. You'll be notified once it's processed.</p>
+            <p class="status-desc">Your recharge request is pending admin approval. You'll be notified once it's processed. Funds will be available within 15 minutes after approval.</p>
             
             <div class="status-info">
               <div class="info-row">
@@ -708,6 +774,10 @@
               <div class="info-row">
                 <span class="info-label">Amount:</span>
                 <span class="info-value" id="confirmation-amount">₹1,000.00</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Bonus:</span>
+                <span class="info-value" id="confirmation-bonus">₹50.00</span>
               </div>
               <div class="info-row">
                 <span class="info-label">UTR Number:</span>
@@ -736,7 +806,7 @@
           <div class="transaction-history">
             <h3 class="history-title">Recent Recharge History</h3>
             <div id="rechargeHistory">
-              <!-- History will be loaded dynamically -->
+              <!-- History items will be loaded from Firebase -->
             </div>
           </div>
         </div>
@@ -744,31 +814,22 @@
     </div>
   </div>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-
   <script>
-    // Firebase configuration
-    const firebaseConfig = {
+   const firebaseConfig = {
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
       databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
       projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.firebasestorage.app",
+      storageBucket: "grow-3e3a1.appspot.com",
       messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
-      measurementId: "G-Q7DPY3BF6C"
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b"
     };
-    
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+    const db = firebase.firestore();
     const storage = firebase.storage();
-    
+
     // DOM elements
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
@@ -796,14 +857,11 @@
     const confirmationAmount = document.getElementById('confirmation-amount');
     const confirmationUtr = document.getElementById('confirmation-utr');
     const confirmationDate = document.getElementById('confirmation-date');
-    
-    const rechargeHistory = document.getElementById('rechargeHistory');
+    const confirmationBonus = document.getElementById('confirmation-bonus');
     
     // Variables
     let selectedAmount = 500;
-    let selectedFile = null;
-    let currentUser = null;
-    let transactionId = '';
+    let userId = "user_" + Math.random().toString(36).substr(2, 9); // Demo user ID
     
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -831,15 +889,14 @@
       
       fileInput.addEventListener('change', function() {
         if (this.files.length > 0) {
-          selectedFile = this.files[0];
-          fileName.innerHTML = `<i class="fas fa-file"></i> ${selectedFile.name}`;
-          fileUploadArea.style.borderColor = '#6a11cb';
-          fileUploadArea.style.backgroundColor = '#f0f5ff';
+          const file = this.files[0];
+          fileName.innerHTML = `<i class="fas fa-file"></i> ${file.name}`;
+          fileUploadArea.style.borderColor = '#f9a825';
+          fileUploadArea.style.backgroundColor = 'rgba(249, 168, 37, 0.1)';
         } else {
-          selectedFile = null;
           fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
-          fileUploadArea.style.borderColor = '#e0e0e0';
-          fileUploadArea.style.backgroundColor = '#fafafa';
+          fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+          fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
         }
       });
       
@@ -848,21 +905,14 @@
       prevStep2Btn.addEventListener('click', goToStep1);
       submitRechargeBtn.addEventListener('click', submitRecharge);
       newRechargeBtn.addEventListener('click', resetForm);
-      goToDashboardBtn.addEventListener('click', () => window.location.href = 'dashboard.html');
-      cancelBtn.addEventListener('click', () => window.location.href = 'dashboard.html');
+      goToDashboardBtn.addEventListener('click', () => window.location.href = 'index.html');
+      cancelBtn.addEventListener('click', () => window.location.href = 'index.html');
       
       // Initialize with ₹500 selected
       amountOptions[0].classList.add('selected');
       
-      // Check auth state
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          currentUser = user;
-          loadRechargeHistory(user.uid);
-        } else {
-          window.location.href = "login.html";
-        }
-      });
+      // Load recharge history
+      loadRechargeHistory();
     });
     
     // Navigation functions
@@ -886,7 +936,7 @@
     }
     
     // Submit recharge request
-    function submitRecharge() {
+    async function submitRecharge() {
       // Validation
       const utr = utrInput.value.trim();
       
@@ -895,7 +945,7 @@
         return;
       }
       
-      if (!selectedFile) {
+      if (!fileInput.files[0]) {
         showNotification('❌ Please upload UTR proof', 'error');
         return;
       }
@@ -904,100 +954,134 @@
       submitRechargeBtn.disabled = true;
       submitRechargeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
       
+      // Calculate bonus
+      let bonus = 0;
+      if (selectedAmount >= 1000 && selectedAmount < 2000) bonus = 50;
+      else if (selectedAmount >= 2000 && selectedAmount < 5000) bonus = 150;
+      else if (selectedAmount >= 5000 && selectedAmount < 10000) bonus = 500;
+      else if (selectedAmount >= 10000) bonus = 1200;
+      
       // Generate transaction ID
-      transactionId = 'TX' + Date.now();
+      const transactionId = 'TX' + Date.now();
       
-      // Create a unique filename to prevent conflicts
-      const fileExtension = selectedFile.name.split('.').pop();
-      const fileName = `recharge_${transactionId}.${fileExtension}`;
-      
-      // Upload file to Firebase Storage
-      const storageRef = storage.ref(`recharge-proofs/${currentUser.uid}/${fileName}`);
-      const uploadTask = storageRef.put(selectedFile);
-      
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          // Progress tracking
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          console.error('Upload failed:', error);
-          
-          let errorMessage = 'Failed to upload payment proof';
-          if (error.code === 'storage/unauthorized') {
-            errorMessage = 'You do not have permission to upload files';
-          } else if (error.code === 'storage/canceled') {
-            errorMessage = 'Upload canceled by user';
-          } else if (error.code === 'storage/unknown') {
-            errorMessage = 'Unknown error occurred. Please try again.';
-          }
-          
-          showNotification(`❌ ${errorMessage}`, 'error');
-          submitRechargeBtn.disabled = false;
-          submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
-        }, 
-        () => {
-          // Handle successful uploads
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            // Save recharge data to Firebase
-            saveRechargeData(utr, downloadURL);
-          });
-        }
-      );
+      try {
+        // Upload file to Firebase Storage
+        const file = fileInput.files[0];
+        const storageRef = storage.ref(`recharge-proofs/${userId}/${transactionId}/${file.name}`);
+        const snapshot = await storageRef.put(file);
+        
+        // Get download URL
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        
+        // Prepare recharge data
+        const rechargeData = {
+          userId: userId,
+          amount: selectedAmount,
+          bonus: bonus,
+          utr: utr,
+          screenshotURL: downloadURL,
+          note: noteInput.value.trim(),
+          status: "pending",
+          transactionId: transactionId,
+          timestamp: new Date(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Save to Firestore
+        await db.collection("rechargeRequests").add(rechargeData);
+        
+        // Update confirmation details
+        confirmationId.textContent = transactionId;
+        confirmationAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}.00`;
+        confirmationBonus.textContent = `₹${bonus.toLocaleString('en-IN')}.00`;
+        confirmationUtr.textContent = utr;
+        confirmationDate.textContent = new Date().toLocaleString('en-IN', { 
+          day: 'numeric', 
+          month: 'short', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) + ' IST';
+        
+        // Show confirmation
+        step2.classList.remove('active');
+        step3.classList.add('active');
+        step2Indicator.classList.remove('active');
+        step3Indicator.classList.add('active');
+        
+        showNotification('✅ Recharge request submitted successfully!', 'success');
+        
+        // Reload history
+        loadRechargeHistory();
+        
+      } catch (error) {
+        console.error("Error submitting recharge: ", error);
+        showNotification(`❌ Error: ${error.message}`, 'error');
+      } finally {
+        // Reset button
+        submitRechargeBtn.disabled = false;
+        submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+      }
     }
     
-    // Save recharge data to Firebase
-    function saveRechargeData(utr, imageUrl) {
-      const rechargeData = {
-        userId: currentUser.uid,
-        amount: selectedAmount,
-        utr: utr,
-        imageUrl: imageUrl,
-        note: noteInput.value.trim(),
-        status: 'pending',
-        timestamp: Date.now(),
-        date: new Date().toLocaleString(),
-        userPhone: currentUser.email.split('@')[0],
-        transactionId: transactionId
-      };
+    // Load recharge history from Firebase
+    async function loadRechargeHistory() {
+      const historyContainer = document.getElementById('rechargeHistory');
+      historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
       
-      // Push to database
-      const newRechargeRef = db.ref('recharges').push();
-      newRechargeRef.set(rechargeData)
-        .then(() => {
-          showNotification('✅ Recharge request submitted successfully!', 'success');
+      try {
+        const querySnapshot = await db.collection("rechargeRequests")
+          .where("userId", "==", userId)
+          .orderBy("createdAt", "desc")
+          .limit(5)
+          .get();
+        
+        if (querySnapshot.empty) {
+          historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
+          return;
+        }
+        
+        historyContainer.innerHTML = '';
+        
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          const historyItem = document.createElement('div');
+          historyItem.className = `history-item ${data.status === 'approved' ? 'approved' : data.status === 'rejected' ? 'rejected' : ''}`;
           
-          // Update confirmation details
-          confirmationId.textContent = transactionId;
-          confirmationAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}.00`;
-          confirmationUtr.textContent = utr;
-          confirmationDate.textContent = new Date().toLocaleString('en-IN', { 
-            day: 'numeric', 
-            month: 'short', 
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          }) + ' IST';
+          const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
+          const formattedDate = date.toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          });
           
-          // Show confirmation
-          step2.classList.remove('active');
-          step3.classList.add('active');
-          step2Indicator.classList.remove('active');
-          step3Indicator.classList.add('active');
+          let statusClass = 'status-pending';
+          let statusText = 'Pending';
           
-          // Reload history
-          loadRechargeHistory(currentUser.uid);
-        })
-        .catch((error) => {
-          console.error('Error saving recharge data:', error);
-          showNotification('❌ Failed to submit recharge request', 'error');
-        })
-        .finally(() => {
-          submitRechargeBtn.disabled = false;
-          submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+          if (data.status === 'approved') {
+            statusClass = 'status-approved';
+            statusText = 'Approved';
+          } else if (data.status === 'rejected') {
+            statusClass = 'status-rejected';
+            statusText = 'Rejected';
+          }
+          
+          historyItem.innerHTML = `
+            <div class="history-details">
+              <div class="history-amount">₹${data.amount.toLocaleString('en-IN')}</div>
+              <div class="history-date">${formattedDate}</div>
+            </div>
+            <div class="history-status ${statusClass}">
+              ${statusText}
+            </div>
+          `;
+          
+          historyContainer.appendChild(historyItem);
         });
+      } catch (error) {
+        console.error("Error loading history: ", error);
+        historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
+      }
     }
     
     // Reset form
@@ -1009,9 +1093,8 @@
       noteInput.value = '';
       fileInput.value = '';
       fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
-      fileUploadArea.style.borderColor = '#e0e0e0';
-      fileUploadArea.style.backgroundColor = '#fafafa';
-      selectedFile = null;
+      fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
       
       // Remove selections
       amountOptions.forEach(opt => opt.classList.remove('selected'));
@@ -1022,60 +1105,6 @@
       step1.classList.add('active');
       step3Indicator.classList.remove('active');
       step1Indicator.classList.add('active');
-    }
-    
-    // Load recharge history
-    function loadRechargeHistory(userId) {
-      rechargeHistory.innerHTML = '<div class="history-loading">Loading history...</div>';
-      
-      db.ref('recharges').orderByChild('userId').equalTo(userId).limitToLast(5).once('value')
-        .then(snapshot => {
-          const recharges = [];
-          snapshot.forEach(childSnapshot => {
-            const recharge = childSnapshot.val();
-            recharge.id = childSnapshot.key;
-            recharges.push(recharge);
-          });
-          
-          // Sort by timestamp (newest first)
-          recharges.sort((a, b) => b.timestamp - a.timestamp);
-          
-          // Display history
-          rechargeHistory.innerHTML = '';
-          
-          if (recharges.length === 0) {
-            rechargeHistory.innerHTML = '<p>No recharge history found</p>';
-            return;
-          }
-          
-          recharges.forEach(recharge => {
-            const historyItem = document.createElement('div');
-            historyItem.className = `history-item ${recharge.status === 'approved' ? 'approved' : recharge.status === 'rejected' ? 'rejected' : ''}`;
-            
-            const date = new Date(recharge.timestamp);
-            const formattedDate = date.toLocaleDateString('en-IN', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric'
-            });
-            
-            historyItem.innerHTML = `
-              <div class="history-details">
-                <div class="history-amount">₹${recharge.amount.toLocaleString('en-IN')}</div>
-                <div class="history-date">${formattedDate}</div>
-              </div>
-              <div class="history-status ${recharge.status === 'approved' ? 'status-approved' : recharge.status === 'rejected' ? 'status-rejected' : 'status-pending'}">
-                ${recharge.status.charAt(0).toUpperCase() + recharge.status.slice(1)}
-              </div>
-            `;
-            
-            rechargeHistory.appendChild(historyItem);
-          });
-        })
-        .catch(error => {
-          console.error('Error loading recharge history:', error);
-          rechargeHistory.innerHTML = '<p>Error loading history. Please try again later.</p>';
-        });
     }
     
     // Show notification
