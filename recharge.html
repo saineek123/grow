@@ -813,338 +813,276 @@
       </div>
     </div>
   </div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+  authDomain: "grow-3e3a1.firebaseapp.com",
+  databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+  projectId: "grow-3e3a1",
+  storageBucket: "grow-3e3a1.appspot.com",
+  messagingSenderId: "285304522946",
+  appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+};
 
-  <script>
-   const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.appspot.com",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b"
-    };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+// DOM Elements
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
+const step1Indicator = document.getElementById('step1-indicator');
+const step2Indicator = document.getElementById('step2-indicator');
+const step3Indicator = document.getElementById('step3-indicator');
 
-    // DOM elements
-    const step1 = document.getElementById('step1');
-    const step2 = document.getElementById('step2');
-    const step3 = document.getElementById('step3');
-    const step1Indicator = document.getElementById('step1-indicator');
-    const step2Indicator = document.getElementById('step2-indicator');
-    const step3Indicator = document.getElementById('step3-indicator');
-    
-    const amountInput = document.getElementById('amount');
-    const amountOptions = document.querySelectorAll('.amount-option');
-    const utrInput = document.getElementById('utr');
-    const fileInput = document.getElementById('fileInput');
-    const fileUploadArea = document.getElementById('fileUploadArea');
-    const fileName = document.getElementById('fileName');
-    const noteInput = document.getElementById('note');
-    
-    const nextStep1Btn = document.getElementById('nextStep1');
-    const prevStep2Btn = document.getElementById('prevStep2');
-    const submitRechargeBtn = document.getElementById('submitRecharge');
-    const newRechargeBtn = document.getElementById('newRecharge');
-    const goToDashboardBtn = document.getElementById('goToDashboard');
-    const cancelBtn = document.getElementById('cancelBtn');
-    
-    const confirmationId = document.getElementById('confirmation-id');
-    const confirmationAmount = document.getElementById('confirmation-amount');
-    const confirmationUtr = document.getElementById('confirmation-utr');
-    const confirmationDate = document.getElementById('confirmation-date');
-    const confirmationBonus = document.getElementById('confirmation-bonus');
-    
-    // Variables
-    let selectedAmount = 500;
-    let userId = "user_" + Math.random().toString(36).substr(2, 9); // Demo user ID
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-      // Amount selection
-      amountOptions.forEach(option => {
-        option.addEventListener('click', function() {
-          amountOptions.forEach(opt => opt.classList.remove('selected'));
-          this.classList.add('selected');
-          
-          selectedAmount = parseInt(this.dataset.amount);
-          amountInput.value = selectedAmount;
-        });
-      });
-      
-      // Amount input change
-      amountInput.addEventListener('input', function() {
-        selectedAmount = parseInt(this.value) || 0;
-        amountOptions.forEach(opt => opt.classList.remove('selected'));
-      });
-      
-      // File upload handling
-      fileUploadArea.addEventListener('click', function() {
-        fileInput.click();
-      });
-      
-      fileInput.addEventListener('change', function() {
-        if (this.files.length > 0) {
-          const file = this.files[0];
-          fileName.innerHTML = `<i class="fas fa-file"></i> ${file.name}`;
-          fileUploadArea.style.borderColor = '#f9a825';
-          fileUploadArea.style.backgroundColor = 'rgba(249, 168, 37, 0.1)';
-        } else {
-          fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
-          fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-          fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
-        }
-      });
-      
-      // Step navigation
-      nextStep1Btn.addEventListener('click', goToStep2);
-      prevStep2Btn.addEventListener('click', goToStep1);
-      submitRechargeBtn.addEventListener('click', submitRecharge);
-      newRechargeBtn.addEventListener('click', resetForm);
-      goToDashboardBtn.addEventListener('click', () => window.location.href = 'index.html');
-      cancelBtn.addEventListener('click', () => window.location.href = 'index.html');
-      
-      // Initialize with ₹500 selected
-      amountOptions[0].classList.add('selected');
-      
-      // Load recharge history
-      loadRechargeHistory();
+const amountInput = document.getElementById('amount');
+const amountOptions = document.querySelectorAll('.amount-option');
+const utrInput = document.getElementById('utr');
+const fileInput = document.getElementById('fileInput');
+const fileUploadArea = document.getElementById('fileUploadArea');
+const fileName = document.getElementById('fileName');
+const noteInput = document.getElementById('note');
+
+const nextStep1Btn = document.getElementById('nextStep1');
+const prevStep2Btn = document.getElementById('prevStep2');
+const submitRechargeBtn = document.getElementById('submitRecharge');
+const newRechargeBtn = document.getElementById('newRecharge');
+const goToDashboardBtn = document.getElementById('goToDashboard');
+const cancelBtn = document.getElementById('cancelBtn');
+
+const confirmationId = document.getElementById('confirmation-id');
+const confirmationAmount = document.getElementById('confirmation-amount');
+const confirmationUtr = document.getElementById('confirmation-utr');
+const confirmationDate = document.getElementById('confirmation-date');
+const confirmationBonus = document.getElementById('confirmation-bonus');
+
+let selectedAmount = 500;
+let userId = "user_" + Math.random().toString(36).substr(2, 9); // Replace with auth.uid
+
+document.addEventListener('DOMContentLoaded', () => {
+  amountOptions.forEach(option => {
+    option.addEventListener('click', function () {
+      amountOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedAmount = parseInt(this.dataset.amount);
+      amountInput.value = selectedAmount;
     });
-    
-    // Navigation functions
-    function goToStep1() {
-      step1.classList.add('active');
-      step2.classList.remove('active');
-      step1Indicator.classList.add('active');
-      step2Indicator.classList.remove('active');
-    }
-    
-    function goToStep2() {
-      if (selectedAmount < 100) {
-        showNotification('❌ Minimum recharge amount is ₹100', 'error');
-        return;
-      }
-      
-      step1.classList.remove('active');
-      step2.classList.add('active');
-      step1Indicator.classList.remove('active');
-      step2Indicator.classList.add('active');
-    }
-    
-    // Submit recharge request
-    async function submitRecharge() {
-      // Validation
-      const utr = utrInput.value.trim();
-      
-      if (!utr) {
-        showNotification('❌ Please enter UTR number', 'error');
-        return;
-      }
-      
-      if (!fileInput.files[0]) {
-        showNotification('❌ Please upload UTR proof', 'error');
-        return;
-      }
-      
-      // Disable button to prevent multiple submissions
-      submitRechargeBtn.disabled = true;
-      submitRechargeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-      
-      // Calculate bonus
-      let bonus = 0;
-      if (selectedAmount >= 1000 && selectedAmount < 2000) bonus = 50;
-      else if (selectedAmount >= 2000 && selectedAmount < 5000) bonus = 150;
-      else if (selectedAmount >= 5000 && selectedAmount < 10000) bonus = 500;
-      else if (selectedAmount >= 10000) bonus = 1200;
-      
-      // Generate transaction ID
-      const transactionId = 'TX' + Date.now();
-      
-      try {
-        // Upload file to Firebase Storage
-        const file = fileInput.files[0];
-        const storageRef = storage.ref(`recharge-proofs/${userId}/${transactionId}/${file.name}`);
-        const snapshot = await storageRef.put(file);
-        
-        // Get download URL
-        const downloadURL = await snapshot.ref.getDownloadURL();
-        
-        // Prepare recharge data
-        const rechargeData = {
-          userId: userId,
-          amount: selectedAmount,
-          bonus: bonus,
-          utr: utr,
-          screenshotURL: downloadURL,
-          note: noteInput.value.trim(),
-          status: "pending",
-          transactionId: transactionId,
-          timestamp: new Date(),
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        // Save to Firestore
-        await db.collection("rechargeRequests").add(rechargeData);
-        
-        // Update confirmation details
-        confirmationId.textContent = transactionId;
-        confirmationAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}.00`;
-        confirmationBonus.textContent = `₹${bonus.toLocaleString('en-IN')}.00`;
-        confirmationUtr.textContent = utr;
-        confirmationDate.textContent = new Date().toLocaleString('en-IN', { 
-          day: 'numeric', 
-          month: 'short', 
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }) + ' IST';
-        
-        // Show confirmation
-        step2.classList.remove('active');
-        step3.classList.add('active');
-        step2Indicator.classList.remove('active');
-        step3Indicator.classList.add('active');
-        
-        showNotification('✅ Recharge request submitted successfully!', 'success');
-        
-        // Reload history
-        loadRechargeHistory();
-        
-      } catch (error) {
-        console.error("Error submitting recharge: ", error);
-        showNotification(`❌ Error: ${error.message}`, 'error');
-      } finally {
-        // Reset button
-        submitRechargeBtn.disabled = false;
-        submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
-      }
-    }
-    
-    // Load recharge history from Firebase
-    async function loadRechargeHistory() {
-      const historyContainer = document.getElementById('rechargeHistory');
-      historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
-      
-      try {
-        const querySnapshot = await db.collection("rechargeRequests")
-          .where("userId", "==", userId)
-          .orderBy("createdAt", "desc")
-          .limit(5)
-          .get();
-        
-        if (querySnapshot.empty) {
-          historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
-          return;
-        }
-        
-        historyContainer.innerHTML = '';
-        
-        querySnapshot.forEach(doc => {
-          const data = doc.data();
-          const historyItem = document.createElement('div');
-          historyItem.className = `history-item ${data.status === 'approved' ? 'approved' : data.status === 'rejected' ? 'rejected' : ''}`;
-          
-          const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
-          const formattedDate = date.toLocaleDateString('en-IN', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-          });
-          
-          let statusClass = 'status-pending';
-          let statusText = 'Pending';
-          
-          if (data.status === 'approved') {
-            statusClass = 'status-approved';
-            statusText = 'Approved';
-          } else if (data.status === 'rejected') {
-            statusClass = 'status-rejected';
-            statusText = 'Rejected';
-          }
-          
-          historyItem.innerHTML = `
-            <div class="history-details">
-              <div class="history-amount">₹${data.amount.toLocaleString('en-IN')}</div>
-              <div class="history-date">${formattedDate}</div>
-            </div>
-            <div class="history-status ${statusClass}">
-              ${statusText}
-            </div>
-          `;
-          
-          historyContainer.appendChild(historyItem);
-        });
-      } catch (error) {
-        console.error("Error loading history: ", error);
-        historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
-      }
-    }
-    
-    // Reset form
-    function resetForm() {
-      // Reset form
-      amountInput.value = '500';
-      selectedAmount = 500;
-      utrInput.value = '';
-      noteInput.value = '';
-      fileInput.value = '';
+  });
+
+  amountInput.addEventListener('input', function () {
+    selectedAmount = parseInt(this.value) || 0;
+    amountOptions.forEach(opt => opt.classList.remove('selected'));
+  });
+
+  fileUploadArea.addEventListener('click', function () {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function () {
+    if (this.files.length > 0) {
+      const file = this.files[0];
+      fileName.innerHTML = `<i class="fas fa-file"></i> ${file.name}`;
+      fileUploadArea.style.borderColor = '#f9a825';
+      fileUploadArea.style.backgroundColor = 'rgba(249, 168, 37, 0.1)';
+    } else {
       fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
       fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
       fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
-      
-      // Remove selections
-      amountOptions.forEach(opt => opt.classList.remove('selected'));
-      amountOptions[0].classList.add('selected');
-      
-      // Go back to step 1
-      step3.classList.remove('active');
-      step1.classList.add('active');
-      step3Indicator.classList.remove('active');
-      step1Indicator.classList.add('active');
     }
-    
-    // Show notification
-    function showNotification(message, type = 'info') {
-      // Remove existing notification if any
-      const existingNotification = document.querySelector('.notification');
-      if (existingNotification) {
-        existingNotification.remove();
+  });
+
+  nextStep1Btn.addEventListener('click', goToStep2);
+  prevStep2Btn.addEventListener('click', goToStep1);
+  submitRechargeBtn.addEventListener('click', submitRecharge);
+  newRechargeBtn.addEventListener('click', resetForm);
+  goToDashboardBtn.addEventListener('click', () => window.location.href = 'index.html');
+  cancelBtn.addEventListener('click', () => window.location.href = 'index.html');
+
+  amountOptions[0].classList.add('selected');
+  loadRechargeHistory();
+});
+
+function goToStep1() {
+  step1.classList.add('active');
+  step2.classList.remove('active');
+  step1Indicator.classList.add('active');
+  step2Indicator.classList.remove('active');
+}
+
+function goToStep2() {
+  if (selectedAmount < 100) {
+    showNotification('❌ Minimum recharge amount is ₹100', 'error');
+    return;
+  }
+
+  step1.classList.remove('active');
+  step2.classList.add('active');
+  step1Indicator.classList.remove('active');
+  step2Indicator.classList.add('active');
+}
+
+async function submitRecharge() {
+  const utr = utrInput.value.trim();
+  if (!utr) {
+    showNotification('❌ Please enter UTR number', 'error');
+    return;
+  }
+  if (!fileInput.files[0]) {
+    showNotification('❌ Please upload UTR proof (only for reference)', 'error');
+    return;
+  }
+
+  submitRechargeBtn.disabled = true;
+  submitRechargeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+  let bonus = 0;
+  if (selectedAmount >= 1000 && selectedAmount < 2000) bonus = 50;
+  else if (selectedAmount >= 2000 && selectedAmount < 5000) bonus = 150;
+  else if (selectedAmount >= 5000 && selectedAmount < 10000) bonus = 500;
+  else if (selectedAmount >= 10000) bonus = 1200;
+
+  const transactionId = 'TX' + Date.now();
+
+  try {
+    const rechargeData = {
+      userId: userId,
+      amount: selectedAmount,
+      bonus: bonus,
+      utr: utr,
+      note: noteInput.value.trim(),
+      status: "pending",
+      transactionId: transactionId,
+      timestamp: new Date(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    await db.collection("rechargeRequests").add(rechargeData);
+
+    confirmationId.textContent = transactionId;
+    confirmationAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}.00`;
+    confirmationBonus.textContent = `₹${bonus.toLocaleString('en-IN')}.00`;
+    confirmationUtr.textContent = utr;
+    confirmationDate.textContent = new Date().toLocaleString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) + ' IST';
+
+    step2.classList.remove('active');
+    step3.classList.add('active');
+    step2Indicator.classList.remove('active');
+    step3Indicator.classList.add('active');
+
+    showNotification('✅ Recharge request submitted successfully!', 'success');
+    loadRechargeHistory();
+  } catch (error) {
+    console.error("Error:", error);
+    showNotification(`❌ Error: ${error.message}`, 'error');
+  } finally {
+    submitRechargeBtn.disabled = false;
+    submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+  }
+}
+
+async function loadRechargeHistory() {
+  const historyContainer = document.getElementById('rechargeHistory');
+  historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
+
+  try {
+    const querySnapshot = await db.collection("rechargeRequests")
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .limit(5)
+      .get();
+
+    if (querySnapshot.empty) {
+      historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
+      return;
+    }
+
+    historyContainer.innerHTML = '';
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      const historyItem = document.createElement('div');
+      historyItem.className = `history-item ${data.status}`;
+
+      const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
+      const formattedDate = date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+
+      let statusClass = 'status-pending';
+      let statusText = 'Pending';
+
+      if (data.status === 'approved') {
+        statusClass = 'status-approved';
+        statusText = 'Approved';
+      } else if (data.status === 'rejected') {
+        statusClass = 'status-rejected';
+        statusText = 'Rejected';
       }
-      
-      // Create notification element
-      const notification = document.createElement('div');
-      notification.className = `notification ${type === 'success' ? 'success' : type === 'error' ? 'error' : ''}`;
-      
-      // Add icon based on type
-      let icon = 'fas fa-info-circle';
-      if (type === 'success') icon = 'fas fa-check-circle';
-      if (type === 'error') icon = 'fas fa-exclamation-circle';
-      
-      notification.innerHTML = `
-        <i class="${icon}"></i>
-        <span>${message}</span>
+
+      historyItem.innerHTML = `
+        <div class="history-details">
+          <div class="history-amount">₹${data.amount.toLocaleString('en-IN')}</div>
+          <div class="history-date">${formattedDate}</div>
+        </div>
+        <div class="history-status ${statusClass}">
+          ${statusText}
+        </div>
       `;
-      
-      // Add to document
-      document.body.appendChild(notification);
-      
-      // Show notification
-      setTimeout(() => {
-        notification.classList.add('show');
-      }, 10);
-      
-      // Remove after 3 seconds
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          notification.remove();
-        }, 300);
-      }, 3000);
-    }
-  </script>
+
+      historyContainer.appendChild(historyItem);
+    });
+  } catch (error) {
+    console.error("History load error:", error);
+    historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
+  }
+}
+
+function resetForm() {
+  amountInput.value = '500';
+  selectedAmount = 500;
+  utrInput.value = '';
+  noteInput.value = '';
+  fileInput.value = '';
+  fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
+  fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+  fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
+  amountOptions.forEach(opt => opt.classList.remove('selected'));
+  amountOptions[0].classList.add('selected');
+  step3.classList.remove('active');
+  step1.classList.add('active');
+  step3Indicator.classList.remove('active');
+  step1Indicator.classList.add('active');
+}
+
+function showNotification(message, type = 'info') {
+  const existing = document.querySelector('.notification');
+  if (existing) existing.remove();
+
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+
+  let icon = 'fas fa-info-circle';
+  if (type === 'success') icon = 'fas fa-check-circle';
+  if (type === 'error') icon = 'fas fa-exclamation-circle';
+
+  notification.innerHTML = `<i class="${icon}"></i> <span>${message}</span>`;
+  document.body.appendChild(notification);
+
+  setTimeout(() => notification.classList.add('show'), 10);
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+</script>
+
 </body>
 </html>
