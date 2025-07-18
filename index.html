@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WealthGrow | Investment Platform</title>
+    <title>WealthGrow | Real Investment Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -559,6 +562,122 @@
             font-size: 12px;
             color: #94a3b8;
         }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #60a5fa;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Investment Modal */
+        .investment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .investment-content {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+        }
+        
+        .investment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .investment-header h2 {
+            color: #f8fafc;
+            font-size: 24px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .investment-details {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .investment-details div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .investment-details div:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            color: #94a3b8;
+        }
+        
+        .detail-value {
+            color: #f8fafc;
+            font-weight: 500;
+        }
+        
+        .investment-form {
+            margin-bottom: 25px;
+        }
+        
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(to right, #4ade80, #22c55e);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 300;
+            display: none;
+            animation: fadeInOut 3s ease-in-out;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; top: 0; }
+            10% { opacity: 1; top: 20px; }
+            90% { opacity: 1; top: 20px; }
+            100% { opacity: 0; top: 0; }
+        }
     </style>
 </head>
 <body>
@@ -584,23 +703,31 @@
         </div>
     </nav>
     
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i> Investment successful!
+    </div>
+    
     <!-- Main Content -->
     <div class="container">
+        <!-- Loading Spinner -->
+        <div class="spinner" id="loadingSpinner"></div>
+        
         <!-- User Header -->
         <div class="header">
             <div class="user-info">
-                <div class="avatar">JD</div>
+                <div class="avatar" id="userAvatar">JD</div>
                 <div class="user-details">
-                    <h2>John Doe</h2>
-                    <p>Member ID: INV-2024-98765 <span class="level-badge">VIP Level 3</span></p>
+                    <h2 id="userName">John Doe</h2>
+                    <p>Member ID: <span id="memberId">INV-2024-98765</span> <span class="level-badge" id="vipLevel">VIP Level 3</span></p>
                 </div>
             </div>
             <div class="header-right">
                 <div class="notification-icon" onclick="location.href='notifications.html'">
                     <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
+                    <span class="badge" id="notificationBadge">3</span>
                 </div>
-                <div class="notification-icon" onclick="location.href='settings.html'">
+                <div class="notification-icon" onclick="showSettings()">
                     <i class="fas fa-cog"></i>
                 </div>
             </div>
@@ -610,15 +737,15 @@
         <div class="wallet-summary">
             <div class="wallet-card">
                 <div class="wallet-title">Available Balance</div>
-                <div class="wallet-amount">$5,420.50</div>
-                <div class="wallet-change positive">
+                <div class="wallet-amount" id="availableBalance">$5,420.50</div>
+                <div class="wallet-change positive" id="dailyChange">
                     <i class="fas fa-arrow-up"></i> $240.50 today
                 </div>
             </div>
             <div class="wallet-card">
                 <div class="wallet-title">Invested</div>
-                <div class="wallet-amount">$3,250.00</div>
-                <div class="wallet-change positive">
+                <div class="wallet-amount" id="investedAmount">$3,250.00</div>
+                <div class="wallet-change positive" id="investmentChange">
                     <i class="fas fa-chart-line"></i> +12.5%
                 </div>
             </div>
@@ -626,19 +753,19 @@
         
         <!-- Quick Actions -->
         <div class="quick-actions">
-            <div class="action-button" onclick="location.href='deposit.html'">
+            <div class="action-button" onclick="showDepositModal()">
                 <i class="fas fa-plus-circle"></i>
                 <span>Deposit</span>
             </div>
-            <div class="action-button" onclick="location.href='withdraw.html'">
+            <div class="action-button" onclick="showWithdrawModal()">
                 <i class="fas fa-money-bill-wave"></i>
                 <span>Withdraw</span>
             </div>
-            <div class="action-button" onclick="location.href='transfer.html'">
+            <div class="action-button" onclick="showTransferModal()">
                 <i class="fas fa-exchange-alt"></i>
                 <span>Transfer</span>
             </div>
-            <div class="action-button" onclick="location.href='history.html'">
+            <div class="action-button" onclick="showTransactionHistory()">
                 <i class="fas fa-history"></i>
                 <span>History</span>
             </div>
@@ -648,14 +775,14 @@
         <div class="stats-section">
             <div class="stat-card">
                 <div class="stat-card-title">Total Earnings</div>
-                <div class="stat-card-value">$8,240.50</div>
+                <div class="stat-card-value" id="totalEarnings">$8,240.50</div>
                 <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" style="width: 75%;"></div>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-card-title">Referral Earnings</div>
-                <div class="stat-card-value">$1,520.00</div>
+                <div class="stat-card-value" id="referralEarnings">$1,520.00</div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 40%;"></div>
                 </div>
@@ -665,18 +792,18 @@
         <!-- Balance Card -->
         <div class="balance-card">
             <div class="balance-title">Total Portfolio Value</div>
-            <div class="balance-amount">$8,420.50</div>
+            <div class="balance-amount" id="portfolioValue">$8,420.50</div>
             <div class="balance-stats">
                 <div class="stat-item">
-                    <div class="stat-value">+$1,240</div>
+                    <div class="stat-value" id="earnedAmount">+$1,240</div>
                     <div class="stat-label">Earned</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">$2,850</div>
+                    <div class="stat-value" id="totalInvested">$2,850</div>
                     <div class="stat-label">Invested</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">+42%</div>
+                    <div class="stat-value" id="growthPercent">+42%</div>
                     <div class="stat-label">Growth</div>
                 </div>
             </div>
@@ -688,45 +815,8 @@
             <a href="#" onclick="viewAllProducts()">View All <i class="fas fa-arrow-right"></i></a>
         </div>
         
-        <div class="products-grid">
-            <!-- Special Offer -->
-            <div class="product-card">
-                <div class="product-badge">Limited Time</div>
-                <div class="product-title">Special Offer</div>
-                <div class="product-income">
-                    <div class="income-item">
-                        <div class="income-value">2142</div>
-                        <div class="income-label">Daily Income</div>
-                    </div>
-                    <div class="income-item">
-                        <div class="income-value">2 Days</div>
-                        <div class="income-label">Duration</div>
-                    </div>
-                </div>
-                <div class="product-footer">
-                    <div class="product-price">$80</div>
-                    <button class="product-button" onclick="invest('Special Offer')">Invest</button>
-                </div>
-            </div>
-            
-            <!-- Product A -->
-            <div class="product-card">
-                <div class="product-title">Product A</div>
-                <div class="product-income">
-                    <div class="income-item">
-                        <div class="income-value">271</div>
-                        <div class="income-label">Daily Income</div>
-                    </div>
-                    <div class="income-item">
-                        <div class="income-value">30 Days</div>
-                        <div class="income-label">Duration</div>
-                    </div>
-                </div>
-                <div class="product-footer">
-                    <div class="product-price">$0</div>
-                    <button class="product-button" onclick="invest('Product A')">Invest</button>
-                </div>
-            </div>
+        <div class="products-grid" id="productsContainer">
+            <!-- Products will be loaded dynamically -->
         </div>
         
         <!-- Recent Transactions -->
@@ -735,50 +825,8 @@
             <a href="#" onclick="viewAllTransactions()">View All <i class="fas fa-arrow-right"></i></a>
         </div>
         
-        <div class="transactions">
-            <div class="transaction-item">
-                <div class="transaction-icon">
-                    <i class="fas fa-arrow-down"></i>
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Investment: Special Offer</div>
-                    <div class="transaction-time">Today, 10:45 AM</div>
-                </div>
-                <div class="transaction-amount income">+$2142</div>
-            </div>
-            
-            <div class="transaction-item">
-                <div class="transaction-icon" style="background: rgba(248, 113, 113, 0.2);">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Withdrawal</div>
-                    <div class="transaction-time">Yesterday, 3:22 PM</div>
-                </div>
-                <div class="transaction-amount expense">-$500</div>
-            </div>
-            
-            <div class="transaction-item">
-                <div class="transaction-icon" style="background: rgba(74, 222, 128, 0.2);">
-                    <i class="fas fa-arrow-down"></i>
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Deposit</div>
-                    <div class="transaction-time">Yesterday, 10:15 AM</div>
-                </div>
-                <div class="transaction-amount income">+$1000</div>
-            </div>
-            
-            <div class="transaction-item">
-                <div class="transaction-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Referral Bonus</div>
-                    <div class="transaction-time">Dec 12, 10:15 AM</div>
-                </div>
-                <div class="transaction-amount income">+$120</div>
-            </div>
+        <div class="transactions" id="transactionsContainer">
+            <!-- Transactions will be loaded dynamically -->
         </div>
     </div>
     
@@ -809,60 +857,284 @@
         </div>
     </nav>
     
-    <script>
-        // Function to handle investment button clicks
-        function invest(product) {
-            alert(`You are investing in: ${product}\n\nThis is a demo - in a real app, this would open the investment screen.`);
-        }
-        
-        // Function to show quick actions
-        function showQuickActions() {
-            alert("Quick Actions Menu:\n\n• New Investment\n• Recharge Account\n• Withdraw Funds\n• Invite Friends");
-        }
-        
-        // Function to view all products
-        function viewAllProducts() {
-            alert("Showing all investment products");
-        }
-        
-        // Function to view all transactions
-        function viewAllTransactions() {
-            alert("Showing transaction history");
-        }
-        
-        // Add active state to navigation items
-        const navItems = document.querySelectorAll('.top-nav-item, .tab-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', function() {
-                // Remove active class from all items
-                navItems.forEach(i => i.classList.remove('active'));
-                // Add active class to clicked item
-                this.classList.add('active');
-            });
-        });
-        
-        // Update balance stats periodically
-        function updateStats() {
-            const earned = document.querySelector('.stat-value:nth-child(1)');
-            const invested = document.querySelector('.stat-value:nth-child(2)');
-            const growth = document.querySelector('.stat-value:nth-child(3)');
-            
-            // Simulate small changes
-            const change = (Math.random() * 10).toFixed(2);
-            earned.textContent = `+$${(1240 + parseFloat(change)).toFixed(2)}`;
-            
-            const investedChange = (Math.random() * 5).toFixed(2);
-            invested.textContent = `$${(2850 + parseFloat(investedChange)).toFixed(2)}`;
-            
-            const growthChange = (Math.random() * 0.5).toFixed(2);
-            growth.textContent = `+${(42 + parseFloat(growthChange)).toFixed(2)}%`;
-            
-            // Update every 30 seconds
-            setTimeout(updateStats, 30000);
-        }
-        
-        // Initialize stats update
-        updateStats();
-    </script>
+    <!-- Investment Modal -->
+    <div class="investment-modal" id="investmentModal">
+        <div class="investment-content">
+            <div class="investment-header">
+                <h2 id="investmentTitle">Special Offer</h2>
+                <button class="close-btn" onclick="closeInvestmentModal()">&times;</button>
+            </div>
+            <div class="investment-details">
+                <div>
+                    <span class="detail-label">Daily Income:</span>
+                    <span class="detail-value" id="modalDailyIncome">$2142</span>
+                </div>
+                <div>
+                    <span class="detail-label">Duration:</span>
+                    <span class="detail-value" id="modalDuration">2 Days</span>
+                </div>
+                <div>
+                    <span class="detail-label">Minimum Investment:</span>
+                    <span class="detail-value" id="modalMinInvestment">$80</span>
+                </div>
+                <div>
+                    <span class="detail-label">Expected Return:</span>
+                    <span class="detail-value" id="modalReturn">+15.2%</span>
+                </div>
+            </div>
+            <div class="investment-form">
+                <div class="form-group">
+                    <label for="investmentAmount">Investment Amount ($)</label>
+                    <input type="number" id="investmentAmount" placeholder="Enter amount" value="80">
+                </div>
+                <div class="error-message" id="investmentError"></div>
+                <button class="btn" id="investButton" onclick="confirmInvestment()">Confirm Investment</button>
+            </div>
+        </div>
+    </div>
+    
+  <script>
+  // Firebase configuration
+  const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const auth = firebase.auth();
+
+  let currentUser = null;
+  let currentUserData = null;
+  let currentProduct = null;
+
+  auth.onAuthStateChanged((user) => {
+      if (user) {
+          currentUser = user;
+          loadUserData(user.uid);
+          loadProducts();
+          loadTransactions(user.uid);
+      } else {
+          const localUID = localStorage.getItem("userId");
+          if (localUID) {
+              loadUserData(localUID);
+              loadProducts();
+              loadTransactions(localUID);
+          } else {
+              window.location.href = "login.html";
+          }
+      }
+  });
+
+  function loadUserData(uid) {
+      showLoading(true);
+      const userRef = db.ref("users/" + uid);
+      userRef.on("value", snap => {
+          const data = snap.val() || {};
+          currentUserData = data;
+
+          document.getElementById("userName").textContent = data.name || "No Name";
+          document.getElementById("memberId").textContent = data.memberId || "N/A";
+          document.getElementById("vipLevel").textContent = data.vipLevel || "VIP Level 1";
+          document.getElementById("userAvatar").textContent = getInitials(data.name || "JD");
+
+          document.getElementById("availableBalance").textContent = `$${(data.availableBalance || 0).toFixed(2)}`;
+          document.getElementById("investedAmount").textContent = `$${(data.invested || 0).toFixed(2)}`;
+          document.getElementById("dailyChange").innerHTML = `<i class="fas fa-arrow-up"></i> $${(data.dailyChange || 0).toFixed(2)} today`;
+          document.getElementById("investmentChange").innerHTML = `<i class="fas fa-chart-line"></i> +${(data.investmentChange || 0).toFixed(1)}%`;
+
+          document.getElementById("totalEarnings").textContent = `$${(data.totalEarnings || 0).toFixed(2)}`;
+          document.getElementById("referralEarnings").textContent = `$${(data.referralEarnings || 0).toFixed(2)}`;
+
+          document.getElementById("portfolioValue").textContent = `$${(data.portfolioValue || 0).toFixed(2)}`;
+          document.getElementById("earnedAmount").textContent = `+$${(data.earnedAmount || 0).toFixed(2)}`;
+          document.getElementById("totalInvested").textContent = `$${(data.totalInvested || 0).toFixed(2)}`;
+          document.getElementById("growthPercent").textContent = `+${(data.growthPercent || 0).toFixed(1)}%`;
+
+          document.getElementById("notificationBadge").textContent = data.notifications || 0;
+
+          showLoading(false);
+      });
+  }
+
+  function getInitials(name) {
+      if (!name) return "JD";
+      const names = name.split(" ");
+      return names.map(n => n[0]).join("").toUpperCase().substring(0, 2);
+  }
+
+  function loadProducts() {
+      const productsRef = db.ref("products");
+      productsRef.on("value", snap => {
+          const products = snap.val() || {};
+          const container = document.getElementById("productsContainer");
+          container.innerHTML = '';
+          let count = 0;
+          for (const key in products) {
+              if (count >= 2) break;
+              const product = products[key];
+              const card = document.createElement('div');
+              card.className = 'product-card';
+              card.innerHTML = `
+                  ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                  <div class="product-title">${product.name}</div>
+                  <div class="product-income">
+                      <div class="income-item">
+                          <div class="income-value">${product.dailyIncome}</div>
+                          <div class="income-label">Daily Income</div>
+                      </div>
+                      <div class="income-item">
+                          <div class="income-value">${product.duration}</div>
+                          <div class="income-label">Duration</div>
+                      </div>
+                  </div>
+                  <div class="product-footer">
+                      <div class="product-price">$${product.minInvestment}</div>
+                      <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
+                  </div>
+              `;
+              container.appendChild(card);
+              count++;
+          }
+      });
+  }
+
+  function loadTransactions(uid) {
+      const transactionsRef = db.ref("users/" + uid + "/transactions");
+      transactionsRef.on("value", snap => {
+          const transactions = snap.val() || {};
+          const container = document.getElementById("transactionsContainer");
+          container.innerHTML = '';
+          const sortedTransactions = Object.values(transactions).sort((a, b) => 
+              new Date(b.date) - new Date(a.date)
+          ).slice(0, 4);
+          sortedTransactions.forEach(transaction => {
+              const isIncome = transaction.type === "income";
+              const amountClass = isIncome ? 'income' : 'expense';
+              const amountSign = isIncome ? '+' : '-';
+              const absAmount = Math.abs(transaction.amount);
+
+              const now = new Date();
+              const transDate = new Date(transaction.date);
+              const isToday = transDate.toDateString() === now.toDateString();
+              const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
+
+              let dateString;
+              if (isToday) {
+                  dateString = `Today, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+              } else if (isYesterday) {
+                  dateString = `Yesterday, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+              } else {
+                  dateString = transDate.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+              }
+
+              const item = document.createElement('div');
+              item.className = 'transaction-item';
+              item.innerHTML = `
+                  <div class="transaction-icon" style="background: ${isIncome ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'}">
+                      <i class="fas ${transaction.icon || 'fa-exchange-alt'}"></i>
+                  </div>
+                  <div class="transaction-details">
+                      <div class="transaction-title">${transaction.title}</div>
+                      <div class="transaction-time">${dateString}</div>
+                  </div>
+                  <div class="transaction-amount ${amountClass}">${amountSign}$${absAmount.toFixed(2)}</div>
+              `;
+              container.appendChild(item);
+          });
+      });
+  }
+
+  function showInvestmentModal(productId) {
+      const productsRef = db.ref("products/" + productId);
+      productsRef.once("value").then(snap => {
+          const product = snap.val();
+          if (!product) return;
+
+          currentProduct = product;
+          currentProduct.id = productId;
+
+          document.getElementById('investmentTitle').textContent = product.name;
+          document.getElementById('modalDailyIncome').textContent = `$${product.dailyIncome}`;
+          document.getElementById('modalDuration').textContent = product.duration;
+          document.getElementById('modalMinInvestment').textContent = `$${product.minInvestment}`;
+          document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
+          document.getElementById('investmentAmount').value = product.minInvestment;
+
+          const investButton = document.getElementById('investButton');
+          investButton.textContent = product.minInvestment > 0 ? `Invest $${product.minInvestment}` : 'Start Free Trial';
+
+          investmentModal.style.display = 'flex';
+      });
+  }
+
+  function closeInvestmentModal() {
+      investmentModal.style.display = 'none';
+      document.getElementById('investmentError').style.display = 'none';
+  }
+
+  function confirmInvestment() {
+      if (!currentUser || !currentUserData || !currentProduct) return;
+      const amountInput = document.getElementById('investmentAmount');
+      const amount = parseFloat(amountInput.value);
+      const errorElement = document.getElementById('investmentError');
+      if (!amount || amount <= 0) {
+          errorElement.textContent = 'Please enter a valid investment amount';
+          errorElement.style.display = 'block';
+          return;
+      }
+
+      if (amount > currentUserData.availableBalance) {
+          errorElement.textContent = 'Insufficient funds. Please deposit more money.';
+          errorElement.style.display = 'block';
+          return;
+      }
+
+      showLoading(true);
+      const transactionId = 'trans' + new Date().getTime();
+      const transaction = {
+          title: `Investment: ${currentProduct.name}`,
+          amount: -amount,
+          type: "expense",
+          date: new Date().toISOString(),
+          icon: "fa-arrow-up"
+      };
+
+      const updates = {};
+      updates[`users/${currentUser.uid}/availableBalance`] = currentUserData.availableBalance - amount;
+      updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
+      updates[`users/${currentUser.uid}/totalInvested`] = (currentUserData.totalInvested || 0) + amount;
+      updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+      db.ref().update(updates).then(() => {
+          showLoading(false);
+          closeInvestmentModal();
+          showSuccessMessage("Investment successful!");
+          loadUserData(currentUser.uid);
+          loadTransactions(currentUser.uid);
+      }).catch(error => {
+          showLoading(false);
+          errorElement.textContent = 'Investment failed: ' + error.message;
+          errorElement.style.display = 'block';
+      });
+  }
+
+  function showSuccessMessage(message) {
+      const successElement = document.getElementById('successMessage');
+      successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      successElement.style.display = 'block';
+      setTimeout(() => {
+          successElement.style.display = 'none';
+      }, 3000);
+  }
+
+  function showLoading(show) {
+      document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+  }
+</script>
+
 </body>
 </html>
