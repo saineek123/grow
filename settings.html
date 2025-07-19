@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --card-border: #2d2d2d;
+      --text-light: #f5f5f5;
+      --text-gray: #b0b0b0;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --info: #2196f3;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 20px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--primary);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .back-btn:hover {
+      background: rgba(0, 188, 212, 0.2);
+      transform: translateX(-3px);
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .settings-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      margin-bottom: 24px;
+      border: 1px solid var(--card-border);
+    }
+
+    .settings-section {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .settings-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .section-title i {
+      width: 24px;
+      text-align: center;
+    }
+
+    .settings-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .settings-option:last-child {
+      border-bottom: none;
+    }
+    
+    .option-info {
+      flex: 1;
+    }
+    
+    .option-label {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .option-desc {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #888;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: rgba(0, 188, 212, 0.3);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+      background-color: var(--primary);
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .btn:hover {
+      background: rgba(0, 188, 212, 0.15);
+      border-color: rgba(0, 188, 212, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 188, 212, 0.1);
+    }
+    
+    .btn i {
+      font-size: 1.2rem;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+      font-weight: 700;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+    }
+    
+    .btn-logout {
+      background: rgba(244, 67, 54, 0.15);
+      border-color: rgba(244, 67, 54, 0.2);
+      color: #ff8a80;
+    }
+    
+    .btn-logout:hover {
+      background: rgba(244, 67, 54, 0.25);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+    }
+    
+    .btn-delete {
+      background: rgba(244, 67, 54, 0.15);
+      border-color: rgba(244, 67, 54, 0.2);
+      color: #ff8a80;
+    }
+    
+    .btn-delete:hover {
+      background: rgba(244, 67, 54, 0.25);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+    }
+    
+    .btn-warning {
+      background: rgba(255, 152, 0, 0.15);
+      border-color: rgba(255, 152, 0, 0.2);
+      color: #ffcc80;
+    }
+    
+    .btn-warning:hover {
+      background: rgba(255, 152, 0, 0.25);
+      box-shadow: 0 4px 12px rgba(255, 152, 0, 0.1);
+    }
+    
+    .language-select {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text-light);
+      padding: 10px 15px;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+    
+    .language-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .theme-options {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .theme-option {
+      flex: 1;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .theme-option:hover {
+      background: rgba(0, 188, 212, 0.15);
+      border-color: rgba(0, 188, 212, 0.3);
+    }
+    
+    .theme-option.active {
+      background: rgba(0, 188, 212, 0.3);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.5);
+    }
+    
+    .theme-option i {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .dark-theme i {
+      color: var(--primary);
+    }
+    
+    .light-theme i {
+      color: #ffcc00;
+    }
+    
+    .system-theme i {
+      color: #9c27b0;
+    }
+    
+    .theme-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .security-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+    
+    .security-status.warning {
+      background: rgba(255, 152, 0, 0.1);
+      border: 1px solid rgba(255, 152, 0, 0.2);
+    }
+    
+    .security-status i {
+      color: var(--success);
+      font-size: 1.2rem;
+    }
+    
+    .security-status.warning i {
+      color: var(--warning);
+    }
+    
+    .security-text {
+      font-size: 0.9rem;
+    }
+    
+    .security-text strong {
+      color: var(--success);
+    }
+    
+    .security-status.warning strong {
+      color: var(--warning);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-header {
+      background: linear-gradient(90deg, #006064, #00838f);
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .modal-text {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .modal-actions button {
+      flex: 1;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(244, 67, 54, 0.3);
+    }
+    
+    @media (max-width: 600px) {
+      .theme-options {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .container {
+        padding: 0 12px;
+      }
+      
+      .settings-section {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-btn" onclick="window.history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1><i class="fas fa-cog"></i> Account Settings</h1>
+    <div style="width: 40px;"></div>
+  </header>
+
+  <div class="container">
+    <div class="settings-card">
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-bell"></i> Notifications</h3>
+        
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-label">App Notifications</div>
+            <div class="option-desc">Receive app notifications</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-label">Email Notifications</div>
+            <div class="option-desc">Get updates via email</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-label">SMS Notifications</div>
+            <div class="option-desc">Get updates via SMS</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-lock"></i> Security</h3>
+        
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-label">Two-Factor Authentication</div>
+            <div class="option-desc">Add an extra layer of security</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="security-status">
+          <i class="fas fa-shield-alt"></i>
+          <div class="security-text">
+            Your account security is <strong>Good</strong>. 
+            Enable two-factor authentication for stronger security.
+          </div>
+        </div>
+        
+        <button class="btn" onclick="window.location.href='change-password.html'">
+          <i class="fas fa-key"></i> Change Password
+        </button>
+        
+        <button class="btn" onclick="window.location.href='security-activity.html'">
+          <i class="fas fa-history"></i> Security Activity
+        </button>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-palette"></i> Theme</h3>
+        
+        <div class="theme-options">
+          <div class="theme-option dark-theme active">
+            <i class="fas fa-moon"></i>
+            <div class="theme-name">Dark</div>
+          </div>
+          
+          <div class="theme-option light-theme">
+            <i class="fas fa-sun"></i>
+            <div class="theme-name">Light</div>
+          </div>
+          
+          <div class="theme-option system-theme">
+            <i class="fas fa-desktop"></i>
+            <div class="theme-name">System</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-globe"></i> Language</h3>
+        
+        <select class="language-select">
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+        </select>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-wallet"></i> Wallet Settings</h3>
+        
+        <button class="btn" onclick="window.location.href='withdrawal-methods.html'">
+          <i class="fas fa-credit-card"></i> Withdrawal Methods
+        </button>
+        
+        <button class="btn" onclick="window.location.href='deposit-limits.html'">
+          <i class="fas fa-tachometer-alt"></i> Set Deposit Limits
+        </button>
+      </div>
+    </div>
+    
+    <div class="settings-card">
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-user-shield"></i> Privacy</h3>
+        
+        <button class="btn" onclick="window.location.href='privacy-policy.html'">
+          <i class="fas fa-file-contract"></i> Privacy Policy
+        </button>
+        
+        <button class="btn" onclick="window.location.href='data-request.html'">
+          <i class="fas fa-database"></i> Request My Data
+        </button>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="section-title"><i class="fas fa-info-circle"></i> About</h3>
+        
+        <button class="btn" onclick="window.location.href='terms.html'">
+          <i class="fas fa-file-alt"></i> Terms of Service
+        </button>
+        
+        <button class="btn" onclick="window.location.href='faq.html'">
+          <i class="fas fa-question-circle"></i> Help & FAQ
+        </button>
+        
+        <button class="btn" onclick="window.location.href='contact.html'">
+          <i class="fas fa-headset"></i> Contact Support
+        </button>
+      </div>
+    </div>
+    
+    <div class="settings-card">
+      <div class="settings-section">
+        <button class="btn btn-logout" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+        
+        <button class="btn btn-delete" onclick="showDeleteModal()">
+          <i class="fas fa-trash-alt"></i> Delete Account
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Delete Account Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Account</h3>
+      </div>
+      <div class="modal-body">
+        <div class="modal-text">
+          <p>Are you sure you want to delete your account?</p>
+          <p>This action is permanent and will delete all your data including wallet balance, transaction history, and personal information.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-warning" onclick="deleteAccount()">
+            <i class="fas fa-trash-alt"></i> Delete Account
+          </button>
+          <button class="btn" onclick="closeModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<script>
+   const firebaseConfig = {
+            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+            authDomain: "grow-3e3a1.firebaseapp.com",
+            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+            projectId: "grow-3e3a1",
+            storageBucket: "grow-3e3a1.appspot.com",
+            messagingSenderId: "285304522946",
+            appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+        };
+    // Theme selection
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        themeOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        // In a real app, you would save this preference
+      });
+    });
+    
+    // Modal functions
+    const deleteModal = document.getElementById('deleteModal');
+    
+    function showDeleteModal() {
+      deleteModal.style.display = 'flex';
+    }
+    
+    function closeModal() {
+      deleteModal.style.display = 'none';
+    }
+    
+    function deleteAccount() {
+      alert('Account deletion request sent. This process may take up to 48 hours.');
+      closeModal();
+      // In a real app, you would call your backend API here
+    }
+    
+    function logout() {
+      if (confirm("Are you sure you want to logout?")) {
+        // In a real app, you would implement actual logout
+        window.location.href = "login.html";
+      }
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === deleteModal) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

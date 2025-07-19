@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Match Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      color: #f0f0f0;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      background: rgba(30, 30, 46, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid #4e54c8;
+      overflow: hidden;
+    }
+    
+    .login-section {
+      padding: 50px 40px;
+      text-align: center;
+    }
+    
+    .admin-content {
+      display: none;
+      padding: 30px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #4e54c8;
+    }
+    
+    h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #ffd200;
+    }
+    
+    .logout-btn {
+      background: rgba(255, 69, 58, 0.2);
+      color: #ff453a;
+      padding: 8px 15px;
+      border: 1px solid rgba(255, 69, 58, 0.4);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255, 69, 58, 0.3);
+      box-shadow: 0 0 10px rgba(255, 69, 58, 0.3);
+    }
+    
+    .panel {
+      background: rgba(40, 40, 60, 0.7);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .panel-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #00e5ff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #a0a0e0;
+      font-weight: 500;
+    }
+    
+    select, input, button {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #4e54c8;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+    }
+    
+    input[type="datetime-local"] {
+      padding: 13px;
+    }
+    
+    select:focus, input:focus, button:focus {
+      outline: none;
+      border-color: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    }
+    
+    button {
+      padding: 14px 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, #4e54c8, #8f94fb);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(90deg, #ff416c, #ff4b2b);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+    }
+    
+    .btn-success {
+      background: linear-gradient(90deg, #00b09b, #96c93d);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4);
+    }
+    
+    .btn-warning {
+      background: linear-gradient(90deg, #ff8c00, #ffd700);
+      color: white;
+    }
+    
+    .btn-warning:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+    }
+    
+    .history-container {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    
+    .history-title {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #ffd200;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .history-list {
+      list-style: none;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    
+    .history-item {
+      background: rgba(30, 30, 46, 0.6);
+      border-left: 4px solid #4e54c8;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .history-item.win {
+      border-left-color: #00b09b;
+    }
+    
+    .history-item.live {
+      border-left-color: #ff416c;
+    }
+    
+    .history-item.upcoming {
+      border-left-color: #4e54c8;
+    }
+    
+    .history-item.cancel {
+      border-left-color: #ff416c;
+    }
+    
+    .history-item.locked {
+      border-left-color: #ffd700;
+    }
+    
+    .match-info {
+      flex-grow: 1;
+    }
+    
+    .match-result {
+      font-weight: bold;
+      color: #ffd200;
+      margin-left: 15px;
+      min-width: 120px;
+      text-align: right;
+    }
+    
+    .win .match-result {
+      color: #00b09b;
+    }
+    
+    .cancel .match-result {
+      color: #ff416c;
+    }
+    
+    .live .match-result {
+      color: #ff416c;
+      animation: pulse 1.5s infinite;
+    }
+    
+    .upcoming .match-result {
+      color: #8f94fb;
+    }
+    
+    .locked .match-result {
+      color: #ffd700;
+    }
+    
+    .notification {
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .success {
+      background: rgba(50, 205, 50, 0.15);
+      color: #32cd32;
+      border: 1px solid rgba(50, 205, 50, 0.3);
+    }
+    
+    .error {
+      background: rgba(255, 69, 58, 0.15);
+      color: #ff453a;
+      border: 1px solid rgba(255, 69, 58, 0.3);
+    }
+    
+    .warning {
+      background: rgba(255, 165, 0, 0.15);
+      color: #ffa500;
+      border: 1px solid rgba(255, 165, 0, 0.3);
+    }
+    
+    .login-title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #ffd200;
+      text-shadow: 0 0 10px rgba(255, 210, 0, 0.3);
+    }
+    
+    .login-input {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      margin: 15px auto;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #4e54c8;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      display: block;
+    }
+    
+    .login-btn {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      background: linear-gradient(90deg, #4e54c8, #8f94fb);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 20px auto;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(78, 84, 200, 0.6);
+    }
+    
+    .security-badge {
+      text-align: center;
+      margin-top: 30px;
+      padding: 10px;
+      background: rgba(0, 100, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 100, 255, 0.3);
+      color: #4e54c8;
+    }
+    
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .match-time-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .match-status-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .status-live {
+      background-color: #ff416c;
+      box-shadow: 0 0 8px #ff416c;
+      animation: pulse 1.5s infinite;
+    }
+    
+    .status-upcoming {
+      background-color: #4e54c8;
+      box-shadow: 0 0 8px #4e54c8;
+    }
+    
+    .timer-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .timer-btn {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    
+    .add-match-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .add-match-section .form-group:last-child {
+      grid-column: span 2;
+    }
+    
+    .match-timer {
+      text-align: center;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 1.2rem;
+  font-weight: bold;
+  color: #00e5ff;
+}
+
+.lock-indicator {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.lock-on {
+  background-color: rgba(255, 0, 0, 0.2);
+  color: #ff5555;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.lock-off {
+  background-color: rgba(0, 255, 0, 0.2);
+  color: #55ff55;
+  border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+@media (max-width: 992px) {
+  .match-time-section,
+  .match-status-section,
+  .add-match-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .add-match-section .form-group:last-child {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login Section -->
+    <div id="loginSection" class="login-section">
+      <h2 class="login-title"><i class="fas fa-lock"></i> Admin Authentication</h2>
+      <p style="color: #a0a0e0; margin-bottom: 25px;">Enter your admin credentials to access match management</p>
+      
+      <input type="email" id="loginEmail" class="login-input" placeholder="admin@example.com" value="admin@example.com">
+      <input type="password" id="loginPassword" class="login-input" placeholder="Password" value="password123">
+      
+      <div id="loginMessage" class="notification" style="display: none;"></div>
+      
+      <button id="loginBtn" class="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Login to Admin Panel
+      </button>
+      
+      <div class="security-badge">
+        <i class="fas fa-shield-alt"></i> Secured by Firebase Authentication
+      </div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div id="adminContent" class="admin-content">
+      <div class="header">
+        <h1><i class="fas fa-trophy"></i> Match Management Panel</h1>
+        <div class="user-info">
+          <span id="adminEmail">admin@example.com</span>
+          <button class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+      
+      <!-- Add New Match Panel -->
+      <div class="panel">
+        <h2 class="panel-title"><i class="fas fa-plus-circle"></i> Add New Match</h2>
+        
+        <div class="add-match-section">
+          <div class="form-group">
+            <label for="newTeam1">Team 1:</label>
+            <input type="text" id="newTeam1" placeholder="Enter Team 1" value="Mumbai Indians">
+          </div>
+          
+          <div class="form-group">
+            <label for="newTeam2">Team 2:</label>
+            <input type="text" id="newTeam2" placeholder="Enter Team 2" value="Chennai Super Kings">
+          </div>
+          
+          <div class="form-group">
+            <label for="newRate1">Team 1 Rate:</label>
+            <input type="number" id="newRate1" placeholder="Enter rate" step="0.01" min="1.01" value="1.85">
+          </div>
+          
+          <div class="form-group">
+            <label for="newRate2">Team 2 Rate:</label>
+            <input type="number" id="newRate2" placeholder="Enter rate" step="0.01" min="1.01" value="1.95">
+          </div>
+          
+          <div class="form-group">
+            <label for="newMatchTime">Match Time:</label>
+            <input type="datetime-local" id="newMatchTime">
+          </div>
+          
+          <div class="form-group">
+            <label for="newMatchStatus">Status:</label>
+            <select id="newMatchStatus">
+              <option value="upcoming">Upcoming</option>
+              <option value="live">Live</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn-success" id="addMatchBtn">
+          <i class="fas fa-plus"></i> Add Match
+        </button>
+      </div>
+      
+      <!-- Match Settings Panel -->
+      <div class="panel">
+        <h2 class="panel-title"><i class="fas fa-cog"></i> Match Configuration</h2>
+        
+        <div class="form-group">
+          <label for="matchSelect">Select Match:</label>
+          <select id="matchSelect">
+            <option value="">-- Select a Match --</option>
+            <!-- Options will be populated by JavaScript -->
+          </select>
+        </div>
+        
+        <div class="match-time-section">
+          <div class="form-group">
+            <label for="matchTime"><i class="fas fa-clock"></i> Match Time:</label>
+            <input type="datetime-local" id="matchTime">
+          </div>
+          
+          <div class="form-group">
+            <label for="matchStatus"><i class="fas fa-bolt"></i> Status:</label>
+            <select id="matchStatus">
+              <option value="upcoming">Upcoming</option>
+              <option value="live">Live</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="timer-control" id="timerControl" style="display: none;">
+          <div class="form-group">
+            <label for="timerInput"><i class="fas fa-stopwatch"></i> Timer (min):</label>
+            <input type="number" id="timerInput" min="1" max="120" value="90">
+          </div>
+          <button class="btn-primary timer-btn" id="startTimerBtn">
+            <i class="fas fa-play"></i> Start
+          </button>
+        </div>
+        
+        <div id="timerDisplay" class="match-timer" style="display: none;">
+          <i class="fas fa-clock"></i> Timer: <span id="timerValue">00:00</span>
+        </div>
+        
+        <button class="btn-warning" id="lockBetBtn">
+          <i class="fas fa-lock"></i> Lock Bets
+        </button>
+        
+        <button class="btn-primary" id="updateSettingsBtn">
+          <i class="fas fa-sync-alt"></i> Update Settings
+        </button>
+      </div>
+      
+      <!-- Match Results Panel -->
+      <div class="panel">
+        <h2 class="panel-title"><i class="fas fa-flag-checkered"></i> Set Match Result</h2>
+        
+        <div class="form-group">
+          <label for="result">Select Result:</label>
+          <select id="result">
+            <option value="">-- Select Result --</option>
+            <option value="team1">Team 1 Wins</option>
+            <option value="team2">Team 2 Wins</option>
+          </select>
+        </div>
+        
+        <div class="action-buttons">
+          <button class="btn-success" id="submitResultBtn">
+            <i class="fas fa-check-circle"></i> Submit Result
+          </button>
+          <button class="btn-danger" id="cancelMatchBtn">
+            <i class="fas fa-times-circle"></i> Cancel Match
+          </button>
+        </div>
+        
+        <div id="notification" class="notification" style="display: none;"></div>
+      </div>
+      
+      <!-- Match History -->
+      <div class="history-container">
+        <h3 class="history-title"><i class="fas fa-history"></i> Match History</h3>
+        <ul class="history-list" id="resultHistory">
+          <li class="history-item">
+            <div>Loading match history...</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+ 
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDTIIz6F0Dpxow48HiIyhn1qCISHcdubiQ",
+  authDomain: "betting-app-43800.firebaseapp.com",
+  databaseURL: "https://betting-app-43800-default-rtdb.firebaseio.com",
+  projectId: "betting-app-43800"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+let matchesMap = {};
+let currentAdminUID = null;
+
+// ✅ Show notification
+function showNotification(msg, type = 'success') {
+  const n = document.getElementById("notification");
+  n.textContent = msg;
+  n.className = "notification " + type;
+  n.style.display = "block";
+  setTimeout(() => n.style.display = "none", 4000);
+}
+
+// ✅ Load Matches (without result)
+function loadMatches() {
+  const matchSelect = document.getElementById("matchSelect");
+  matchSelect.innerHTML = '<option value="">-- Select Match --</option>';
+  db.ref("matches").once("value").then(snap => {
+    matchesMap = snap.val() || {};
+    for (const id in matchesMap) {
+      const m = matchesMap[id];
+      if (!m.result) {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = `${m.team1} vs ${m.team2}`;
+        matchSelect.appendChild(opt);
+      }
+    }
+  });
+}
+
+// ✅ Submit result and process payout
+document.getElementById("submitResultBtn").addEventListener("click", async () => {
+  const matchId = document.getElementById("matchSelect").value;
+  const resultValue = document.getElementById("result").value;
+
+  if (!matchId || !resultValue) return showNotification("⚠️ Select match and result", "error");
+
+  const match = matchesMap[matchId];
+  const winnerTeam = resultValue === "team1" ? match.team1 : match.team2;
+
+  try {
+    // ✅ Set result
+    await db.ref(`matches/${matchId}/result`).set(resultValue);
+
+    // ✅ Process payouts
+    const usersSnap = await db.ref("users").once("value");
+    const users = usersSnap.val() || {};
+
+    for (const uid in users) {
+      const bet = users[uid]?.bets?.[matchId];
+      if (!bet || bet.result !== "pending") continue;
+
+      const payout = bet.amount * bet.rate;
+      const updates = {};
+
+      if (bet.team === winnerTeam) {
+        updates[`users/${uid}/wallet/winning`] = (users[uid].wallet?.winning || 0) + payout;
+        updates[`users/${uid}/bets/${matchId}/result`] = "win";
+        updates[`users/${uid}/bets/${matchId}/return`] = payout;
+      } else {
+        updates[`users/${uid}/bets/${matchId}/result`] = "lose";
+        updates[`users/${uid}/bets/${matchId}/return`] = 0;
+      }
+
+      await db.ref().update(updates);
+    }
+
+    showNotification(`✅ Result submitted and payouts done for ${match.team1} vs ${match.team2}`);
+    loadMatches();
+  } catch (err) {
+    console.error(err);
+    showNotification("❌ Error: " + err.message, "error");
+  }
+});
+
+// ✅ Admin Login
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+
+  if (!email || !password) {
+    showNotification("⚠️ Enter both email & password", "error");
+    return;
+  }
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCred => {
+      const uid = userCred.user.uid;
+      db.ref("admins/" + uid).once("value").then(snap => {
+        if (snap.exists()) {
+          document.getElementById("loginSection").style.display = "none";
+          document.getElementById("adminContent").style.display = "block";
+          loadMatches();
+        } else {
+          showNotification("❌ Not an admin", "error");
+          auth.signOut();
+        }
+      });
+    })
+    .catch(err => {
+      showNotification("❌ Login Failed: " + err.message, "error");
+    });
+});
+
+// ✅ Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  auth.signOut().then(() => {
+    document.getElementById("adminContent").style.display = "none";
+    document.getElementById("loginSection").style.display = "block";
+    showNotification("Logged out", "success");
+  });
+});
+</script>
+
+
+</body>
+</html>
