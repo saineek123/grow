@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIG WIN - Premium Betting Experience</title>
+  <title>WealthGrow | Investment Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /*  * {
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -304,89 +304,6 @@
       box-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
     }
 
-    /* Games Grid */
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 30px 0 20px;
-      font-size: 1.5rem;
-      color: #00f7ff;
-    }
-
-    .section-title i {
-      font-size: 1.8rem;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: linear-gradient(145deg, rgba(31, 31, 47, 0.8), rgba(46, 46, 62, 0.8));
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 10px 25px rgba(0, 247, 255, 0.3);
-      border-color: rgba(0, 247, 255, 0.3);
-    }
-
-    .card-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00f7ff, #0077ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 15px;
-      font-size: 1.8rem;
-    }
-
-    .card h3 {
-      margin: 10px 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .card p {
-      font-size: 0.9rem;
-      color: #bbb;
-      margin-bottom: 15px;
-      flex-grow: 1;
-    }
-
-    .card-btn {
-      padding: 10px 20px;
-      background: linear-gradient(to right, #00f7ff, #0077ff);
-      border: none;
-      border-radius: 30px;
-      color: #000;
-      font-weight: bold;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: 0.3s ease;
-      width: 100%;
-    }
-
-    .card-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
-    }
-
     /* Logout Button */
     .logout {
       text-align: center;
@@ -478,8 +395,7 @@
       }
     }
 
-
-      .notification {
+    .notification {
       position: fixed;
       top: 10%;
       left: 50%;
@@ -542,7 +458,7 @@
 
     .btn-detail:hover {
       background: #ff2e30;
-    } /* ... (existing styles remain the same) ... */
+    }
     
     /* NEW STYLES FOR INVESTMENT SECTION */
     .products-grid {
@@ -660,12 +576,384 @@
         font-size: 18px;
       }
     }
+    
+    /* Modal Styles */
+    .investment-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    
+    .investment-content {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+    
+    .investment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+    
+    .investment-header h2 {
+      color: #f8fafc;
+      font-size: 24px;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    .investment-details {
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .investment-details div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    
+    .investment-details div:last-child {
+      margin-bottom: 0;
+    }
+    
+    .detail-label {
+      color: #94a3b8;
+    }
+    
+    .detail-value {
+      color: #f8fafc;
+      font-weight: 500;
+    }
+    
+    .investment-form {
+      margin-bottom: 25px;
+    }
+    
+    /* Success Message */
+    .success-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, #4ade80, #22c55e);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 300;
+      display: none;
+      animation: fadeInOut 3s ease-in-out;
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; top: 0; }
+      10% { opacity: 1; top: 20px; }
+      90% { opacity: 1; top: 20px; }
+      100% { opacity: 0; top: 0; }
+    }
+    
+    /* Form elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: rgba(30, 41, 59, 0.7);
+      color: #f8fafc;
+      font-size: 16px;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      background: linear-gradient(to right, #60a5fa, #93c5fd);
+      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    }
+    
+    .error-message {
+      color: #f87171;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .action-button {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 12px 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .action-button:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #60a5fa;
+    }
+    
+    .action-button i {
+      font-size: 20px;
+      color: #60a5fa;
+      margin-bottom: 5px;
+    }
+    
+    .action-button span {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid #60a5fa;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 30px auto;
+      display: none;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Transaction History Modal */
+    .transaction-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    
+    .transaction-content {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+    
+    .transaction-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+    
+    .transaction-header h2 {
+      color: #f8fafc;
+      font-size: 24px;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .tab-button {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: rgba(30, 41, 59, 0.7);
+      border: none;
+      color: #94a3b8;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-button.active {
+      background: rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+    }
+    
+    .tab-button:first-child {
+      border-radius: 10px 0 0 10px;
+    }
+    
+    .tab-button:last-child {
+      border-radius: 0 10px 10px 0;
+    }
+    
+    .transaction-list {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    
+    .transaction-list-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .transaction-list-icon {
+      background: rgba(56, 189, 248, 0.2);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 15px;
+    }
+    
+    .transaction-list-details {
+      flex: 1;
+    }
+    
+    .transaction-list-title {
+      font-weight: 600;
+      color: #f8fafc;
+    }
+    
+    .transaction-list-time {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    
+    .transaction-list-amount {
+      font-weight: 700;
+    }
+    
+    .income {
+      color: #4ade80;
+    }
+    
+    .expense {
+      color: #f87171;
+    }
   </style>
 </head>
 <body>
-  <!-- ... (existing header and drawer code remains the same) ... -->
-  
+  <div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
+
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>
+          <div class="user-name" id="drawerUserName">User</div>
+          <div class="user-balance">₹<span id="drawerBalance">0.00</span></div>
+        </div>
+      </div>
+    </div>
+    
+    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+    <a href="wallet.html"><i class="fas fa-credit-card"></i> Wallet</a>
+    <a href="recharge.html"><i class="fas fa-wallet"></i> Recharge</a>
+    <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
+    <a href="history.html"><i class="fas fa-history"></i> History</a>
+    <a href="account.html"><i class="fas fa-user-circle"></i> Account</a>
+    
+    <div class="divider"></div>
+    
+    <a href="support.html"><i class="fas fa-headset"></i> Support</a>
+    <a href="invite.html"><i class="fas fa-gift"></i> Invite Friends</a>
+    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+    
+    <div class="divider"></div>
+    
+    <a href="login.html" style="color: #ff7b87;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+
+  <header>
+    <div class="logo">
+      <i class="fas fa-chart-line"></i>
+      <span>WealthGrow</span>
+    </div>
+    
+    <div class="user-controls">
+      <div class="balance-display">
+        <i class="fas fa-wallet"></i>
+        <span>₹<span id="totalBalance">0.00</span></span>
+      </div>
+      <div class="menu-icon" onclick="toggleDrawer()">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Success Message -->
+  <div class="success-message" id="successMessage">
+    <i class="fas fa-check-circle"></i> Investment successful!
+  </div>
+
   <div class="main-content">
+    <!-- Loading Spinner -->
+    <div class="spinner" id="loadingSpinner"></div>
+    
     <!-- Welcome Banner -->
     <div class="welcome-banner">
       <h1>Welcome, <span id="userName">User</span>!</h1>
@@ -674,136 +962,187 @@
       <div class="wallet-breakdown">
         <div class="wallet-item">
           <i class="fas fa-credit-card"></i>
-          <div class="wallet-label">Recharge Balance</div>
-          <div class="wallet-amount">₹<span id="rechargeBalance">0.00</span></div>
+          <div class="wallet-label">Available Balance</div>
+          <div class="wallet-amount">₹<span id="availableBalance">0.00</span></div>
         </div>
         
         <div class="wallet-item">
           <i class="fas fa-gift"></i>
-          <div class="wallet-label">Bonus Balance</div>
-          <div class="wallet-amount">₹<span id="bonusBalance">0.00</span></div>
+          <div class="wallet-label">Invested Amount</div>
+          <div class="wallet-amount">₹<span id="investedAmount">0.00</span></div>
         </div>
         
         <div class="wallet-item">
           <i class="fas fa-trophy"></i>
-          <div class="wallet-label">Winning Balance</div>
-          <div class="wallet-amount">₹<span id="winningBalance">0.00</span></div>
+          <div class="wallet-label">Total Earnings</div>
+          <div class="wallet-amount">₹<span id="totalEarnings">0.00</span></div>
         </div>
       </div>
     </div>
     
-    <!-- Promo Banner -->
-    <div class="promo-banner">
-      <div class="promo-card">
-        <div class="promo-image">
-          <i class="fas fa-coins"></i>
-        </div>
-        <div class="promo-content">
-          <h3>Recharge Bonus</h3>
-          <p>Get 10% extra on every recharge</p>
-          <a href="recharge.html" class="btn-promo">Recharge Now</a>
-        </div>
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <div class="action-button" onclick="showDepositModal()">
+        <i class="fas fa-plus-circle"></i>
+        <span>Deposit</span>
       </div>
-      
-      <div class="promo-card">
-        <div class="promo-image">
-          <i class="fas fa-gift"></i>
-        </div>
-        <div class="promo-content">
-          <h3>Invite Friends</h3>
-          <p>Earn ₹100 for each friend</p>
-          <a href="invite.html" class="btn-promo">Invite Now</a>
-        </div>
+      <div class="action-button" onclick="showWithdrawModal()">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>Withdraw</span>
+      </div>
+      <div class="action-button" onclick="showTransferModal()">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Transfer</span>
+      </div>
+      <div class="action-button" onclick="showTransactionModal()">
+        <i class="fas fa-history"></i>
+        <span>History</span>
       </div>
     </div>
     
-    <!-- Investment Products (REPLACED POPULAR GAMES) -->
+    <!-- Investment Products -->
     <div class="section-title">
       <i class="fas fa-chart-line"></i>
       <h2>Investment Products</h2>
     </div>
     
     <div class="products-grid" id="productsContainer">
-      <div class="product-card">
-        <div class="product-badge">Hot</div>
-        <div class="product-title">Gold Investment</div>
-        <div class="product-income">
-          <div class="income-item">
-            <div class="income-value">₹850</div>
-            <div class="income-label">Daily Income</div>
-          </div>
-          <div class="income-item">
-            <div class="income-value">3 Days</div>
-            <div class="income-label">Duration</div>
-          </div>
-        </div>
-        <div class="product-footer">
-          <div class="product-price">₹500</div>
-          <button class="product-button">Invest</button>
-        </div>
-      </div>
-      
-      <div class="product-card">
-        <div class="product-badge">New</div>
-        <div class="product-title">Silver Package</div>
-        <div class="product-income">
-          <div class="income-item">
-            <div class="income-value">₹1200</div>
-            <div class="income-label">Daily Income</div>
-          </div>
-          <div class="income-item">
-            <div class="income-value">5 Days</div>
-            <div class="income-label">Duration</div>
-          </div>
-        </div>
-        <div class="product-footer">
-          <div class="product-price">₹800</div>
-          <button class="product-button">Invest</button>
-        </div>
-      </div>
-      
-      <div class="product-card">
-        <div class="product-badge">Premium</div>
-        <div class="product-title">Diamond Plan</div>
-        <div class="product-income">
-          <div class="income-item">
-            <div class="income-value">₹2500</div>
-            <div class="income-label">Daily Income</div>
-          </div>
-          <div class="income-item">
-            <div class="income-value">7 Days</div>
-            <div class="income-label">Duration</div>
-          </div>
-        </div>
-        <div class="product-footer">
-          <div class="product-price">₹1500</div>
-          <button class="product-button">Invest</button>
-        </div>
-      </div>
-      
-      <div class="product-card">
-        <div class="product-badge">Special</div>
-        <div class="product-title">Platinum Offer</div>
-        <div class="product-income">
-          <div class="income-item">
-            <div class="income-value">₹4500</div>
-            <div class="income-label">Daily Income</div>
-          </div>
-          <div class="income-item">
-            <div class="income-value">10 Days</div>
-            <div class="income-label">Duration</div>
-          </div>
-        </div>
-        <div class="product-footer">
-          <div class="product-price">₹2500</div>
-          <button class="product-button">Invest</button>
-        </div>
-      </div>
+      <!-- Products will be loaded dynamically -->
     </div>
     
     <!-- Logout Button -->
     <div class="logout">
       <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+  
+  <!-- Investment Modal -->
+  <div class="investment-modal" id="investmentModal">
+    <div class="investment-content">
+      <div class="investment-header">
+        <h2 id="investmentTitle">Special Offer</h2>
+        <button class="close-btn" onclick="closeInvestmentModal()">&times;</button>
+      </div>
+      <div class="investment-details">
+        <div>
+          <span class="detail-label">Daily Income:</span>
+          <span class="detail-value" id="modalDailyIncome">₹0</span>
+        </div>
+        <div>
+          <span class="detail-label">Duration:</span>
+          <span class="detail-value" id="modalDuration">0 Days</span>
+        </div>
+        <div>
+          <span class="detail-label">Minimum Investment:</span>
+          <span class="detail-value" id="modalMinInvestment">₹0</span>
+        </div>
+        <div>
+          <span class="detail-label">Expected Return:</span>
+          <span class="detail-value" id="modalReturn">+0%</span>
+        </div>
+      </div>
+      <div class="investment-form">
+        <div class="form-group">
+          <label for="investmentAmount">Investment Amount (₹)</label>
+          <input type="number" id="investmentAmount" placeholder="Enter amount">
+        </div>
+        <div class="error-message" id="investmentError"></div>
+        <button class="btn" id="investButton" onclick="confirmInvestment()">Confirm Investment</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Deposit Modal -->
+  <div class="investment-modal" id="depositModal">
+    <div class="investment-content">
+      <div class="investment-header">
+        <h2>Deposit Funds</h2>
+        <button class="close-btn" onclick="closeDepositModal()">&times;</button>
+      </div>
+      <div class="investment-form">
+        <div class="form-group">
+          <label for="depositAmount">Amount (₹)</label>
+          <input type="number" id="depositAmount" placeholder="Enter amount">
+        </div>
+        <div class="form-group">
+          <label for="depositMethod">Payment Method</label>
+          <select id="depositMethod">
+            <option value="credit_card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="crypto">Crypto Wallet</option>
+          </select>
+        </div>
+        <div class="error-message" id="depositError"></div>
+        <button class="btn" onclick="processDeposit()">Deposit Now</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Withdraw Modal -->
+  <div class="investment-modal" id="withdrawModal">
+    <div class="investment-content">
+      <div class="investment-header">
+        <h2>Withdraw Funds</h2>
+        <button class="close-btn" onclick="closeWithdrawModal()">&times;</button>
+      </div>
+      <div class="investment-form">
+        <div class="form-group">
+          <label for="withdrawAmount">Amount (₹)</label>
+          <input type="number" id="withdrawAmount" placeholder="Enter amount">
+        </div>
+        <div class="form-group">
+          <label for="withdrawMethod">Withdrawal Method</label>
+          <select id="withdrawMethod">
+            <option value="bank_account">Bank Account</option>
+            <option value="paypal">PayPal</option>
+            <option value="crypto">Crypto Wallet</option>
+          </select>
+        </div>
+        <div class="error-message" id="withdrawError"></div>
+        <button class="btn" onclick="processWithdrawal()">Withdraw Now</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Transfer Modal -->
+  <div class="investment-modal" id="transferModal">
+    <div class="investment-content">
+      <div class="investment-header">
+        <h2>Transfer Funds</h2>
+        <button class="close-btn" onclick="closeTransferModal()">&times;</button>
+      </div>
+      <div class="investment-form">
+        <div class="form-group">
+          <label for="transferAmount">Amount (₹)</label>
+          <input type="number" id="transferAmount" placeholder="Enter amount">
+        </div>
+        <div class="form-group">
+          <label for="recipientId">Recipient ID</label>
+          <input type="text" id="recipientId" placeholder="Enter member ID">
+        </div>
+        <div class="error-message" id="transferError"></div>
+        <button class="btn" onclick="processTransfer()">Transfer Now</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Transaction History Modal -->
+  <div class="transaction-modal" id="transactionModal">
+    <div class="transaction-content">
+      <div class="transaction-header">
+        <h2>Transaction History</h2>
+        <button class="close-btn" onclick="closeTransactionModal()">&times;</button>
+      </div>
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="changeTransactionTab('all')">All</button>
+        <button class="tab-button" onclick="changeTransactionTab('deposit')">Deposits</button>
+        <button class="tab-button" onclick="changeTransactionTab('withdraw')">Withdrawals</button>
+        <button class="tab-button" onclick="changeTransactionTab('investment')">Investments</button>
+      </div>
+      <div class="transaction-list" id="transactionList">
+        <!-- Transactions will be loaded dynamically -->
+      </div>
     </div>
   </div>
 
@@ -812,92 +1151,21 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
 <script>
-   const firebaseConfig = {
-            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-            authDomain: "grow-3e3a1.firebaseapp.com",
-            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-            projectId: "grow-3e3a1",
-          
-        };
+  const firebaseConfig = {
+    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+    authDomain: "grow-3e3a1.firebaseapp.com",
+    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+    projectId: "grow-3e3a1",
+  };
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const auth = firebase.auth();
 
-  
-
-    // ... (existing Firebase and other JS remains the same) ...
-    
-    // NEW FUNCTION TO LOAD INVESTMENT PRODUCTS
-    function loadProducts() {
-      // In a real app, this would come from Firebase
-      // For demo, we'll create static products
-      const products = [
-        {
-          name: "Gold Investment",
-          badge: "Hot",
-          dailyIncome: "₹850",
-          duration: "3 Days",
-          minInvestment: "₹500"
-        },
-        {
-          name: "Silver Package",
-          badge: "New",
-          dailyIncome: "₹1200",
-          duration: "5 Days",
-          minInvestment: "₹800"
-        },
-        {
-          name: "Diamond Plan",
-          badge: "Premium",
-          dailyIncome: "₹2500",
-          duration: "7 Days",
-          minInvestment: "₹1500"
-        },
-        {
-          name: "Platinum Offer",
-          badge: "Special",
-          dailyIncome: "₹4500",
-          duration: "10 Days",
-          minInvestment: "₹2500"
-        }
-      ];
-      
-      const container = document.getElementById("productsContainer");
-      container.innerHTML = '';
-      
-      products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div class="product-badge">${product.badge}</div>
-          <div class="product-title">${product.name}</div>
-          <div class="product-income">
-            <div class="income-item">
-              <div class="income-value">${product.dailyIncome}</div>
-              <div class="income-label">Daily Income</div>
-            </div>
-            <div class="income-item">
-              <div class="income-value">${product.duration}</div>
-              <div class="income-label">Duration</div>
-            </div>
-          </div>
-          <div class="product-footer">
-            <div class="product-price">${product.minInvestment}</div>
-            <button class="product-button">Invest</button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-    
-    // Call this function when page loads
-    window.onload = function() {
-      // ... existing initialization ...
-      loadProducts();
-    };
- 
-
+  let currentUser = null;
+  let currentUserData = null;
+  let currentProduct = null;
+  let transactions = [];
 
   // Toggle drawer function
   function toggleDrawer() {
@@ -907,35 +1175,405 @@
     overlay.style.display = drawer.classList.contains("open") ? "block" : "none";
   }
 
-  // ✅ Get UID from LocalStorage
+  // Get UID from LocalStorage
   const localUid = localStorage.getItem("userId");
 
   if (!localUid) {
-    // If not logged in, redirect
     window.location.href = "login.html";
   } else {
-    // Fetch wallet using local UID
-    const userId = localUid;
+    loadUserData(localUid);
+    loadProducts();
+  }
 
-    db.ref("users/" + userId).on("value", (snapshot) => {
-      const userData = snapshot.val();
-      if (userData) {
-        const wallet = userData.wallet || {};
-        const recharge = wallet.recharge || 0;
-        const bonus = wallet.bonus || 0;
-        const winning = wallet.winning || 0;
-        const total = recharge + bonus + winning;
+  function loadUserData(uid) {
+    showLoading(true);
+    const userRef = db.ref("users/" + uid);
+    userRef.on("value", snap => {
+      const data = snap.val() || {};
+      currentUserData = data;
+      currentUser = { uid: uid };
 
-        document.getElementById("userName").textContent = userData.name || "User";
-        document.getElementById("drawerUserName").textContent = userData.name || "User";
+      document.getElementById("userName").textContent = data.name || "User";
+      document.getElementById("drawerUserName").textContent = data.name || "User";
 
-        document.getElementById("totalBalance").textContent = total.toFixed(2);
-        document.getElementById("drawerBalance").textContent = total.toFixed(2);
-        document.getElementById("rechargeBalance").textContent = recharge.toFixed(2);
-        document.getElementById("bonusBalance").textContent = bonus.toFixed(2);
-        document.getElementById("winningBalance").textContent = winning.toFixed(2);
+      // Update balances
+      const recharge = data.wallet?.recharge || 0;
+      const bonus = data.wallet?.bonus || 0;
+      const winning = data.wallet?.winning || 0;
+      const total = recharge + bonus + winning;
+      const invested = data.invested || 0;
+      const earnings = data.earnings || 0;
+
+      document.getElementById("totalBalance").textContent = total.toFixed(2);
+      document.getElementById("drawerBalance").textContent = total.toFixed(2);
+      document.getElementById("availableBalance").textContent = recharge.toFixed(2);
+      document.getElementById("investedAmount").textContent = invested.toFixed(2);
+      document.getElementById("totalEarnings").textContent = earnings.toFixed(2);
+
+      // Load transactions
+      if (data.transactions) {
+        transactions = Object.values(data.transactions);
+      } else {
+        transactions = [];
+      }
+
+      showLoading(false);
+    });
+  }
+
+  function loadProducts() {
+    const productsRef = db.ref("products");
+    productsRef.on("value", snap => {
+      const products = snap.val() || {};
+      const container = document.getElementById("productsContainer");
+      container.innerHTML = '';
+      
+      for (const key in products) {
+        const product = products[key];
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+          <div class="product-title">${product.name}</div>
+          <div class="product-income">
+            <div class="income-item">
+              <div class="income-value">₹${product.dailyIncome}</div>
+              <div class="income-label">Daily Income</div>
+            </div>
+            <div class="income-item">
+              <div class="income-value">${product.duration}</div>
+              <div class="income-label">Duration</div>
+            </div>
+          </div>
+          <div class="product-footer">
+            <div class="product-price">₹${product.minInvestment}</div>
+            <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
+          </div>
+        `;
+        container.appendChild(card);
       }
     });
+  }
+
+  function showInvestmentModal(productId) {
+    const productsRef = db.ref("products/" + productId);
+    productsRef.once("value").then(snap => {
+      const product = snap.val();
+      if (!product) return;
+
+      currentProduct = product;
+      currentProduct.id = productId;
+
+      document.getElementById('investmentTitle').textContent = product.name;
+      document.getElementById('modalDailyIncome').textContent = `₹${product.dailyIncome}`;
+      document.getElementById('modalDuration').textContent = product.duration;
+      document.getElementById('modalMinInvestment').textContent = `₹${product.minInvestment}`;
+      document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
+      document.getElementById('investmentAmount').value = product.minInvestment;
+
+      document.getElementById('investmentModal').style.display = 'flex';
+    });
+  }
+
+  function closeInvestmentModal() {
+    document.getElementById('investmentModal').style.display = 'none';
+    document.getElementById('investmentError').style.display = 'none';
+  }
+
+  function confirmInvestment() {
+    if (!currentUser || !currentUserData || !currentProduct) return;
+    const amountInput = document.getElementById('investmentAmount');
+    const amount = parseFloat(amountInput.value);
+    const errorElement = document.getElementById('investmentError');
+    
+    if (!amount || amount <= 0) {
+      errorElement.textContent = 'Please enter a valid investment amount';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    const rechargeBalance = currentUserData.wallet?.recharge || 0;
+    if (amount > rechargeBalance) {
+      errorElement.textContent = 'Insufficient funds. Please deposit more money.';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    showLoading(true);
+    const transactionId = 'trans' + new Date().getTime();
+    const transaction = {
+      title: `Investment: ${currentProduct.name}`,
+      amount: -amount,
+      type: "expense",
+      date: new Date().toISOString(),
+      icon: "fa-arrow-up",
+      category: "investment"
+    };
+
+    const updates = {};
+    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
+    updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
+    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+    db.ref().update(updates).then(() => {
+      showLoading(false);
+      closeInvestmentModal();
+      showSuccessMessage("Investment successful! Funds deducted.");
+      loadUserData(currentUser.uid);
+    }).catch(error => {
+      showLoading(false);
+      errorElement.textContent = 'Investment failed: ' + error.message;
+      errorElement.style.display = 'block';
+    });
+  }
+
+  function showDepositModal() {
+    document.getElementById('depositModal').style.display = 'flex';
+  }
+
+  function closeDepositModal() {
+    document.getElementById('depositModal').style.display = 'none';
+    document.getElementById('depositError').style.display = 'none';
+  }
+
+  function processDeposit() {
+    const amountInput = document.getElementById('depositAmount');
+    const amount = parseFloat(amountInput.value);
+    const errorElement = document.getElementById('depositError');
+    
+    if (!amount || amount <= 0) {
+      errorElement.textContent = 'Please enter a valid deposit amount';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    showLoading(true);
+    const transactionId = 'trans' + new Date().getTime();
+    const transaction = {
+      title: "Deposit Funds",
+      amount: amount,
+      type: "income",
+      date: new Date().toISOString(),
+      icon: "fa-arrow-down",
+      category: "deposit"
+    };
+
+    const rechargeBalance = currentUserData.wallet?.recharge || 0;
+    const updates = {};
+    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance + amount;
+    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+    db.ref().update(updates).then(() => {
+      showLoading(false);
+      closeDepositModal();
+      showSuccessMessage("Deposit successful! Funds added to your account.");
+      loadUserData(currentUser.uid);
+    }).catch(error => {
+      showLoading(false);
+      errorElement.textContent = 'Deposit failed: ' + error.message;
+      errorElement.style.display = 'block';
+    });
+  }
+
+  function showWithdrawModal() {
+    document.getElementById('withdrawModal').style.display = 'flex';
+  }
+
+  function closeWithdrawModal() {
+    document.getElementById('withdrawModal').style.display = 'none';
+    document.getElementById('withdrawError').style.display = 'none';
+  }
+
+  function processWithdrawal() {
+    const amountInput = document.getElementById('withdrawAmount');
+    const amount = parseFloat(amountInput.value);
+    const errorElement = document.getElementById('withdrawError');
+    
+    if (!amount || amount <= 0) {
+      errorElement.textContent = 'Please enter a valid withdrawal amount';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    const rechargeBalance = currentUserData.wallet?.recharge || 0;
+    if (amount > rechargeBalance) {
+      errorElement.textContent = 'Insufficient funds. You cannot withdraw more than your available balance.';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    showLoading(true);
+    const transactionId = 'trans' + new Date().getTime();
+    const transaction = {
+      title: "Withdrawal Request",
+      amount: -amount,
+      type: "expense",
+      date: new Date().toISOString(),
+      icon: "fa-arrow-up",
+      category: "withdrawal"
+    };
+
+    const updates = {};
+    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
+    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+    db.ref().update(updates).then(() => {
+      showLoading(false);
+      closeWithdrawModal();
+      showSuccessMessage("Withdrawal request submitted successfully!");
+      loadUserData(currentUser.uid);
+    }).catch(error => {
+      showLoading(false);
+      errorElement.textContent = 'Withdrawal failed: ' + error.message;
+      errorElement.style.display = 'block';
+    });
+  }
+
+  function showTransferModal() {
+    document.getElementById('transferModal').style.display = 'flex';
+  }
+
+  function closeTransferModal() {
+    document.getElementById('transferModal').style.display = 'none';
+    document.getElementById('transferError').style.display = 'none';
+  }
+
+  function processTransfer() {
+    const amountInput = document.getElementById('transferAmount');
+    const amount = parseFloat(amountInput.value);
+    const recipientId = document.getElementById('recipientId').value.trim();
+    const errorElement = document.getElementById('transferError');
+    
+    if (!amount || amount <= 0) {
+      errorElement.textContent = 'Please enter a valid transfer amount';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    const rechargeBalance = currentUserData.wallet?.recharge || 0;
+    if (amount > rechargeBalance) {
+      errorElement.textContent = 'Insufficient funds. You cannot transfer more than your available balance.';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    if (!recipientId) {
+      errorElement.textContent = 'Please enter recipient member ID';
+      errorElement.style.display = 'block';
+      return;
+    }
+
+    showLoading(true);
+    const transactionId = 'trans' + new Date().getTime();
+    const transaction = {
+      title: `Transfer to ${recipientId}`,
+      amount: -amount,
+      type: "expense",
+      date: new Date().toISOString(),
+      icon: "fa-exchange-alt",
+      category: "transfer"
+    };
+
+    const updates = {};
+    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
+    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+    db.ref().update(updates).then(() => {
+      showLoading(false);
+      closeTransferModal();
+      showSuccessMessage(`Transfer of ₹${amount.toFixed(2)} to ${recipientId} completed!`);
+      loadUserData(currentUser.uid);
+    }).catch(error => {
+      showLoading(false);
+      errorElement.textContent = 'Transfer failed: ' + error.message;
+      errorElement.style.display = 'block';
+    });
+  }
+
+  function showTransactionModal() {
+    document.getElementById('transactionModal').style.display = 'flex';
+    renderTransactions('all');
+  }
+
+  function closeTransactionModal() {
+    document.getElementById('transactionModal').style.display = 'none';
+  }
+
+  function changeTransactionTab(category) {
+    const tabs = document.querySelectorAll('.tab-button');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    tabs.forEach(tab => {
+      if (tab.textContent.toLowerCase().includes(category)) {
+        tab.classList.add('active');
+      }
+    });
+    
+    renderTransactions(category);
+  }
+
+  function renderTransactions(category) {
+    const container = document.getElementById('transactionList');
+    container.innerHTML = '';
+    
+    let filteredTransactions = transactions;
+    if (category !== 'all') {
+      filteredTransactions = transactions.filter(t => t.category === category);
+    }
+    
+    filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    if (filteredTransactions.length === 0) {
+      container.innerHTML = '<div class="no-transactions">No transactions found</div>';
+      return;
+    }
+    
+    filteredTransactions.forEach(transaction => {
+      const isIncome = transaction.type === "income";
+      const amountClass = isIncome ? 'income' : 'expense';
+      const amountSign = isIncome ? '+' : '-';
+      const absAmount = Math.abs(transaction.amount);
+
+      const now = new Date();
+      const transDate = new Date(transaction.date);
+      const isToday = transDate.toDateString() === now.toDateString();
+      const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
+
+      let dateString;
+      if (isToday) {
+        dateString = `Today, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+      } else if (isYesterday) {
+        dateString = `Yesterday, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+      } else {
+        dateString = transDate.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+      }
+
+      const item = document.createElement('div');
+      item.className = 'transaction-list-item';
+      item.innerHTML = `
+        <div class="transaction-list-icon" style="background: ${isIncome ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'}">
+          <i class="fas ${transaction.icon || 'fa-exchange-alt'}"></i>
+        </div>
+        <div class="transaction-list-details">
+          <div class="transaction-list-title">${transaction.title}</div>
+          <div class="transaction-list-time">${dateString}</div>
+        </div>
+        <div class="transaction-list-amount ${amountClass}">${amountSign}₹${absAmount.toFixed(2)}</div>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  function showSuccessMessage(message) {
+    const successElement = document.getElementById('successMessage');
+    successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    successElement.style.display = 'block';
+    setTimeout(() => {
+      successElement.style.display = 'none';
+    }, 3000);
+  }
+
+  function showLoading(show) {
+    document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
   }
 
   function logout() {
@@ -948,45 +1586,52 @@
     });
   }
 
+  // Initialize products in Firebase
+  function initializeProducts() {
+    const productsRef = db.ref("products");
+    productsRef.once("value").then(snap => {
+      if (!snap.val()) {
+        const products = {
+          "prod1": {
+            name: "Gold Investment",
+            badge: "Hot",
+            dailyIncome: "850",
+            duration: "3 Days",
+            minInvestment: "500",
+            roi: 15.2
+          },
+          "prod2": {
+            name: "Silver Package",
+            badge: "New",
+            dailyIncome: "1200",
+            duration: "5 Days",
+            minInvestment: "800",
+            roi: 18.5
+          },
+          "prod3": {
+            name: "Diamond Plan",
+            badge: "Premium",
+            dailyIncome: "2500",
+            duration: "7 Days",
+            minInvestment: "1500",
+            roi: 22.3
+          },
+          "prod4": {
+            name: "Platinum Offer",
+            badge: "Special",
+            dailyIncome: "4500",
+            duration: "10 Days",
+            minInvestment: "2500",
+            roi: 25.7
+          }
+        };
+        productsRef.set(products);
+      }
+    });
+  }
 
-
-
-  const messages = [
-     
-      "Get 10% extra bonus on your first recharge!",
-      "Withdrawals are processed within 10 minutes daily.",
-      "Play and win up to ₹10,000 daily!",
-      "Refer friends and earn ₹100 per invite!",
-      "9856276849 recharged ₹500 successfully.",
-      "7073497620 recharged ₹1000 successfully.",
-      "6395789345 recharged ₹200 successfully.",
-      "9845729027 recharged ₹300 successfully.",
-      "9792345678 recharged ₹1500 successfully.",
-      "856789345 recharged ₹2500 successfully.",
-      "935678912 recharged ₹400 successfully.",
-      "7234567890 recharged ₹600 successfully.",
-      "7856789123 recharged ₹800 successfully.",
-      "867891234 withdrew  ₹1200 successfully.",
-    ];
-    
-
-    let index = 0;
-    const textEl = document.getElementById("notifText");
-
-    function showNextMessage() {
-      textEl.style.opacity = 0;
-      setTimeout(() => {
-        textEl.textContent = messages[index];
-        textEl.style.opacity = 1;
-        index = (index + 1) % messages.length;
-      }, 300);
-    }
-
-    // Initial message
-    showNextMessage();
-
-    // Change message every 2 seconds
-    setInterval(showNextMessage, 2000);
+  // Initialize products when the app starts
+  initializeProducts();
 </script>
 
 </body>
