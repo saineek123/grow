@@ -271,10 +271,12 @@
             text-decoration: none;
         }
         
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        /* PRODUCT LIST STYLE */
+        .products-list {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
+            margin-bottom: 20px;
         }
         
         .product-card {
@@ -284,12 +286,25 @@
             border: 1px solid #334155;
             transition: all 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
         
         .product-card:hover {
             transform: translateY(-5px);
             border-color: #60a5fa;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .product-info {
+            flex: 1;
         }
         
         .product-badge {
@@ -299,7 +314,7 @@
             padding: 4px 12px;
             border-radius: 20px;
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .product-title {
@@ -317,6 +332,7 @@
         
         .income-item {
             text-align: center;
+            flex: 1;
         }
         
         .income-value {
@@ -793,6 +809,159 @@
         .expense {
             color: #f87171;
         }
+        
+        /* ADMIN PANEL */
+        .admin-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .admin-header h2 {
+            color: #f8fafc;
+            font-size: 24px;
+        }
+        
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .admin-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .admin-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .admin-submit {
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            color: white;
+        }
+        
+        .admin-cancel {
+            background: #334155;
+            color: #f8fafc;
+        }
+        
+        /* Product list */
+        .product-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .product-list-info {
+            flex: 1;
+        }
+        
+        .product-list-name {
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 5px;
+        }
+        
+        .product-list-details {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        
+        .product-list-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            transition: all 0.3s ease;
+        }
+        
+        .action-icon.delete {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+        
+        .action-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        /* ADMIN BUTTON */
+        .admin-toggle {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: #60a5fa;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -818,9 +987,64 @@
         </div>
     </nav>
     
+    <!-- ADMIN PANEL -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>Manage Investment Products</h2>
+            <button class="close-btn" onclick="closeAdminPanel()">&times;</button>
+        </div>
+        <div class="admin-form">
+            <input type="hidden" id="productId">
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" id="productName" placeholder="Enter product name">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dailyIncome">Daily Income ($)</label>
+                    <input type="number" id="dailyIncome" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (Days)</label>
+                    <input type="number" id="duration" placeholder="Enter days">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="minInvestment">Min. Investment ($)</label>
+                    <input type="number" id="minInvestment" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="roi">Expected Return (%)</label>
+                    <input type="number" id="roi" placeholder="Enter percentage">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productBadge">Badge Text</label>
+                <input type="text" id="productBadge" placeholder="Special offer, New, etc.">
+            </div>
+            <div class="error-message" id="adminError"></div>
+            <div class="admin-actions">
+                <button class="admin-btn admin-cancel" onclick="closeAdminPanel()">Cancel</button>
+                <button class="admin-btn admin-submit" id="adminSubmit" onclick="saveProduct()">Add Product</button>
+            </div>
+        </div>
+        <div class="product-list" id="adminProductList">
+            <!-- Products will be listed here for management -->
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeAdminPanel()"></div>
+    
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
         <i class="fas fa-check-circle"></i> Investment successful!
+    </div>
+    
+    <!-- Admin Toggle Button -->
+    <div class="admin-toggle" id="adminToggle">
+        <i class="fas fa-cogs"></i> Admin Panel
     </div>
     
     <!-- Main Content -->
@@ -930,7 +1154,7 @@
             <a href="#" onclick="viewAllProducts()">View All <i class="fas fa-arrow-right"></i></a>
         </div>
         
-        <div class="products-grid" id="productsContainer">
+        <div class="products-list" id="productsContainer">
             <!-- Products will be loaded dynamically -->
         </div>
     </div>
@@ -1110,6 +1334,7 @@
     let currentUserData = null;
     let currentProduct = null;
     let transactions = [];
+    let isAdmin = false; // Will be set based on user role
 
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -1154,6 +1379,10 @@
 
             document.getElementById("notificationBadge").textContent = data.notifications || 0;
             
+            // Check if user is admin
+            isAdmin = data.isAdmin || false;
+            document.getElementById("adminToggle").style.display = isAdmin ? "block" : "none";
+            
             // Load transactions
             if (data.transactions) {
                 transactions = Object.values(data.transactions);
@@ -1177,31 +1406,202 @@
             const products = snap.val() || {};
             const container = document.getElementById("productsContainer");
             container.innerHTML = '';
+            
             for (const key in products) {
                 const product = products[key];
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
-                    <div class="product-title">${product.name}</div>
-                    <div class="product-income">
-                        <div class="income-item">
-                            <div class="income-value">${product.dailyIncome}</div>
-                            <div class="income-label">Daily Income</div>
-                        </div>
-                        <div class="income-item">
-                            <div class="income-value">${product.duration}</div>
-                            <div class="income-label">Duration</div>
-                        </div>
-                    </div>
-                    <div class="product-footer">
-                        <div class="product-price">$${product.minInvestment}</div>
-                        <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
-                    </div>
-                `;
+                const card = createProductCard(key, product);
                 container.appendChild(card);
             }
+            
+            // Also update admin product list
+            if (isAdmin) {
+                updateAdminProductList(products);
+            }
         });
+    }
+    
+    function createProductCard(key, product) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="product-header">
+                <div class="product-info">
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <div class="product-title">${product.name}</div>
+                </div>
+            </div>
+            <div class="product-income">
+                <div class="income-item">
+                    <div class="income-value">$${product.dailyIncome}</div>
+                    <div class="income-label">Daily Income</div>
+                </div>
+                <div class="income-item">
+                    <div class="income-value">${product.duration} Days</div>
+                    <div class="income-label">Duration</div>
+                </div>
+                <div class="income-item">
+                    <div class="income-value">+${(product.roi || 15.2).toFixed(1)}%</div>
+                    <div class="income-label">Return</div>
+                </div>
+            </div>
+            <div class="product-footer">
+                <div class="product-price">$${product.minInvestment}</div>
+                <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
+            </div>
+        `;
+        return card;
+    }
+    
+    function updateAdminProductList(products) {
+        const container = document.getElementById("adminProductList");
+        container.innerHTML = '';
+        
+        for (const key in products) {
+            const product = products[key];
+            const item = document.createElement('div');
+            item.className = 'product-list-item';
+            item.innerHTML = `
+                <div class="product-list-info">
+                    <div class="product-list-name">${product.name}</div>
+                    <div class="product-list-details">
+                        <span>$${product.dailyIncome}/day</span>
+                        <span>${product.duration} days</span>
+                        <span>$${product.minInvestment}</span>
+                    </div>
+                </div>
+                <div class="product-list-actions">
+                    <div class="action-icon" onclick="editProduct('${key}')">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="action-icon delete" onclick="deleteProduct('${key}')">
+                        <i class="fas fa-trash"></i>
+                    </div>
+                </div>
+            `;
+            container.appendChild(item);
+        }
+    }
+    
+    function showAdminPanel() {
+        document.getElementById("adminPanel").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("adminSubmit").textContent = "Add Product";
+        document.getElementById("productId").value = "";
+        resetAdminForm();
+    }
+    
+    function closeAdminPanel() {
+        document.getElementById("adminPanel").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("adminError").style.display = "none";
+    }
+    
+    function resetAdminForm() {
+        document.getElementById("productName").value = "";
+        document.getElementById("dailyIncome").value = "";
+        document.getElementById("duration").value = "";
+        document.getElementById("minInvestment").value = "";
+        document.getElementById("roi").value = "";
+        document.getElementById("productBadge").value = "";
+    }
+    
+    function saveProduct() {
+        const productId = document.getElementById("productId").value;
+        const name = document.getElementById("productName").value.trim();
+        const dailyIncome = parseFloat(document.getElementById("dailyIncome").value);
+        const duration = parseInt(document.getElementById("duration").value);
+        const minInvestment = parseFloat(document.getElementById("minInvestment").value);
+        const roi = parseFloat(document.getElementById("roi").value);
+        const badge = document.getElementById("productBadge").value.trim();
+        const errorElement = document.getElementById("adminError");
+        
+        // Validation
+        if (!name || !dailyIncome || !duration || !minInvestment || !roi) {
+            errorElement.textContent = "Please fill in all required fields";
+            errorElement.style.display = "block";
+            return;
+        }
+        
+        if (dailyIncome <= 0 || duration <= 0 || minInvestment <= 0 || roi <= 0) {
+            errorElement.textContent = "Values must be positive numbers";
+            errorElement.style.display = "block";
+            return;
+        }
+        
+        const product = {
+            name,
+            dailyIncome,
+            duration,
+            minInvestment,
+            roi,
+            badge: badge || null
+        };
+        
+        showLoading(true);
+        
+        if (productId) {
+            // Update existing product
+            db.ref("products/" + productId).update(product)
+                .then(() => {
+                    showLoading(false);
+                    showSuccessMessage("Product updated successfully!");
+                    closeAdminPanel();
+                })
+                .catch(error => {
+                    showLoading(false);
+                    errorElement.textContent = "Error updating product: " + error.message;
+                    errorElement.style.display = "block";
+                });
+        } else {
+            // Add new product
+            const newProductRef = db.ref("products").push();
+            newProductRef.set(product)
+                .then(() => {
+                    showLoading(false);
+                    showSuccessMessage("Product added successfully!");
+                    closeAdminPanel();
+                })
+                .catch(error => {
+                    showLoading(false);
+                    errorElement.textContent = "Error adding product: " + error.message;
+                    errorElement.style.display = "block";
+                });
+        }
+    }
+    
+    function editProduct(productId) {
+        const productsRef = db.ref("products/" + productId);
+        productsRef.once("value").then(snap => {
+            const product = snap.val();
+            if (!product) return;
+            
+            document.getElementById("productId").value = productId;
+            document.getElementById("productName").value = product.name;
+            document.getElementById("dailyIncome").value = product.dailyIncome;
+            document.getElementById("duration").value = product.duration;
+            document.getElementById("minInvestment").value = product.minInvestment;
+            document.getElementById("roi").value = product.roi;
+            document.getElementById("productBadge").value = product.badge || "";
+            
+            document.getElementById("adminSubmit").textContent = "Update Product";
+            document.getElementById("adminPanel").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        });
+    }
+    
+    function deleteProduct(productId) {
+        if (confirm("Are you sure you want to delete this product?")) {
+            showLoading(true);
+            db.ref("products/" + productId).remove()
+                .then(() => {
+                    showLoading(false);
+                    showSuccessMessage("Product deleted successfully!");
+                })
+                .catch(error => {
+                    showLoading(false);
+                    alert("Error deleting product: " + error.message);
+                });
+        }
     }
 
     function showInvestmentModal(productId) {
@@ -1215,7 +1615,7 @@
 
             document.getElementById('investmentTitle').textContent = product.name;
             document.getElementById('modalDailyIncome').textContent = `$${product.dailyIncome}`;
-            document.getElementById('modalDuration').textContent = product.duration;
+            document.getElementById('modalDuration').textContent = `${product.duration} Days`;
             document.getElementById('modalMinInvestment').textContent = `$${product.minInvestment}`;
             document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
             document.getElementById('investmentAmount').value = product.minInvestment;
@@ -1534,6 +1934,9 @@
     function viewAllProducts() {
         alert("All investment products would be displayed here");
     }
+    
+    // Initialize admin toggle
+    document.getElementById("adminToggle").addEventListener("click", showAdminPanel);
 </script>
 
 </body>
