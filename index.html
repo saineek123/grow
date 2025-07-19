@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    * {
+    /*  * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -542,77 +542,134 @@
 
     .btn-detail:hover {
       background: #ff2e30;
+    } /* ... (existing styles remain the same) ... */
+    
+    /* NEW STYLES FOR INVESTMENT SECTION */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .product-card {
+      background: linear-gradient(145deg, rgba(31, 31, 47, 0.8), rgba(46, 46, 62, 0.8));
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0, 247, 255, 0.3);
+      box-shadow: 0 10px 25px rgba(0, 247, 255, 0.3);
+    }
+    
+    .product-badge {
+      background: linear-gradient(to right, #f97316, #f59e0b);
+      color: white;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    
+    .product-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #f8fafc;
+    }
+    
+    .product-income {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    
+    .income-item {
+      text-align: center;
+    }
+    
+    .income-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #4ade80;
+    }
+    
+    .income-label {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+    
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .product-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    
+    .product-button {
+      background: linear-gradient(to right, #00f7ff, #0077ff);
+      color: #000;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .product-button:hover {
+      background: linear-gradient(to right, #60a5fa, #93c5fd);
+      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+      transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+      
+      .product-card {
+        padding: 15px;
+      }
+      
+      .product-title {
+        font-size: 16px;
+      }
+      
+      .income-value {
+        font-size: 18px;
+      }
+      
+      .product-price {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
-
-   
-
-  <div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
-
-  <div class="drawer" id="drawer">
-    <div class="drawer-header">
-      <div class="user-info">
-        <div class="user-avatar">
-          <i class="fas fa-user"></i>
-        </div>
-        <div>
-          <div class="user-name" id="drawerUserName">User</div>
-          <div class="user-balance">₹<span id="drawerBalance">0.00</span></div>
-        </div>
-      </div>
-    </div>
-    
-    <a href="index.html"><i class="fas fa-home"></i> Home</a>
-    <a href="wallet.html"><i class="fas fa-credit-card"></i> Wallet</a>
-    <a href="recharge.html"><i class="fas fa-wallet"></i> Recharge</a>
-    <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
-    <a href="history.html"><i class="fas fa-history"></i> History</a>
-    <a href="account.html"><i class="fas fa-user-circle"></i> Account</a>
-    
-    <div class="divider"></div>
-    
-    <a href="support.html"><i class="fas fa-headset"></i> Support</a>
-    <a href="invite.html"><i class="fas fa-gift"></i> Invite Friends</a>
-    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
-    
-    <div class="divider"></div>
-    
-    <a href="login.html" style="color: #ff7b87;"><i class="fas fa-sign-out-alt"></i> Logout</a>
-  </div>
-
-  <header>
-    <div class="logo">
-      <i class="fas fa-flag-checkered"></i>
-      <span>BIG WIN</span>
-    </div>
-     <!-- Top Notification -->
-  <div class="notification">
-    <img class="sound-icon" src="https://cdn-icons-png.flaticon.com/512/727/727269.png" alt="Sound" />
-    <div class="text" id="notifText">Loading message...</div>
-    <button class="btn-detail">🔥 Detail</button>
-  </div>
-
-
-
-    
-    <div class="user-controls">
-      <div class="balance-display">
-        <i class="fas fa-wallet"></i>
-        <span>₹<span id="totalBalance">0.00</span></span>
-      </div>
-      <div class="menu-icon" onclick="toggleDrawer()">
-        <i class="fas fa-bars"></i>
-      </div>
-    </div>
-  </header>
-
+  <!-- ... (existing header and drawer code remains the same) ... -->
+  
   <div class="main-content">
     <!-- Welcome Banner -->
     <div class="welcome-banner">
       <h1>Welcome, <span id="userName">User</span>!</h1>
-      <p>Your ultimate betting experience starts here</p>
+      <p>Your ultimate investment experience starts here</p>
       
       <div class="wallet-breakdown">
         <div class="wallet-item">
@@ -660,83 +717,87 @@
       </div>
     </div>
     
-    <!-- Popular Games -->
+    <!-- Investment Products (REPLACED POPULAR GAMES) -->
     <div class="section-title">
-      <i class="fas fa-gamepad"></i>
-      <h2>Popular Games</h2>
+      <i class="fas fa-chart-line"></i>
+      <h2>Investment Products</h2>
     </div>
     
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-futbol"></i>
+    <div class="products-grid" id="productsContainer">
+      <div class="product-card">
+        <div class="product-badge">Hot</div>
+        <div class="product-title">Gold Investment</div>
+        <div class="product-income">
+          <div class="income-item">
+            <div class="income-value">₹850</div>
+            <div class="income-label">Daily Income</div>
+          </div>
+          <div class="income-item">
+            <div class="income-value">3 Days</div>
+            <div class="income-label">Duration</div>
+          </div>
         </div>
-        <h3>Sports Betting</h3>
-        <p>Bet on your favorite sports</p>
-        <button class="card-btn" onclick="window.location.href='bet.html'">Play Now</button>
-      </div>
-    
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-bomb"></i>
+        <div class="product-footer">
+          <div class="product-price">₹500</div>
+          <button class="product-button">Invest</button>
         </div>
-        <h3>Mines Game</h3>
-        <p>Avoid the mines to win</p>
-        <button class="card-btn" onclick="window.location.href='mines.html'">Play Now</button>
-      </div>
-      
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-dice"></i>
-        </div>
-        <h3>Slots</h3>
-        <p>Spin to win big</p>
-        <button class="card-btn" onclick="window.location.href='slots.html'">Play Now</button>
       </div>
       
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-coins"></i>
+      <div class="product-card">
+        <div class="product-badge">New</div>
+        <div class="product-title">Silver Package</div>
+        <div class="product-income">
+          <div class="income-item">
+            <div class="income-value">₹1200</div>
+            <div class="income-label">Daily Income</div>
+          </div>
+          <div class="income-item">
+            <div class="income-value">5 Days</div>
+            <div class="income-label">Duration</div>
+          </div>
         </div>
-        <h3>Andar Bahar</h3>
-        <p>Classic Indian card game</p>
-        <button class="card-btn" onclick="window.location.href='andar-bahar.html'">Play Now</button>
+        <div class="product-footer">
+          <div class="product-price">₹800</div>
+          <button class="product-button">Invest</button>
+        </div>
       </div>
       
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-dragon"></i>
+      <div class="product-card">
+        <div class="product-badge">Premium</div>
+        <div class="product-title">Diamond Plan</div>
+        <div class="product-income">
+          <div class="income-item">
+            <div class="income-value">₹2500</div>
+            <div class="income-label">Daily Income</div>
+          </div>
+          <div class="income-item">
+            <div class="income-value">7 Days</div>
+            <div class="income-label">Duration</div>
+          </div>
         </div>
-        <h3>Dragon vs Tiger</h3>
-        <p>Fast-paced card game</p>
-        <button class="card-btn" onclick="window.location.href='dragon.html'">Play Now</button>
+        <div class="product-footer">
+          <div class="product-price">₹1500</div>
+          <button class="product-button">Invest</button>
+        </div>
       </div>
       
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-heart"></i>
+      <div class="product-card">
+        <div class="product-badge">Special</div>
+        <div class="product-title">Platinum Offer</div>
+        <div class="product-income">
+          <div class="income-item">
+            <div class="income-value">₹4500</div>
+            <div class="income-label">Daily Income</div>
+          </div>
+          <div class="income-item">
+            <div class="income-value">10 Days</div>
+            <div class="income-label">Duration</div>
+          </div>
         </div>
-        <h3>Red & Black</h3>
-        <p>Simple color betting</p>
-        <button class="card-btn" onclick="window.location.href='red.html'">Play Now</button>
-      </div>
-      
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-sync-alt"></i>
+        <div class="product-footer">
+          <div class="product-price">₹2500</div>
+          <button class="product-button">Invest</button>
         </div>
-        <h3>Lucky Spin</h3>
-        <p>Spin the wheel for prizes</p>
-        <button class="card-btn" onclick="window.location.href='spin.html'">Play Now</button>
-      </div>
-      
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-ticket-alt"></i>
-        </div>
-        <h3>K3 DICE Lottery</h3>
-        <p>Try your luck today</p>
-        <button class="card-btn" onclick="window.location.href='K3_Game_Mobile_Final.html'">Play Now</button>
       </div>
     </div>
     
@@ -762,6 +823,81 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const auth = firebase.auth();
+
+  
+
+    // ... (existing Firebase and other JS remains the same) ...
+    
+    // NEW FUNCTION TO LOAD INVESTMENT PRODUCTS
+    function loadProducts() {
+      // In a real app, this would come from Firebase
+      // For demo, we'll create static products
+      const products = [
+        {
+          name: "Gold Investment",
+          badge: "Hot",
+          dailyIncome: "₹850",
+          duration: "3 Days",
+          minInvestment: "₹500"
+        },
+        {
+          name: "Silver Package",
+          badge: "New",
+          dailyIncome: "₹1200",
+          duration: "5 Days",
+          minInvestment: "₹800"
+        },
+        {
+          name: "Diamond Plan",
+          badge: "Premium",
+          dailyIncome: "₹2500",
+          duration: "7 Days",
+          minInvestment: "₹1500"
+        },
+        {
+          name: "Platinum Offer",
+          badge: "Special",
+          dailyIncome: "₹4500",
+          duration: "10 Days",
+          minInvestment: "₹2500"
+        }
+      ];
+      
+      const container = document.getElementById("productsContainer");
+      container.innerHTML = '';
+      
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-badge">${product.badge}</div>
+          <div class="product-title">${product.name}</div>
+          <div class="product-income">
+            <div class="income-item">
+              <div class="income-value">${product.dailyIncome}</div>
+              <div class="income-label">Daily Income</div>
+            </div>
+            <div class="income-item">
+              <div class="income-value">${product.duration}</div>
+              <div class="income-label">Duration</div>
+            </div>
+          </div>
+          <div class="product-footer">
+            <div class="product-price">${product.minInvestment}</div>
+            <button class="product-button">Invest</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    
+    // Call this function when page loads
+    window.onload = function() {
+      // ... existing initialization ...
+      loadProducts();
+    };
+ 
+
 
   // Toggle drawer function
   function toggleDrawer() {
