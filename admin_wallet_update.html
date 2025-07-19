@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secure Admin Wallet Control</title>
+  <style>
+    body {
+      background-color: #121212;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: rgba(31, 31, 31, 0.85);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    
+    h1 {
+      text-align: center;
+      color: #00e5ff;
+      margin-bottom: 25px;
+      font-size: 28px;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    }
+    
+    h2 {
+      text-align: center;
+      color: #00e5ff;
+      margin-top: 0;
+      font-size: 22px;
+    }
+    
+    input, button, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    
+    input {
+      background: rgba(44, 44, 44, 0.7);
+      color: #fff;
+      border: 1px solid #333;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #00e5ff;
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+    }
+    
+    button {
+      background: linear-gradient(to right, #00e5ff, #00bcd4);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      border: none;
+      margin-top: 20px;
+    }
+    
+    button:hover {
+      background: linear-gradient(to right, #00bcd4, #0097a7);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 229, 255, 0.4);
+    }
+    
+    .label {
+      margin-top: 18px;
+      font-size: 15px;
+      color: #bbb;
+      display: block;
+    }
+    
+    .history {
+      background: rgba(41, 41, 41, 0.6);
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .history h3 {
+      margin: 0 0 12px;
+      color: #00e5ff;
+      font-size: 17px;
+    }
+    
+    .history-entry {
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(68, 68, 68, 0.5);
+      padding-bottom: 10px;
+      line-height: 1.5;
+    }
+    
+    .history-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .login-section {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .admin-content {
+      display: none;
+    }
+    
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+    }
+    
+    .user-info {
+      color: #00e5ff;
+      font-weight: bold;
+    }
+    
+    .logout-btn {
+      background: rgba(255, 69, 58, 0.2);
+      color: #ff453a;
+      width: auto;
+      padding: 8px 15px;
+      border: 1px solid rgba(255, 69, 58, 0.4);
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255, 69, 58, 0.3);
+      transform: none;
+      box-shadow: 0 0 10px rgba(255, 69, 58, 0.3);
+    }
+    
+    .notification {
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+    
+    .success {
+      background: rgba(50, 205, 50, 0.15);
+      color: #32cd32;
+      border: 1px solid rgba(50, 205, 50, 0.3);
+    }
+    
+    .error {
+      background: rgba(255, 69, 58, 0.15);
+      color: #ff453a;
+      border: 1px solid rgba(255, 69, 58, 0.3);
+    }
+    
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #00e5ff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .security-badge {
+      text-align: center;
+      font-size: 12px;
+      color: #32cd32;
+      margin-top: 20px;
+      padding: 8px;
+      background: rgba(50, 205, 50, 0.1);
+      border-radius: 5px;
+      border: 1px solid rgba(50, 205, 50, 0.2);
+    }
+    
+    .security-badge i {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Secure Admin Wallet Management</h1>
+  
+  <div id="loginSection" class="login-section">
+    <h2>Admin Authentication</h2>
+    
+    <label class="label">Email Address</label>
+    <input type="email" id="loginEmail" placeholder="admin@example.com" />
+    
+    <label class="label">Password</label>
+    <input type="password" id="loginPassword" placeholder="••••••••" />
+    
+    <button onclick="login()">🔒 Login to Admin Panel</button>
+    
+    <div id="loginMessage" class="notification"></div>
+    
+    <div class="security-badge">
+      <i>🔐</i> Secured by Firebase Authentication
+    </div>
+  </div>
+  
+  <div id="adminContent" class="admin-content">
+    <div class="status-bar">
+      <div class="user-info">Welcome, <span id="adminEmail"></span></div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <h2>Admin Wallet Editor</h2>
+
+    <label class="label">Enter User ID:</label>
+    <input type="text" id="userId" placeholder="User ID" onblur="loadWallet()" />
+
+    <div id="userName" style="margin-top: 10px; color:#bbb; font-style: italic; min-height: 24px;"></div>
+
+    <label class="label">Recharge Balance ₹</label>
+    <input type="number" id="recharge" placeholder="Recharge" min="0" />
+
+    <label class="label">Bonus Balance ₹</label>
+    <input type="number" id="bonus" placeholder="Bonus" min="0" />
+
+    <label class="label">Winning Balance ₹</label>
+    <input type="number" id="winning" placeholder="Winning" min="0" />
+
+    <button onclick="updateWallet()">✅ Update Wallet</button>
+
+    <div class="history" id="withdrawHistory">
+      <h3>Withdraw History</h3>
+      <div id="withdrawList">Enter User ID to load history</div>
+    </div>
+
+    <div class="history" id="rechargeHistory">
+      <h3>Recharge History</h3>
+      <div id="rechargeList">Enter User ID to load history</div>
+    </div>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<script>
+   const firebaseConfig = {
+            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+            authDomain: "grow-3e3a1.firebaseapp.com",
+            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+            projectId: "grow-3e3a1",
+            storageBucket: "grow-3e3a1.appspot.com",
+            messagingSenderId: "285304522946",
+            appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+        };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  // Authentication state observer
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // User is signed in - verify admin status
+      verifyAdmin(user);
+    } else {
+      // User is signed out
+      showLogin();
+    }
+  });
+
+  // Verify if user is admin
+  function verifyAdmin(user) {
+    db.ref('admins/' + user.uid).once('value').then(snapshot => {
+      if (snapshot.val() === true) {
+        // User is admin
+        showAdminPanel(user);
+      } else {
+        // User is not admin
+        showNotification("⛔ You don't have admin privileges", "error");
+        logout();
+      }
+    }).catch(error => {
+      showNotification("Error verifying admin status: " + error.message, "error");
+      logout();
+    });
+  }
+
+  // Show admin panel
+  function showAdminPanel(user) {
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    document.getElementById('adminEmail').textContent = user.email;
+  }
+
+  // Show login section
+  function showLogin() {
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('adminContent').style.display = 'none';
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+  }
+
+  // Show notification
+  function showNotification(message, type) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = 'notification ' + type;
+    notification.style.display = 'block';
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 5000);
+  }
+
+  // Show login message
+  function showLoginMessage(message, type) {
+    const loginMessage = document.getElementById('loginMessage');
+    loginMessage.textContent = message;
+    loginMessage.className = 'notification ' + type;
+    loginMessage.style.display = 'block';
+  }
+
+  // Login function
+  function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    if (!email || !password) {
+      showLoginMessage("Please enter both email and password", "error");
+      return;
+    }
+    
+    showLoginMessage('<span class="loader"></span> Authenticating...', '');
+    
+    auth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Login successful, handled by auth state listener
+      })
+      .catch((error) => {
+        showLoginMessage("Login failed: " + error.message, "error");
+      });
+  }
+
+  // Logout function
+  function logout() {
+    auth.signOut().then(() => {
+      showNotification("You have been logged out", "success");
+    }).catch((error) => {
+      showNotification("Logout error: " + error.message, "error");
+    });
+  }
+
+  // Load wallet data
+  function loadWallet() {
+    const userId = document.getElementById("userId").value.trim();
+    if (!userId) return;
+    
+    document.getElementById("userName").textContent = "Loading...";
+    document.getElementById("withdrawList").textContent = "Loading...";
+    document.getElementById("rechargeList").textContent = "Loading...";
+    
+    // Load name & wallet
+    db.ref("users/" + userId).once("value").then(snapshot => {
+      const user = snapshot.val();
+      if (user) {
+        document.getElementById("userName").textContent = "👤 " + (user.name || "No name found");
+        const wallet = user.wallet || {};
+        document.getElementById("recharge").value = wallet.recharge || 0;
+        document.getElementById("bonus").value = wallet.bonus || 0;
+        document.getElementById("winning").value = wallet.winning || 0;
+      } else {
+        document.getElementById("userName").textContent = "❌ User not found";
+        return;
+      }
+    }).catch(error => {
+      document.getElementById("userName").textContent = "Error: " + error.message;
+    });
+
+    // Load withdraw history
+    db.ref("withdraws/" + userId).limitToLast(5).once("value").then(snapshot => {
+      const list = document.getElementById("withdrawList");
+      list.innerHTML = "";
+      const data = snapshot.val();
+      if (!data) {
+        list.innerHTML = "No withdraws found.";
+        return;
+      }
+      Object.values(data).reverse().forEach(entry => {
+        list.innerHTML += `<div class="history-entry">
+          ₹${entry.amount} → ${entry.upi || entry.account || "N/A"}<br/>
+          Status: <span style="color: ${entry.status === 'approved' ? '#32cd32' : '#ffcc00'}">${entry.status || "pending"}</span><br/>
+          Date: ${entry.date || "-"}
+        </div>`;
+      });
+    }).catch(error => {
+      document.getElementById("withdrawList").textContent = "Error loading data";
+    });
+
+    // Load recharge history
+    db.ref("recharges/" + userId).limitToLast(5).once("value").then(snapshot => {
+      const list = document.getElementById("rechargeList");
+      list.innerHTML = "";
+      const data = snapshot.val();
+      if (!data) {
+        list.innerHTML = "No recharges found.";
+        return;
+      }
+      Object.values(data).reverse().forEach(entry => {
+        list.innerHTML += `<div class="history-entry">
+          ₹${entry.amount}<br/>
+          Status: <span style="color: ${entry.status === 'approved' ? '#32cd32' : '#ffcc00'}">${entry.status || "pending"}</span><br/>
+          Date: ${entry.date || "-"}
+        </div>`;
+      });
+    }).catch(error => {
+      document.getElementById("rechargeList").textContent = "Error loading data";
+    });
+  }
+
+  // Update wallet function
+  function updateWallet() {
+    const userId = document.getElementById("userId").value.trim();
+    const recharge = parseFloat(document.getElementById("recharge").value);
+    const bonus = parseFloat(document.getElementById("bonus").value);
+    const winning = parseFloat(document.getElementById("winning").value);
+
+    if (!userId) {
+      showNotification("❌ Please enter User ID", "error");
+      return;
+    }
+
+    const walletData = {
+      recharge: isNaN(recharge) ? 0 : recharge,
+      bonus: isNaN(bonus) ? 0 : bonus,
+      winning: isNaN(winning) ? 0 : winning
+    };
+
+    db.ref("users/" + userId + "/wallet").set(walletData)
+      .then(() => {
+        showNotification("✅ Wallet updated successfully!", "success");
+        loadWallet();
+      })
+      .catch((error) => {
+        showNotification("Error: " + error.message, "error");
+      });
+  }
+</script>
+
+</body>
+</html>
