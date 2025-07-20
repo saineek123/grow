@@ -33,12 +33,27 @@
 
           if (invested > 0 && now - lastTime >= 86400000) {
             const dailyIncome = invested * 0.10; // 10% daily
-            const updates = {
-              [`users/${uid}/wallet/winning`]: winning + dailyIncome,
-              [`users/${uid}/earnings`]: earnings + dailyIncome,
-              [`users/${uid}/lastIncomeTime`]: now,
+            const updates = {};
+
+            // Update wallet and earnings
+            updates[`users/${uid}/wallet/winning`] = winning + dailyIncome;
+            updates[`users/${uid}/earnings`] = earnings + dailyIncome;
+            updates[`users/${uid}/lastIncomeTime`] = now;
+
+            // Add transaction log
+            const logId = 'trans' + now;
+            updates[`users/${uid}/transactions/${logId}`] = {
+              title: "Daily Income",
+              amount: dailyIncome,
+              type: "income",
+              date: new Date().toISOString(),
+              icon: "fa-coins",
+              category: "daily"
             };
-            db.ref().update(updates);
+
+            db.ref().update(updates).then(() => {
+              console.log(`Credited ₹${dailyIncome} to ${uid}`);
+            });
           }
         }
       });
