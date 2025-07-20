@@ -109,8 +109,7 @@
       `;
       return div;
     }
-
-    function loadRechargeHistory(uid) {
+function loadRechargeHistory(uid) {
   const container = document.getElementById("rechargeHistory");
   db.ref("rechargeRequests").orderByChild("userId").equalTo(uid).once("value").then(snap => {
     container.innerHTML = '';
@@ -128,21 +127,36 @@
   });
 }
 
-
-    function loadInvestmentHistory(uid) {
-      const container = document.getElementById("investmentHistory");
-      db.ref("investment/" + uid).once("value").then(snap => {
-        container.innerHTML = '';
-        if (!snap.exists()) {
-          container.innerHTML = "<p>No investment history found</p>";
-          return;
-        }
-        Object.values(snap.val()).reverse().forEach(data => {
-          const item = createHistoryItem(data, "active");
-          container.appendChild(item);
-        });
-      });
+function loadWithdrawHistory(uid) {
+  const container = document.getElementById("withdrawHistory");
+  db.ref("withdraws/" + uid).once("value").then(snap => {
+    container.innerHTML = '';
+    if (!snap.exists()) {
+      container.innerHTML = "<p>No withdraw history found</p>";
+      return;
     }
+    Object.values(snap.val()).reverse().forEach(data => {
+      const item = createHistoryItem(data, data.status);
+      container.appendChild(item);
+    });
+  });
+}
+
+function loadInvestmentHistory(uid) {
+  const container = document.getElementById("investmentHistory");
+  db.ref("investment/" + uid).once("value").then(snap => {
+    container.innerHTML = '';
+    if (!snap.exists()) {
+      container.innerHTML = "<p>No investment history found</p>";
+      return;
+    }
+    Object.values(snap.val()).reverse().forEach(data => {
+      const item = createHistoryItem(data, "active");
+      container.appendChild(item);
+    });
+  });
+}
+
   </script>
 </body>
 </html>
