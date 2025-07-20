@@ -395,8 +395,8 @@
         
         <div class="balance-card winning">
           <div class="balance-icon"><i class="fas fa-trophy"></i></div>
-          <div class="balance-label">Winning</div>
-          <div class="balance-amount" id="winning">₹0.00</div>
+          <div class="balance-label">Total Earnings</div>
+          <div class="balance-amount" id="Earnings">₹0.00</div>
         </div>
       </div>
 
@@ -447,7 +447,7 @@
   // ✅ 3. Refs
   const rechargeEl = document.getElementById('recharge');
   const bonusEl = document.getElementById('bonus');
-  const winningEl = document.getElementById('winning');
+  const winningEl = document.getElementById('Earnings');
   const totalEl = document.getElementById('total');
   const txnList = document.getElementById('transactionList');
 
@@ -461,7 +461,7 @@
       const walletRef = db.ref(`users/${userId}/wallet`);
       walletRef.once("value").then(snap => {
         if (!snap.exists()) {
-          walletRef.set({ recharge: 1000, bonus: 100, winning: 0 });
+          walletRef.set({ recharge: 1000, bonus: 100, Earnings: 0 });
         }
       });
 
@@ -470,12 +470,12 @@
         const w = snap.val() || {};
         const recharge = w.recharge || 0;
         const bonus = w.bonus || 0;
-        const winning = w.winning || 0;
-        const total = recharge + bonus + winning;
+        const Earnings = w.Earnings || 0;
+        const total = recharge + bonus + Earnings;
 
         rechargeEl.textContent = `₹${recharge.toFixed(2)}`;
         bonusEl.textContent = `₹${bonus.toFixed(2)}`;
-        winningEl.textContent = `₹${winning.toFixed(2)}`;
+        winningEl.textContent = `₹${Earnings.toFixed(2)}`;
         totalEl.textContent = `₹${total.toFixed(2)}`;
 
         pulse(rechargeEl.parentElement);
@@ -494,12 +494,12 @@
             el.className = 'transaction-item';
             const iconCls = txn.type === 'withdraw'
               ? 'withdraw-icon'
-              : txn.type === 'winning'
+              : txn.type === 'Earnings'
                 ? 'winning-icon'
                 : 'recharge-icon';
             const icon = txn.type === 'withdraw'
               ? '<i class="fas fa-arrow-up"></i>'
-              : txn.type === 'winning'
+              : txn.type === 'Earnings'
                 ? '<i class="fas fa-trophy"></i>'
                 : '<i class="fas fa-arrow-down"></i>';
             const amountCls = txn.type === 'withdraw' ? 'debit' : 'credit';
