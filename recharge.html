@@ -867,7 +867,16 @@
     const confirmationBonus = document.getElementById('confirmation-bonus');
 
     let selectedAmount = 500;
-    let userId = "user_" + Math.random().toString(36).substr(2, 9); // Replace with auth.uid
+    let userId;
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    userId = user.uid;
+    loadRechargeHistory(); // Load only after auth
+  } else {
+    alert("Please login to continue");
+    window.location.href = "login.html";
+  }
+});
 
     document.addEventListener('DOMContentLoaded', () => {
       amountOptions.forEach(option => {
