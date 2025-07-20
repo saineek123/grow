@@ -50,12 +50,12 @@
     <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
     <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
     <p><strong>Account ID:</strong> <span id="userId">Loading...</span></p>
-    <p><strong>Total Balance:</strong> ₹<span id="userBalance">0</span></p>
+    <p><strong>Available Balance:</strong> ₹<span id="userBalance">0</span></p>
   </div>
 
   <div class="card actions">
-    <button onclick="window.location.href='edit_profile.html'">✏️ Edit Profile</button>
-    <button onclick="window.location.href='change_password.html'">🔑 Change Password</button>
+    <button onclick="window.location.href='edit-profile.html'">✏️ Edit Profile</button>
+    <button onclick="window.location.href='change-password.html'">🔑 Change Password</button>
     <button onclick="window.location.href='support.html'">🛟 Support</button>
     <button onclick="window.location.href='settings.html'">⚙️ Settings</button>
     <button onclick="logout()">🚪 Logout</button>
@@ -80,14 +80,14 @@
         const uid = user.uid;
         document.getElementById("userId").textContent = uid;
         document.getElementById("userEmail").textContent = user.email;
-
+       
         db.ref("users/" + uid).once("value").then(snapshot => {
           const data = snapshot.val();
           document.getElementById("userName").textContent = data.name || "N/A";
         });
 
         db.ref("wallet/" + uid + "/total").once("value").then(snap => {
-          document.getElementById("userBalance").textContent = snap.val() || "0";
+          document.getElementById("availableBalance").textContent = snap.val() || "0";
         });
       } else {
         window.location.href = "login.html";
