@@ -1007,53 +1007,56 @@ firebase.auth().onAuthStateChanged(user => {
         submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
       }
     }
+async function loadRechargeHistory() {
+  const historyContainer = document.getElementById('rechargeHistory');
+  historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
 
-    async function loadRechargeHistory() {
-      const historyContainer = document.getElementById('rechargeHistory');
-      historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
+  try {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      historyContainer.innerHTML = '<p class="error">User not logged in</p>';
+      return;
+    }
 
-      try {
-        const snapshot = await db.ref("rechargeRequests")
-          .orderByChild("userId")
-          .equalTo(userId)
-          .limitToLast(5)
-          .once("value");
+    const snapshot = await db.ref("rechargeRequests")
+      .orderByChild("userId")
+      .equalTo(userId)
+      .limitToLast(5)
+      .once("value");
 
+    if (!snapshot.exists()) {
+      historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
+      return;
+    }
 
+    historyContainer.innerHTML = '';
 
-        if (querySnapshot.empty) {
-          historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
-          return;
-        }
+    snapshot.forEach(child => {
+      const data = child.val();
+      const historyItem = document.createElement('div');
+      historyItem.className = `history-item ${data.status}`;
 
-        historyContainer.innerHTML = '';
+      const date = new Date(data.timestamp || Date.now());
+      const formattedDate = date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
 
-        querySnapshot.forEach(doc => {
-          const data = doc.data();
-          const historyItem = document.createElement('div');
-          historyItem.className = `history-item ${data.status}`;
+      let statusClass = 'status-pending';
+      let statusText = 'Pending';
 
-          const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
-          const formattedDate = date.toLocaleDateString('en-IN', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-          });
+      if (data.status === 'approved') {
+        statusClass = 'status-approved';
+        statusText = 'Approved';
+      } else if (data.status === 'rejected') {
+        statusClass = 'status-rejected';
+        statusText = 'Rejected';
+      }
 
-          let statusClass = 'status-pending';
-          let statusText = 'Pending';
-
-          if (data.status === 'approved') {
-            statusClass = 'status-approved';
-            statusText = 'Approved';
-          } else if (data.status === 'rejected') {
-            statusClass = 'status-rejected';
-            statusText = 'Rejected';
-          }
-
-          historyItem.innerHTML = `
+      historyItem.innerHTML = `
         <div class="history-details">
-          <div class="history-amount">₹${data.amount.toLocaleString('en-IN')}</div>
+          <div class="history-amount">₹${(data.amount || 0).toLocaleString('en-IN')}</div>
           <div class="history-date">${formattedDate}</div>
         </div>
         <div class="history-status ${statusClass}">
@@ -1061,13 +1064,14 @@ firebase.auth().onAuthStateChanged(user => {
         </div>
       `;
 
-          historyContainer.appendChild(historyItem);
-        });
-      } catch (error) {
-        console.error("History load error:", error);
-        historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
-      }
-    }
+      historyContainer.appendChild(historyItem);
+    });
+  } catch (error) {
+    console.error("History load error:", error);
+    historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
+  }
+}
+
 
     function resetForm() {
       amountInput.value = '500';
