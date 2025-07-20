@@ -353,7 +353,7 @@
         
         <div class="balance-card winning">
           <div class="balance-icon"><i class="fas fa-trophy"></i></div>
-          <div class="balance-label">Winning Balance</div>
+          <div class="balance-label">Earnings Balance</div>
           <div class="balance-amount">₹<span id="winningBalance">0.00</span></div>
         </div>
         
@@ -387,7 +387,7 @@
       </button>
       
       <button class="btn btn-primary" onclick="window.location.href='withdraw.html'">
-        <i class="fas fa-money-bill-wave"></i> Withdraw Funds
+        <i class="fas fa-money-bill-wave"></i> Withdraw 
       </button>
       
       <button class="btn btn-logout" onclick="logout()">
@@ -440,12 +440,12 @@
       const w = snap.val() || {};
       const recharge = w.recharge || 0;
       const bonus = w.bonus || 0;
-      const winning = w.winning || 0;
-      const total = recharge + bonus + winning;
+      const totalEarningsEl = w.totalEarningsEl || 0;
+      const total = recharge + bonus + totalEarningsEl;
 
       document.getElementById("rechargeBalance").textContent = recharge.toFixed(2);
       document.getElementById("bonusBalance").textContent = bonus.toFixed(2);
-      document.getElementById("winningBalance").textContent = winning.toFixed(2);
+      document.getElementById("totalEarningsBalance").textContent = totalEarningsEl.toFixed(2);
       document.getElementById("totalBalance").textContent = total.toFixed(2);
     });
   }
