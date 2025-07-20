@@ -1,106 +1,41 @@
+
+<!-- ✅ edit_profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Edit Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      background: #121212;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 60px auto;
-      background: #1e1e1e;
-      padding: 30px;
-      border-radius: 12px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      background: #2a2a2a;
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-    }
-
-    button {
-      margin-top: 25px;
-      padding: 12px;
-      width: 100%;
-      background: #00bcd4;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      color: #000;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0097a7;
-    }
+    body { background: #0f0f1d; color: white; font-family: sans-serif; padding: 20px; }
+    input, button { padding: 10px; margin: 10px 0; width: 100%; border-radius: 6px; border: none; }
+    button { background: #00e5ff; color: black; font-weight: bold; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>✏️ Edit Profile</h2>
-    <label for="username">Username:</label>
-    <input type="text" id="username" placeholder="Enter your username">
+  <h2>Edit Profile</h2>
+  <input type="text" id="nameInput" placeholder="Enter New Name">
+  <button onclick="updateName()">Save</button>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" placeholder="Enter your email">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = { /* same config as before */ };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-    <button onclick="saveProfile()">Save Changes</button>
-  </div>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-
-<script>
-   const firebaseConfig = {
-            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-            authDomain: "grow-3e3a1.firebaseapp.com",
-            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-            projectId: "grow-3e3a1",
-            storageBucket: "grow-3e3a1.appspot.com",
-            messagingSenderId: "285304522946",
-            appId: "1:285304522946:web:c423e49a8e0968ce63535b"
-        };
-    const user = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (!user) {
-      window.location.href = "login.html";
-    } else {
-      document.getElementById("username").value = user.username || "";
-      document.getElementById("email").value = user.email || "";
-    }
-
-    function saveProfile() {
-      user.username = document.getElementById("username").value;
-      user.email = document.getElementById("email").value;
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-      alert("Profile updated successfully!");
-      window.location.href = "account.html";
+    function updateName() {
+      const name = document.getElementById("nameInput").value;
+      const user = auth.currentUser;
+      if (user && name) {
+        db.ref("users/" + user.uid).update({ name }).then(() => {
+          alert("Name updated!");
+          window.location.href = "myaccount.html";
+        });
+      }
     }
   </script>
-  <script src="script.js"></script>
-
 </body>
 </html>
