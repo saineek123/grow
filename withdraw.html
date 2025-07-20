@@ -660,142 +660,140 @@
         });
     }
     
-    // Load user data from Firebase
-    function loadUserData(userId) {
-      // Load balance
-      db.ref('users/' + userId).on('value', (snapshot) => {
-        const userData = snapshot.val();
-        if (userData) {
-          const balance = userData.balance || 0;
-          const withdrawable = balance * 0.95; // 5% buffer for safety
-          
-          document.getElementById('balance-display').textContent = `₹ ${balance.toLocaleString('en-IN')}.00`;
-          document.getElementById('withdrawable-display').textContent = `₹ ${withdrawable.toLocaleString('en-IN')}.00`;
-        }
-      });
-      
-      // Load recent transactions
-      db.ref('withdrawals').orderByChild('userId').equalTo(userId).limitToLast(3).on('value', (snapshot) => {
-        const transactions = snapshot.val();
-        const transactionsList = document.getElementById('recent-transactions');
-        transactionsList.innerHTML = '';
-        
-        if (transactions) {
-          Object.values(transactions).reverse().forEach(transaction => {
-            const li = document.createElement('li');
-            li.innerHTML = `<i class="fas fa-rupee-sign"></i> ₹ ${transaction.amount} - ${transaction.method} - <span class="${transaction.status.toLowerCase()}">${transaction.status}</span>`;
-            transactionsList.appendChild(li);
-          });
-        } else {
-          transactionsList.innerHTML = '<li><i class="fas fa-rupee-sign"></i> No recent transactions</li>';
-        }
-      });
-    }
-    
-    // Submit withdrawal request
-    function submitWithdraw() {
-      const amount = parseInt(document.getElementById('amount').value.trim());
-      const msgBox = document.getElementById('msg');
-      msgBox.className = '';
-      msgBox.textContent = '';
-      
-      if (!amount || amount < 100) {
-        msgBox.textContent = '❌ Minimum withdrawal amount is ₹100.';
-        msgBox.classList.add('error');
-        return;
-      }
-      
-      const user = auth.currentUser;
-      if (!user) {
-        msgBox.textContent = '❌ Please log in to withdraw.';
-        msgBox.classList.add('error');
-        return;
-      }
-      
-      const method = document.querySelector('.method-btn.active').getAttribute('data-method');
-      const withdrawData = {
-        userId: user.uid,
-        amount: amount,
-        method: method,
-        timestamp: new Date().toISOString(),
-        status: "Pending"
-      };
-      
-      if (method === "upi") {
-        const upiId = document.getElementById('upi-id').value.trim();
-        if (!upiId || !upiId.includes('@')) {
-          msgBox.textContent = '❌ Please enter a valid UPI ID.';
-          msgBox.classList.add('error');
-          return;
-        }
-        withdrawData.upiId = upiId;
-      } else {
-        const accountName = document.getElementById('account-name').value.trim();
-        const accountNumber = document.getElementById('account-number').value.trim();
-        const ifsc = document.getElementById('ifsc-code').value.trim();
-        const bankName = document.getElementById('bank-name').value.trim();
-        
-        if (!accountName || !accountNumber || !ifsc || !bankName) {
-          msgBox.textContent = '❌ Please fill all bank details.';
-          msgBox.classList.add('error');
-          return;
-        }
-        
-        withdrawData.accountName = accountName;
-        withdrawData.accountNumber = accountNumber;
-        withdrawData.ifsc = ifsc;
-        withdrawData.bankName = bankName;
-      }
-      
-      // Check user balance
-      db.ref('users/' + user.uid).once('value').then(snapshot => {
-        const userData = snapshot.val();
-        const balance = userData.balance || 0;
-        
-        if (amount > balance) {
-          msgBox.textContent = '❌ Insufficient balance for withdrawal.';
-          msgBox.classList.add('error');
-          return;
-        }
-        
-        // Deduct from balance
-        const newBalance = balance - amount;
-        db.ref('users/' + user.uid).update({ balance: newBalance });
-        
-        // Save withdrawal request
-        const withdrawRef = db.ref('withdrawals').push();
-        withdrawRef.set(withdrawData);
-        
-        msgBox.textContent = '✅ Withdrawal request submitted successfully!';
-        msgBox.classList.add('success');
-        
-        // Clear form
-        document.getElementById('amount').value = '';
-        if (method === "upi") {
-          document.getElementById('upi-id').value = '';
-        } else {
-          document.getElementById('account-name').value = '';
-          document.getElementById('account-number').value = '';
-          document.getElementById('ifsc-code').value = '';
-          document.getElementById('bank-name').value = '';
-        }
-        
-        // Update UI
-        document.getElementById('balance-display').textContent = `₹ ${newBalance.toLocaleString('en-IN')}.00`;
-        document.getElementById('withdrawable-display').textContent = `₹ ${(newBalance * 0.95).toLocaleString('en-IN')}.00`;
-        
-        // Add to recent transactions
-        const transactionsList = document.getElementById('recent-transactions');
+   // Load user data from Firebase
+function loadUserData(userId) {
+  // Use new wallet structure
+  db.ref('users/' + userId + '/wallet').on('value', (snapshot) => {
+    const wallet = snapshot.val() || {};
+    const recharge = wallet.recharge || 0;
+    const bonus = wallet.bonus || 0;
+    const earnings = wallet.Earnings || 0;
+
+    // Only earnings are withdrawable
+    document.getElementById('balance-display').textContent = `₹ ${(recharge + bonus + earnings).toFixed(2)}`;
+    document.getElementById('withdrawable-display').textContent = `₹ ${earnings.toFixed(2)}`;
+  });
+
+  // Load recent withdrawal transactions
+  db.ref('withdrawals').orderByChild('userId').equalTo(userId).limitToLast(3).on('value', (snapshot) => {
+    const transactions = snapshot.val();
+    const transactionsList = document.getElementById('recent-transactions');
+    transactionsList.innerHTML = '';
+
+    if (transactions) {
+      Object.values(transactions).reverse().forEach(transaction => {
         const li = document.createElement('li');
-        li.innerHTML = `<i class="fas fa-rupee-sign"></i> ₹ ${amount} - ${method} - <span class="pending">Pending</span>`;
-        transactionsList.insertBefore(li, transactionsList.firstChild);
-        
-        // Limit to 3 transactions
-        if (transactionsList.children.length > 3) {
-          transactionsList.removeChild(transactionsList.lastChild);
-        }
+        li.innerHTML = `<i class="fas fa-rupee-sign"></i> ₹ ${transaction.amount} - ${transaction.method} - <span class="${transaction.status.toLowerCase()}">${transaction.status}</span>`;
+        transactionsList.appendChild(li);
       });
+    } else {
+      transactionsList.innerHTML = '<li><i class="fas fa-rupee-sign"></i> No recent transactions</li>';
     }
+  });
+}
+function submitWithdraw() {
+  const amount = parseInt(document.getElementById('amount').value.trim());
+  const msgBox = document.getElementById('msg');
+  msgBox.className = '';
+  msgBox.textContent = '';
+
+  if (!amount || amount < 100) {
+    msgBox.textContent = '❌ Minimum withdrawal amount is ₹100.';
+    msgBox.classList.add('error');
+    return;
+  }
+
+  const user = auth.currentUser;
+  if (!user) {
+    msgBox.textContent = '❌ Please log in to withdraw.';
+    msgBox.classList.add('error');
+    return;
+  }
+
+  const method = document.querySelector('.method-btn.active').getAttribute('data-method');
+  const withdrawData = {
+    userId: user.uid,
+    amount: amount,
+    method: method,
+    timestamp: new Date().toISOString(),
+    status: "Pending"
+  };
+
+  if (method === "upi") {
+    const upiId = document.getElementById('upi-id').value.trim();
+    if (!upiId || !upiId.includes('@')) {
+      msgBox.textContent = '❌ Please enter a valid UPI ID.';
+      msgBox.classList.add('error');
+      return;
+    }
+    withdrawData.upiId = upiId;
+  } else {
+    const accountName = document.getElementById('account-name').value.trim();
+    const accountNumber = document.getElementById('account-number').value.trim();
+    const ifsc = document.getElementById('ifsc-code').value.trim();
+    const bankName = document.getElementById('bank-name').value.trim();
+
+    if (!accountName || !accountNumber || !ifsc || !bankName) {
+      msgBox.textContent = '❌ Please fill all bank details.';
+      msgBox.classList.add('error');
+      return;
+    }
+
+    withdrawData.accountName = accountName;
+    withdrawData.accountNumber = accountNumber;
+    withdrawData.ifsc = ifsc;
+    withdrawData.bankName = bankName;
+  }
+
+  // Only deduct from Earnings
+  db.ref('users/' + user.uid + '/wallet').once('value').then(snapshot => {
+    const wallet = snapshot.val() || {};
+    const currentEarnings = wallet.Earnings || 0;
+
+    if (amount > currentEarnings) {
+      msgBox.textContent = '❌ You can only withdraw your Total Earnings balance.';
+      msgBox.classList.add('error');
+      return;
+    }
+
+    const newEarnings = currentEarnings - amount;
+
+    // Update wallet
+    db.ref('users/' + user.uid + '/wallet').update({ Earnings: newEarnings });
+
+    // Add withdrawal request
+    const withdrawRef = db.ref('withdrawals').push();
+    withdrawRef.set(withdrawData);
+
+    msgBox.textContent = '✅ Withdrawal request submitted successfully!';
+    msgBox.classList.add('success');
+
+    document.getElementById('amount').value = '';
+    if (method === "upi") {
+      document.getElementById('upi-id').value = '';
+    } else {
+      document.getElementById('account-name').value = '';
+      document.getElementById('account-number').value = '';
+      document.getElementById('ifsc-code').value = '';
+      document.getElementById('bank-name').value = '';
+    }
+
+    // Update UI
+    document.getElementById('withdrawable-display').textContent = `₹ ${newEarnings.toFixed(2)}`;
+    const total = (wallet.recharge || 0) + (wallet.bonus || 0) + newEarnings;
+    document.getElementById('balance-display').textContent = `₹ ${total.toFixed(2)}`;
+
+    // Show in recent transactions
+    const transactionsList = document.getElementById('recent-transactions');
+    const li = document.createElement('li');
+    li.innerHTML = `<i class="fas fa-rupee-sign"></i> ₹ ${amount} - ${method} - <span class="pending">Pending</span>`;
+    transactionsList.insertBefore(li, transactionsList.firstChild);
+    if (transactionsList.children.length > 3) {
+      transactionsList.removeChild(transactionsList.lastChild);
+    }
+  });
+}
+
   </script>
 </body>
 </html>
