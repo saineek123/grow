@@ -892,6 +892,48 @@
     .expense {
       color: #f87171;
     }
+
+   /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--header-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-item i {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-item.active, .nav-item:hover {
+      color: var(--accent-color);
+    }
+    
+    .nav-item.active i, .nav-item:hover i {
+      color: var(--accent-color);
+      transform: translateY(-5px);
+    }
+    
   </style>
 </head>
 <body>
@@ -912,13 +954,13 @@
     
     <a href="index.html"><i class="fas fa-home"></i> Home</a>
     <a href="wallet.html"><i class="fas fa-credit-card"></i> Wallet</a>
-    <a href="recharge.html"><i class="fas fa-wallet"></i> Recharge</a>
+    <a href="recharge.html"><i class="fas fa-wallet"></i> Deposit</a>
     <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
     <a href="history.html"><i class="fas fa-history"></i> History</a>
     <a href="account.html"><i class="fas fa-user-circle"></i> Account</a>
     
     <div class="divider"></div>
-    
+
     <a href="support.html"><i class="fas fa-headset"></i> Support</a>
     <a href="invite.html"><i class="fas fa-gift"></i> Invite Friends</a>
     <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
@@ -931,7 +973,7 @@
   <header>
     <div class="logo">
       <i class="fas fa-chart-line"></i>
-      <span>WealthGrow</span>
+      <span>GROW</span>
     </div>
     
     <div class="user-controls">
@@ -956,8 +998,8 @@
     
     <!-- Welcome Banner -->
     <div class="welcome-banner">
-      <h1>Welcome, <span id="userName">User</span>!</h1>
-      <p>Your ultimate investment experience starts here</p>
+      <h1>Welcome, <span id="userName">User</span></h1>
+      <p><h3>Your Ultimate Investment Experience Starts Here</h3></p>
       
       <div class="wallet-breakdown">
         <div class="wallet-item">
@@ -979,31 +1021,13 @@
         </div>
       </div>
     </div>
-    
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-      <div class="action-button" onclick="showDepositModal()">
-        <i class="fas fa-plus-circle"></i>
-        <span>Deposit</span>
-      </div>
-      <div class="action-button" onclick="showWithdrawModal()">
-        <i class="fas fa-money-bill-wave"></i>
-        <span>Withdraw</span>
-      </div>
-      <div class="action-button" onclick="showTransferModal()">
-        <i class="fas fa-exchange-alt"></i>
-        <span>Transfer</span>
-      </div>
-      <div class="action-button" onclick="showTransactionModal()">
-        <i class="fas fa-history"></i>
-        <span>History</span>
-      </div>
-    </div>
+   
     
     <!-- Investment Products -->
     <div class="section-title">
       <i class="fas fa-chart-line"></i>
-      <h2>Investment Products</h2>
+      <h2 style="color: #8ef00e;">Investment Products</h2>
+    
     </div>
     
     <div class="products-grid" id="productsContainer">
@@ -1067,14 +1091,15 @@
         <div class="form-group">
           <label for="depositMethod">Payment Method</label>
           <select id="depositMethod">
-            <option value="credit_card">Credit Card</option>
-            <option value="paypal">PayPal</option>
-            <option value="bank_transfer">Bank Transfer</option>
-            <option value="crypto">Crypto Wallet</option>
+            <option value="upi">UPI</option>
+            <option value="paytm">Paytm</option>
+            <option value="phonepe">PhonePe</option>
+            <option value="googlepay">Google Pay</option>
           </select>
         </div>
         <div class="error-message" id="depositError"></div>
-        <button class="btn" onclick="processDeposit()">Deposit Now</button>
+        <button class="btn"><a href="recharge.html">Deposit</a></button>
+
       </div>
     </div>
   </div>
@@ -1083,7 +1108,7 @@
   <div class="investment-modal" id="withdrawModal">
     <div class="investment-content">
       <div class="investment-header">
-        <h2>Withdraw Funds</h2>
+        <h2>Withdraw</h2>
         <button class="close-btn" onclick="closeWithdrawModal()">&times;</button>
       </div>
       <div class="investment-form">
@@ -1095,12 +1120,12 @@
           <label for="withdrawMethod">Withdrawal Method</label>
           <select id="withdrawMethod">
             <option value="bank_account">Bank Account</option>
-            <option value="paypal">PayPal</option>
-            <option value="crypto">Crypto Wallet</option>
+            <option value="upi">UPI</option>
+            
           </select>
         </div>
         <div class="error-message" id="withdrawError"></div>
-        <button class="btn" onclick="processWithdrawal()">Withdraw Now</button>
+        <button class="btn"><a href="withdraw.html">Withdraw Now </a></button>
       </div>
     </div>
   </div>
@@ -1144,6 +1169,29 @@
         <!-- Transactions will be loaded dynamically -->
       </div>
     </div>
+  </div>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="wallet.html" class="nav-item">
+      <i class="fas fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+    <a href="recharge.html" class="nav-item">
+      <i class="fas fa-credit-card"></i>
+      <span>Deposit</span>
+    </a>
+    <a href="history.html" class="nav-item">
+      <i class="fas fa-history"></i>
+      <span>History</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Account</span>
+    </a>
   </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
