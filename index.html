@@ -1206,14 +1206,43 @@
     projectId: "grow-3e3a1",
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const auth = firebase.auth();
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 
-  let currentUser = null;
-  let currentUserData = null;
-  let currentProduct = null;
-  let transactions = [];
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      const userId = user.uid;
+
+      db.ref('users/' + userId + '/wallet').on('value', (snapshot) => {
+        const wallet = snapshot.val() || {};
+        const recharge = wallet.recharge || 0;
+        const bonus = wallet.bonus || 0;
+        const totalEarnings = wallet.totalEarnings || 0;
+        const total = recharge + bonus + totalEarnings;
+
+        // 🟢 Home Page Update
+        const rechargeEl = document.getElementById('recharge');
+        const bonusEl = document.getElementById('bonus');
+        const totalEarningsEl = document.getElementById('totalEarnings');
+        const totalEl = document.getElementById('total');
+
+        if (rechargeEl) rechargeEl.textContent = `₹${recharge.toFixed(2)}`;
+        if (bonusEl) bonusEl.textContent = `₹${bonus.toFixed(2)}`;
+        if (totalEarningsEl) totalEarningsEl.textContent = `₹${totalEarnings.toFixed(2)}`;
+        if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+
+        // 🟢 Drawer Balance Update
+        const drawerTotalEl = document.getElementById('drawer-total');
+        if (drawerTotalEl) drawerTotalEl.textContent = `₹${total.toFixed(2)}`;
+      });
+    } else {
+      auth.signInAnonymously().catch(console.error);
+    }
+  });
 
   // Toggle drawer function
   function toggleDrawer() {
@@ -1247,16 +1276,16 @@
       // Update balances
       const recharge = data.wallet?.recharge || 0;
       const bonus = data.wallet?.bonus || 0;
-      const winning = data.wallet?.winning || 0;
-      const total = recharge + bonus + winning;
+      const totalEarnings = data.wallet?.totalEarnings || 0;
+      const total = recharge + bonus + totalEarnings;
       const invested = data.invested || 0;
-      const earnings = data.earnings || 0;
+      const totalEarningsEl = data.totalEarnings || 0;
 
       document.getElementById("totalBalance").textContent = total.toFixed(2);
       document.getElementById("drawerBalance").textContent = total.toFixed(2);
       document.getElementById("availableBalance").textContent = recharge.toFixed(2);
       document.getElementById("investedAmount").textContent = invested.toFixed(2);
-      document.getElementById("totalEarnings").textContent = earnings.toFixed(2);
+      document.getElementById("totalEarnings").textContent = totalEarnings.toFixed(2);
 
       // Load transactions
       if (data.transactions) {
