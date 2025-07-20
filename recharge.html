@@ -1,583 +1,1088 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recharge Wallet</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INVESTPRO - Wallet Recharge</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <style>
-    :root {
-      --primary: #00bcd4;
-      --primary-dark: #0097a7;
-      --secondary: #9c27b0;
-      --success: #4caf50;
-      --warning: #ff9800;
-      --danger: #f44336;
-      --bg-dark: #121212;
-      --card-bg: #1e1e1e;
-      --card-border: rgba(255, 255, 255, 0.1);
-      --text-light: #ffffff;
-      --text-gray: #b0b0b0;
-    }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
-
+    
     body {
-      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
-      color: var(--text-light);
+      background: #0a1026;
+      color: #fff;
       min-height: 100vh;
-      padding-bottom: 30px;
-    }
-
-    nav {
-      background: rgba(30, 30, 30, 0.9);
-      backdrop-filter: blur(10px);
-      padding: 15px 0;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    nav a {
-      color: var(--text-gray);
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      padding: 8px 15px;
-      border-radius: 30px;
-    }
-
-    nav a:hover, nav a.active {
-      background: rgba(0, 188, 212, 0.2);
-      color: var(--primary);
-    }
-
-    .logo {
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 5px;
-      color: var(--primary);
-      font-size: 1.4rem;
+      align-items: center;
+      padding: 20px;
     }
-
+    
     .container {
-      max-width: 480px;
-      margin: 30px auto;
-      background: var(--card-bg);
-      padding: 30px;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: linear-gradient(145deg, #121f3d, #0c2952);
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--card-border);
-      position: relative;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
       overflow: hidden;
-    }
-
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(0,188,212,0.1) 0%, transparent 70%);
-      z-index: -1;
-    }
-
-    h2 {
-      text-align: center;
       margin-bottom: 30px;
-      font-size: 1.8rem;
-      background: linear-gradient(90deg, #00bcd4, #9c27b0);
+      border: 1px solid rgba(249, 168, 37, 0.15);
+    }
+    
+    .card-header {
+      padding: 30px;
+      background: rgba(16, 25, 54, 0.8);
+      color: white;
+      text-align: center;
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .card-header h1 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #f9a825, #ffca28);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .card-header p {
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto;
+      color: #ccc;
+      font-size: 16px;
+    }
+    
+    .qr-container {
+      margin: 25px auto;
+      text-align: center;
+      max-width: 300px;
+    }
+    
+    .qr-placeholder {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(249, 168, 37, 0.2);
     }
-
-    .form-group {
-      margin-bottom: 25px;
-      position: relative;
+    
+    .qr-placeholder img {
+      max-width: 100%;
+      border-radius: 10px;
     }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--text-gray);
-      display: flex;
+    
+    .card-body {
+      padding: 30px;
+    }
+    
+    .back-btn {
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-    }
-
-    .input-container {
-      position: relative;
-    }
-
-    input {
-      width: 100%;
-      padding: 15px 15px 15px 45px;
-      background: rgba(42, 42, 42, 0.5);
-      color: var(--text-light);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3);
-    }
-
-    .input-icon {
+      color: #f9a825;
+      text-decoration: none;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      background: rgba(249, 168, 37, 0.1);
+      transition: all 0.3s;
       position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-gray);
-      font-size: 1.2rem;
+      left: 20px;
+      top: 20px;
+      font-weight: 500;
+      border: 1px solid rgba(249, 168, 37, 0.2);
     }
-
-    .amount-input {
-      position: relative;
-    }
-
-    .amount-input::before {
-      content: '₹';
-      position: absolute;
-      left: 45px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-light);
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-
-    button {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    .qr-section {
-      text-align: center;
-      margin: 30px 0;
-      padding: 20px;
-      background: rgba(42, 42, 42, 0.3);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .qr-section img {
-      width: 200px;
-      height: 200px;
-      border-radius: 12px;
-      margin: 0 auto 20px;
-      display: block;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .upi-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .upi-card {
-      background: rgba(42, 42, 42, 0.5);
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .upi-info {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .upi-label {
-      font-size: 0.9rem;
-      color: var(--text-gray);
-    }
-
-    .upi-id {
-      font-weight: 600;
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
-    }
-
-    .copy-btn {
-      background: rgba(0, 188, 212, 0.2);
-      color: var(--primary);
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 600;
-    }
-
-    .copy-btn:hover {
-      background: rgba(0, 188, 212, 0.3);
+    
+    .back-btn:hover {
+      background: rgba(249, 168, 37, 0.2);
       transform: translateY(-2px);
     }
-
-    .file-input-container {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-      width: 100%;
-    }
-
-    .file-input-container input[type="file"] {
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    .file-input-label {
+    
+    .recharge-steps {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 15px;
-      background: rgba(42, 42, 42, 0.5);
-      color: var(--text-gray);
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      margin: 30px 0;
+      position: relative;
     }
-
-    .file-input-label:hover {
-      border-color: var(--primary);
-      background: rgba(0, 188, 212, 0.1);
+    
+    .recharge-steps::before {
+      content: '';
+      position: absolute;
+      top: 25px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1;
     }
-
-    .file-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 70%;
-      color: var(--text-light);
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
     }
-
-    .info-box {
-      background: rgba(42, 42, 42, 0.3);
-      border-left: 4px solid var(--primary);
-      padding: 15px;
-      border-radius: 0 8px 8px 0;
-      margin: 25px 0;
-    }
-
-    .info-title {
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--primary);
+    
+    .step-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #777;
     }
-
-    .info-content {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text-gray);
+    
+    .step.active .step-icon {
+      background: linear-gradient(135deg, #f9a825, #2a5298);
+      color: white;
+      box-shadow: 0 5px 15px rgba(249, 168, 37, 0.3);
     }
-
-    .success-msg {
-      background: rgba(76, 175, 80, 0.15);
-      border: 1px solid rgba(76, 175, 80, 0.2);
-      color: var(--success);
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 20px;
-      text-align: center;
+    
+    .step.completed .step-icon {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+    }
+    
+    .step-label {
+      font-size: 14px;
       font-weight: 500;
+      text-align: center;
+      color: #aaa;
+    }
+    
+    .step.active .step-label {
+      color: #f9a825;
+      font-weight: 600;
+    }
+    
+    .form-section {
       display: none;
     }
-
-    .amount-display {
-      text-align: center;
-      margin: 15px 0;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--primary);
+    
+    .form-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
     }
-
-    @media (max-width: 500px) {
-      .container {
-        margin: 20px 15px;
-        padding: 25px;
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #f9a825;
+      font-size: 16px;
+    }
+    
+    .input-with-icon {
+      position: relative;
+    }
+    
+    .input-with-icon i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #f9a825;
+      font-size: 20px;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 16px 20px 16px 60px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+      outline: none;
+      background: rgba(16, 25, 54, 0.5);
+      color: white;
+    }
+    
+    .form-control:focus {
+      border-color: #f9a825;
+      box-shadow: 0 0 0 3px rgba(249, 168, 37, 0.2);
+    }
+    
+    .amount-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .amount-option {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(16, 25, 54, 0.3);
+    }
+    
+    .amount-option:hover {
+      border-color: #f9a825;
+      background: rgba(249, 168, 37, 0.1);
+      transform: translateY(-5px);
+    }
+    
+    .amount-option.selected {
+      border-color: #f9a825;
+      background: rgba(249, 168, 37, 0.15);
+      box-shadow: 0 5px 15px rgba(249, 168, 37, 0.2);
+    }
+    
+    .amount-option .amount {
+      font-size: 22px;
+      color: #f9a825;
+      margin-bottom: 8px;
+    }
+    
+    .amount-option .bonus {
+      font-size: 14px;
+      color: #2ecc71;
+      font-weight: 500;
+    }
+    
+    .file-upload {
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 40px 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(16, 25, 54, 0.3);
+    }
+    
+    .file-upload:hover {
+      border-color: #f9a825;
+      background: rgba(249, 168, 37, 0.1);
+    }
+    
+    .file-upload i {
+      font-size: 50px;
+      color: #f9a825;
+      margin-bottom: 20px;
+    }
+    
+    .file-upload p {
+      margin-bottom: 15px;
+      font-weight: 500;
+      font-size: 16px;
+      color: #ccc;
+    }
+    
+    .file-upload .btn {
+      background: rgba(249, 168, 37, 0.2);
+      border: 1px solid rgba(249, 168, 37, 0.3);
+      color: #f9a825;
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-upload .btn:hover {
+      background: rgba(249, 168, 37, 0.3);
+    }
+    
+    .file-name {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #aaa;
+      padding: 12px;
+      background: rgba(16, 25, 54, 0.3);
+      border-radius: 8px;
+      border-left: 3px solid #f9a825;
+    }
+    
+    .file-name i {
+      margin-right: 10px;
+      color: #f9a825;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #f9a825, #ffca28);
+      color: #000;
+      box-shadow: 0 4px 20px rgba(249, 168, 37, 0.4);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(249, 168, 37, 0.5);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #ccc;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #f9a825;
+      color: #f9a825;
+    }
+    
+    .status-card {
+      background: rgba(16, 25, 54, 0.5);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      margin: 30px 0;
+      border: 1px solid rgba(249, 168, 37, 0.15);
+    }
+    
+    .status-icon {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 40px;
+      background: rgba(243, 156, 18, 0.15);
+      color: #f9a825;
+    }
+    
+    .status-pending .status-icon {
+      background: rgba(243, 156, 18, 0.15);
+      color: #f9a825;
+    }
+    
+    .status-approved .status-icon {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+    
+    .status-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #f9a825;
+    }
+    
+    .status-desc {
+      color: #aaa;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    
+    .status-info {
+      background: rgba(16, 25, 54, 0.8);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: left;
+      margin-top: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      color: #aaa;
+      font-weight: 500;
+    }
+    
+    .info-value {
+      font-weight: 600;
+      color: #f9a825;
+    }
+    
+    .transaction-history {
+      margin-top: 40px;
+    }
+    
+    .history-title {
+      font-size: 22px;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      color: #f9a825;
+    }
+    
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 18px;
+      border-radius: 15px;
+      background: rgba(16, 25, 54, 0.5);
+      margin-bottom: 15px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+      border-left: 4px solid #f9a825;
+      transition: all 0.3s;
+    }
+    
+    .history-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(249, 168, 37, 0.2);
+    }
+    
+    .history-item.approved {
+      border-left-color: #2ecc71;
+    }
+    
+    .history-item.rejected {
+      border-left-color: #e74c3c;
+    }
+    
+    .history-amount {
+      font-weight: 700;
+      font-size: 20px;
+    }
+    
+    .history-date {
+      font-size: 14px;
+      color: #aaa;
+    }
+    
+    .history-status {
+      font-weight: 600;
+      text-align: right;
+    }
+    
+    .status-pending {
+      color: #f9a825;
+    }
+    
+    .status-approved {
+      color: #2ecc71;
+    }
+    
+    .status-rejected {
+      color: #e74c3c;
+    }
+    
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(16, 25, 54, 0.95);
+      color: white;
+      padding: 18px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      border-left: 4px solid #f9a825;
+      backdrop-filter: blur(10px);
+    }
+    
+    .notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .notification.success {
+      border-left-color: #2ecc71;
+    }
+    
+    .notification.error {
+      border-left-color: #e74c3c;
+    }
+    
+    @media (max-width: 768px) {
+      .card-body {
+        padding: 20px;
       }
       
-      nav a {
-        margin: 0 8px;
-        padding: 6px 12px;
-        font-size: 0.9rem;
+      .amount-options {
+        grid-template-columns: repeat(2, 1fr);
       }
       
-      h2 {
-        font-size: 1.5rem;
+      .btn-group {
+        flex-direction: column;
       }
       
-      .qr-section img {
+      .qr-container {
+        max-width: 250px;
+      }
+      
+      .qr-placeholder {
         width: 180px;
         height: 180px;
       }
+      
+      .card-header h1 {
+        font-size: 24px;
+      }
+      
+      .card-header {
+        padding: 25px 20px;
+      }
     }
-
-    .pulse {
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-      100% { transform: translateY(0); }
+    
+    @media (max-width: 480px) {
+      .recharge-steps {
+        flex-direction: column;
+        gap: 30px;
+      }
+      
+      .recharge-steps::before {
+        display: none;
+      }
+      
+      .step {
+        flex-direction: row;
+        gap: 15px;
+      }
+      
+      .step-icon {
+        margin-bottom: 0;
+      }
+      
+      .amount-options {
+        grid-template-columns: 1fr;
+      }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+      
+      .card-header {
+        text-align: left;
+      }
+      
+      .qr-container {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-
-  <nav>
-    <div class="logo">
-      <i class="fas fa-wallet"></i>
-      <span>BetPro Wallet</span>
-    </div>
-    <div>
-      <a href="index.html">Home</a>
-      <a href="recharge.html" class="active">Recharge</a>
-      <a href="withdraw.html">Withdraw</a>
-      <a href="history.html">History</a>
-      <a href="account.html">Account</a>
-    </div>
-  </nav>
-
   <div class="container">
-    <h2><i class="fas fa-coins"></i> Recharge Wallet</h2>
-
-    <form id="amountForm">
-      <div class="form-group">
-        <label for="amount"><i class="fas fa-indian-rupee-sign"></i> Enter Amount</label>
-        <div class="input-container">
-          <i class="fas fa-money-bill-wave input-icon"></i>
-          <input type="number" id="amount" placeholder="Minimum ₹100" required class="amount-input">
+    <div class="card">
+      <div class="card-header">
+        <a href="index.html" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1>Recharge Your Wallet</h1>
+        <p>Add funds to start investing in premium opportunities</p>
+        
+        <div class="qr-container">
+          <div class="qr-placeholder">
+            <img src="qr.jpg" alt="QR Code">
+          </div>
+          <p>Scan this QR code with any UPI app to pay</p>
         </div>
-      </div>
-      
-      <button type="submit" id="submitAmountBtn">
-        <i class="fas fa-arrow-right"></i> Continue to Payment
-      </button>
-    </form>
-
-    <div id="paymentSection" style="display: none;">
-      <div class="amount-display">
-        <i class="fas fa-money-bill-wave"></i> Recharge Amount: ₹<span id="displayAmount">0.00</span>
-      </div>
-      
-      <div class="qr-section">
-        <img id="qrCode" src="png.jpg" alt="QR Code" class="pulse">
-        <div class="upi-container">
-          <div class="upi-card">
-            <div class="upi-info">
-              <div class="upi-label">UPI ID</div>
-              <div class="upi-id" id="fixedUpi">amit.894@ptyes</div>
+        
+        <div class="recharge-steps">
+          <div class="step active" id="step1-indicator">
+            <div class="step-icon">
+              <i class="fas fa-rupee-sign"></i>
             </div>
-            <div class="copy-btn" onclick="copyUpi()">
-              <i class="fas fa-copy"></i> Copy
+            <div class="step-label">Enter Amount</div>
+          </div>
+          <div class="step" id="step2-indicator">
+            <div class="step-icon">
+              <i class="fas fa-receipt"></i>
             </div>
+            <div class="step-label">Upload UTR</div>
+          </div>
+          <div class="step" id="step3-indicator">
+            <div class="step-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="step-label">Confirmation</div>
           </div>
         </div>
       </div>
-
-      <form id="rechargeForm">
-        <div class="form-group">
-          <label for="screenshot"><i class="fas fa-image"></i> Payment Screenshot</label>
-          <div class="file-input-container">
-            <input type="file" id="screenshot" accept="image/*" required>
-            <div class="file-input-label">
-              <span><i class="fas fa-upload"></i> Choose file</span>
-              <span class="file-name" id="fileName">No file selected</span>
+      
+      <div class="card-body">
+        <!-- Step 1: Enter Amount -->
+        <div class="form-section active" id="step1">
+          <div class="form-group">
+            <label for="amount">Enter Recharge Amount (₹)</label>
+            <div class="input-with-icon">
+              <i class="fas fa-rupee-sign"></i>
+              <input type="number" id="amount" class="form-control" placeholder="Enter amount" min="100" value="500">
             </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Recommended Amounts</label>
+            <div class="amount-options">
+              <div class="amount-option" data-amount="500">
+                <div class="amount">₹500</div>
+                <div class="bonus">+ ₹0 bonus</div>
+              </div>
+              <div class="amount-option" data-amount="1000">
+                <div class="amount">₹1000</div>
+                <div class="bonus">+ ₹50 bonus</div>
+              </div>
+              <div class="amount-option" data-amount="2000">
+                <div class="amount">₹2000</div>
+                <div class="bonus">+ ₹150 bonus</div>
+              </div>
+              <div class="amount-option" data-amount="5000">
+                <div class="amount">₹5000</div>
+                <div class="bonus">+ ₹500 bonus</div>
+              </div>
+              <div class="amount-option" data-amount="10000">
+                <div class="amount">₹10000</div>
+                <div class="bonus">+ ₹1200 bonus</div>
+              </div>
+              <div class="amount-option" data-amount="20000">
+                <div class="amount">₹20000</div>
+                <div class="bonus">+ ₹3000 bonus</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-outline" id="cancelBtn">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="btn btn-primary" id="nextStep1">
+              Continue <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </div>
         
-        <div class="form-group">
-          <label for="utr"><i class="fas fa-receipt"></i> UTR / Transaction ID</label>
-          <div class="input-container">
-            <i class="fas fa-hashtag input-icon"></i>
-            <input type="text" id="utr" placeholder="Enter transaction reference" required>
+        <!-- Step 2: Upload UTR -->
+        <div class="form-section" id="step2">
+          <div class="form-group">
+            <label>Upload UTR Proof</label>
+            <div class="file-upload" id="fileUploadArea">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Click to upload UTR screenshot or receipt</p>
+              <button class="btn">
+                <i class="fas fa-file-upload"></i> Choose File
+              </button>
+              <input type="file" id="fileInput" style="display: none;" accept="image/*">
+            </div>
+            <div class="file-name" id="fileName">
+              <i class="fas fa-file"></i> No file chosen
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="utr">UTR Number</label>
+            <div class="input-with-icon">
+              <i class="fas fa-receipt"></i>
+              <input type="text" id="utr" class="form-control" placeholder="Enter UTR number">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="note">Additional Note (Optional)</label>
+            <textarea id="note" class="form-control" placeholder="Add any additional information" rows="3"></textarea>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-outline" id="prevStep2">
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-primary" id="submitRecharge">
+              Submit Recharge Request <i class="fas fa-paper-plane"></i>
+            </button>
           </div>
         </div>
         
-        <button type="submit" id="submitRechargeBtn">
-          <i class="fas fa-paper-plane"></i> Submit Recharge Request
-        </button>
-      </form>
-      
-      <div class="info-box">
-        <div class="info-title"><i class="fas fa-info-circle"></i> Important Notes</div>
-        <div class="info-content">
-          • Minimum recharge amount is ₹100<br>
-          • Ensure UPI ID and UTR are correct<br>
-          • Recharges processed within 24 hours<br>
-          • Contact support for assistance<br>
-          • Your money is safe with us
+        <!-- Step 3: Confirmation -->
+        <div class="form-section" id="step3">
+          <div class="status-card status-pending">
+            <div class="status-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h2 class="status-title">Recharge Request Submitted!</h2>
+            <p class="status-desc">Your recharge request is pending admin approval. You'll be notified once it's processed. Funds will be available within 15 minutes after approval.</p>
+            
+            <div class="status-info">
+              <div class="info-row">
+                <span class="info-label">Transaction ID:</span>
+                <span class="info-value" id="confirmation-id">TX20231025123456</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Amount:</span>
+                <span class="info-value" id="confirmation-amount">₹1,000.00</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Bonus:</span>
+                <span class="info-value" id="confirmation-bonus">₹50.00</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">UTR Number:</span>
+                <span class="info-value" id="confirmation-utr">UTR1234567890</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Date & Time:</span>
+                <span class="info-value" id="confirmation-date">25 Oct 2023, 14:30 IST</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status:</span>
+                <span class="info-value status-pending">Pending Approval</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-outline" id="newRecharge">
+              <i class="fas fa-plus-circle"></i> New Recharge
+            </button>
+            <button class="btn btn-primary" id="goToDashboard">
+              <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+            </button>
+          </div>
+          
+          <div class="transaction-history">
+            <h3 class="history-title">Recent Recharge History</h3>
+            <div id="rechargeHistory">
+              <!-- History items will be loaded from Firebase -->
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div class="success-msg" id="successMsg">
-        <i class="fas fa-check-circle"></i> Recharge request sent! Waiting for admin approval.
       </div>
     </div>
   </div>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
 <script>
-   const firebaseConfig = {
-            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-            authDomain: "grow-3e3a1.firebaseapp.com",
-            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-            projectId: "grow-3e3a1",
-         
-        };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const auth = firebase.auth();
-  const firestore = firebase.firestore();
+const firebaseConfig = {
+  apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+  authDomain: "grow-3e3a1.firebaseapp.com",
+  databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+  projectId: "grow-3e3a1",
+  storageBucket: "grow-3e3a1.appspot.com",
+  messagingSenderId: "285304522946",
+  appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+};
 
-  let userId = localStorage.getItem("userId");
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-  if (!userId) {
-    auth.signInAnonymously().then(() => {
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          userId = user.uid;
-          localStorage.setItem("userId", userId);
-        }
-      });
+// DOM Elements
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
+const step1Indicator = document.getElementById('step1-indicator');
+const step2Indicator = document.getElementById('step2-indicator');
+const step3Indicator = document.getElementById('step3-indicator');
+
+const amountInput = document.getElementById('amount');
+const amountOptions = document.querySelectorAll('.amount-option');
+const utrInput = document.getElementById('utr');
+const fileInput = document.getElementById('fileInput');
+const fileUploadArea = document.getElementById('fileUploadArea');
+const fileName = document.getElementById('fileName');
+const noteInput = document.getElementById('note');
+
+const nextStep1Btn = document.getElementById('nextStep1');
+const prevStep2Btn = document.getElementById('prevStep2');
+const submitRechargeBtn = document.getElementById('submitRecharge');
+const newRechargeBtn = document.getElementById('newRecharge');
+const goToDashboardBtn = document.getElementById('goToDashboard');
+const cancelBtn = document.getElementById('cancelBtn');
+
+const confirmationId = document.getElementById('confirmation-id');
+const confirmationAmount = document.getElementById('confirmation-amount');
+const confirmationUtr = document.getElementById('confirmation-utr');
+const confirmationDate = document.getElementById('confirmation-date');
+const confirmationBonus = document.getElementById('confirmation-bonus');
+
+let selectedAmount = 500;
+let userId = "user_" + Math.random().toString(36).substr(2, 9); // Replace with auth.uid
+
+document.addEventListener('DOMContentLoaded', () => {
+  amountOptions.forEach(option => {
+    option.addEventListener('click', function () {
+      amountOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedAmount = parseInt(this.dataset.amount);
+      amountInput.value = selectedAmount;
     });
-  }
-
-  document.getElementById('amountForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById("amount").value);
-    if (isNaN(amount) || amount < 100) {
-      alert("Minimum amount is ₹100");
-      return;
-    }
-    document.getElementById("displayAmount").innerText = amount.toFixed(2);
-    document.getElementById("paymentSection").style.display = "block";
   });
 
-  document.getElementById('rechargeForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById("amount").value);
-    const utr = document.getElementById("utr").value.trim();
+  amountInput.addEventListener('input', function () {
+    selectedAmount = parseInt(this.value) || 0;
+    amountOptions.forEach(opt => opt.classList.remove('selected'));
+  });
 
-    if (!userId) {
-      alert("Please login first.");
-      return;
+  fileUploadArea.addEventListener('click', function () {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function () {
+    if (this.files.length > 0) {
+      const file = this.files[0];
+      fileName.innerHTML = `<i class="fas fa-file"></i> ${file.name}`;
+      fileUploadArea.style.borderColor = '#f9a825';
+      fileUploadArea.style.backgroundColor = 'rgba(249, 168, 37, 0.1)';
+    } else {
+      fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
+      fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
     }
+  });
 
-    if (isNaN(amount) || amount < 100) {
-      alert("Minimum amount is ₹100");
-      return;
-    }
+  nextStep1Btn.addEventListener('click', goToStep2);
+  prevStep2Btn.addEventListener('click', goToStep1);
+  submitRechargeBtn.addEventListener('click', submitRecharge);
+  newRechargeBtn.addEventListener('click', resetForm);
+  goToDashboardBtn.addEventListener('click', () => window.location.href = 'index.html');
+  cancelBtn.addEventListener('click', () => window.location.href = 'index.html');
 
-    if (!utr) {
-      alert("Please enter valid UTR / Transaction ID");
-      return;
-    }
+  amountOptions[0].classList.add('selected');
+  loadRechargeHistory();
+});
 
-    const rechargeRequest = {
-      amount: amount,
+function goToStep1() {
+  step1.classList.add('active');
+  step2.classList.remove('active');
+  step1Indicator.classList.add('active');
+  step2Indicator.classList.remove('active');
+}
+
+function goToStep2() {
+  if (selectedAmount < 100) {
+    showNotification('❌ Minimum recharge amount is ₹100', 'error');
+    return;
+  }
+
+  step1.classList.remove('active');
+  step2.classList.add('active');
+  step1Indicator.classList.remove('active');
+  step2Indicator.classList.add('active');
+}
+
+async function submitRecharge() {
+  const utr = utrInput.value.trim();
+  if (!utr) {
+    showNotification('❌ Please enter UTR number', 'error');
+    return;
+  }
+  if (!fileInput.files[0]) {
+    showNotification('❌ Please upload UTR proof (only for reference)', 'error');
+    return;
+  }
+
+  submitRechargeBtn.disabled = true;
+  submitRechargeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+  let bonus = 0;
+  if (selectedAmount >= 1000 && selectedAmount < 2000) bonus = 50;
+  else if (selectedAmount >= 2000 && selectedAmount < 5000) bonus = 150;
+  else if (selectedAmount >= 5000 && selectedAmount < 10000) bonus = 500;
+  else if (selectedAmount >= 10000) bonus = 1200;
+
+  const transactionId = 'TX' + Date.now();
+
+  try {
+    const rechargeData = {
+      userId: userId,
+      amount: selectedAmount,
+      bonus: bonus,
       utr: utr,
+      note: noteInput.value.trim(),
       status: "pending",
-      timestamp: Date.now(),
-      type: "recharge",
-      description: "User recharge request"
+      transactionId: transactionId,
+      timestamp: new Date(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    try {
-      await db.ref(`users/${userId}/rechargeRequests`).push(rechargeRequest);
+    await db.collection("rechargeRequests").add(rechargeData);
 
-      await firestore.collection("transactions").add({
-        userId: userId,
-        type: "recharge",
-        amount: amount,
-        status: "pending",
-        date: new Date(),
-        title: "Recharge Request",
-        id: utr
+    confirmationId.textContent = transactionId;
+    confirmationAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}.00`;
+    confirmationBonus.textContent = `₹${bonus.toLocaleString('en-IN')}.00`;
+    confirmationUtr.textContent = utr;
+    confirmationDate.textContent = new Date().toLocaleString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) + ' IST';
+
+    step2.classList.remove('active');
+    step3.classList.add('active');
+    step2Indicator.classList.remove('active');
+    step3Indicator.classList.add('active');
+
+    showNotification('✅ Recharge request submitted successfully!', 'success');
+    loadRechargeHistory();
+  } catch (error) {
+    console.error("Error:", error);
+    showNotification(`❌ Error: ${error.message}`, 'error');
+  } finally {
+    submitRechargeBtn.disabled = false;
+    submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+  }
+}
+
+async function loadRechargeHistory() {
+  const historyContainer = document.getElementById('rechargeHistory');
+  historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
+
+  try {
+    const querySnapshot = await db.collection("rechargeRequests")
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .limit(5)
+      .get();
+
+    if (querySnapshot.empty) {
+      historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
+      return;
+    }
+
+    historyContainer.innerHTML = '';
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      const historyItem = document.createElement('div');
+      historyItem.className = `history-item ${data.status}`;
+
+      const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
+      const formattedDate = date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
       });
 
-      document.getElementById("successMsg").style.display = "block";
-      document.getElementById("rechargeForm").reset();
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong: " + err.message);
-    }
-  });
+      let statusClass = 'status-pending';
+      let statusText = 'Pending';
 
-  document.getElementById("screenshot").addEventListener("change", function () {
-    const fileName = this.files[0] ? this.files[0].name : "No file selected";
-    document.getElementById("fileName").textContent = fileName;
-  });
+      if (data.status === 'approved') {
+        statusClass = 'status-approved';
+        statusText = 'Approved';
+      } else if (data.status === 'rejected') {
+        statusClass = 'status-rejected';
+        statusText = 'Rejected';
+      }
 
-  function copyUpi() {
-    const upiId = document.getElementById("fixedUpi").textContent;
-    navigator.clipboard.writeText(upiId);
-    alert("UPI ID copied: " + upiId);
+      historyItem.innerHTML = `
+        <div class="history-details">
+          <div class="history-amount">₹${data.amount.toLocaleString('en-IN')}</div>
+          <div class="history-date">${formattedDate}</div>
+        </div>
+        <div class="history-status ${statusClass}">
+          ${statusText}
+        </div>
+      `;
+
+      historyContainer.appendChild(historyItem);
+    });
+  } catch (error) {
+    console.error("History load error:", error);
+    historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
   }
+}
+
+function resetForm() {
+  amountInput.value = '500';
+  selectedAmount = 500;
+  utrInput.value = '';
+  noteInput.value = '';
+  fileInput.value = '';
+  fileName.innerHTML = '<i class="fas fa-file"></i> No file chosen';
+  fileUploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+  fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
+  amountOptions.forEach(opt => opt.classList.remove('selected'));
+  amountOptions[0].classList.add('selected');
+  step3.classList.remove('active');
+  step1.classList.add('active');
+  step3Indicator.classList.remove('active');
+  step1Indicator.classList.add('active');
+}
+
+function showNotification(message, type = 'info') {
+  const existing = document.querySelector('.notification');
+  if (existing) existing.remove();
+
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+
+  let icon = 'fas fa-info-circle';
+  if (type === 'success') icon = 'fas fa-check-circle';
+  if (type === 'error') icon = 'fas fa-exclamation-circle';
+
+  notification.innerHTML = `<i class="${icon}"></i> <span>${message}</span>`;
+  document.body.appendChild(notification);
+
+  setTimeout(() => notification.classList.add('show'), 10);
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
 </script>
+
 </body>
 </html>
