@@ -1386,11 +1386,45 @@
       icon: "fa-arrow-up",
       category: "investment"
     };
+const uid = currentUser.uid;
+const updates = {};
 
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+const rechargeAmount = userData.wallet?.recharge || 0;
+if (amount > rechargeAmount) {
+  alert("Insufficient balance!");
+  return;
+}
+
+// Get product info
+const productName = selectedProduct.querySelector("h3").innerText;
+const dailyIncome = parseFloat(selectedProduct.querySelector("p").innerText.split("₹")[1]);
+
+const investId = "inv" + Date.now();
+
+// Update all necessary Firebase paths
+updates[`users/${uid}/wallet/recharge`] = rechargeAmount - amount;
+updates[`users/${uid}/invested`] = (userData.invested || 0) + amount;
+updates[`users/${uid}/wallet/totalEarnings`] = (userData.wallet?.totalEarnings || 0);
+
+// ✅ Save investment info
+updates[`users/${uid}/investments/${investId}`] = {
+  productName: productName,
+  amount: amount,
+  daily: dailyIncome,
+  startDate: new Date().toISOString()
+};
+
+// Update in DB
+firebase.database().ref().update(updates)
+  .then(() => {
+    alert("Investment Successful!");
+    location.reload();
+  })
+  .catch(err => {
+    alert("Error: " + err.message);
+  });
+
+
 
     db.ref().update(updates).then(() => {
       showLoading(false);
