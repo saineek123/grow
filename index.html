@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -332,35 +333,35 @@
       .logo {
         font-size: 1.5rem;
       }
-      
+
       .balance-display {
         padding: 6px 10px;
         font-size: 0.8rem;
       }
-      
+
       .cards {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       }
-      
+
       .card-icon {
         width: 50px;
         height: 50px;
         font-size: 1.5rem;
       }
-      
+
       .card h3 {
         font-size: 1.1rem;
       }
-      
+
       .promo-card {
         min-width: 100%;
       }
-      
+
       .wallet-breakdown {
         flex-direction: column;
         align-items: center;
       }
-      
+
       .wallet-item {
         width: 100%;
         max-width: 250px;
@@ -371,25 +372,25 @@
       .user-controls {
         gap: 10px;
       }
-      
+
       .balance-display span {
         display: none;
       }
-      
+
       .cards {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 15px;
       }
-      
+
       .card {
         padding: 15px;
       }
-      
+
       .card-btn {
         padding: 8px 15px;
         font-size: 0.85rem;
       }
-      
+
       .welcome-banner h1 {
         font-size: 1.7rem;
       }
@@ -408,7 +409,7 @@
       background: #fff;
       border-radius: 0 0 30px 30px;
       padding: 10px 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       font-family: Arial, sans-serif;
       z-index: 9999;
       animation: slideDown 0.5s ease;
@@ -419,6 +420,7 @@
         transform: translateX(-50%) translateY(-100%);
         opacity: 0;
       }
+
       to {
         transform: translateX(-50%) translateY(0);
         opacity: 1;
@@ -433,8 +435,15 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.3); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.3);
+      }
     }
 
     .text {
@@ -459,7 +468,7 @@
     .btn-detail:hover {
       background: #ff2e30;
     }
-    
+
     /* NEW STYLES FOR INVESTMENT SECTION */
     .products-grid {
       display: grid;
@@ -467,7 +476,7 @@
       gap: 15px;
       margin-top: 20px;
     }
-    
+
     .product-card {
       background: linear-gradient(145deg, rgba(31, 31, 47, 0.8), rgba(46, 46, 62, 0.8));
       border-radius: 20px;
@@ -477,13 +486,13 @@
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
-    
+
     .product-card:hover {
       transform: translateY(-5px);
       border-color: rgba(0, 247, 255, 0.3);
       box-shadow: 0 10px 25px rgba(0, 247, 255, 0.3);
     }
-    
+
     .product-badge {
       background: linear-gradient(to right, #f97316, #f59e0b);
       color: white;
@@ -493,36 +502,36 @@
       display: inline-block;
       margin-bottom: 15px;
     }
-    
+
     .product-title {
       font-size: 18px;
       font-weight: 600;
       margin-bottom: 10px;
       color: #f8fafc;
     }
-    
+
     .product-income {
       display: flex;
       justify-content: space-between;
       margin-bottom: 15px;
     }
-    
+
     .income-item {
       text-align: center;
     }
-    
+
     .income-value {
       font-size: 22px;
       font-weight: 700;
       color: #4ade80;
     }
-    
+
     .income-label {
       font-size: 12px;
       color: #94a3b8;
       margin-top: 5px;
     }
-    
+
     .product-footer {
       display: flex;
       justify-content: space-between;
@@ -531,13 +540,13 @@
       padding-top: 15px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
+
     .product-price {
       font-size: 20px;
       font-weight: 700;
       color: #f8fafc;
     }
-    
+
     .product-button {
       background: linear-gradient(to right, #00f7ff, #0077ff);
       color: #000;
@@ -548,35 +557,35 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     .product-button:hover {
       background: linear-gradient(to right, #60a5fa, #93c5fd);
       box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
       transform: scale(1.05);
     }
-    
+
     @media (max-width: 768px) {
       .products-grid {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       }
-      
+
       .product-card {
         padding: 15px;
       }
-      
+
       .product-title {
         font-size: 16px;
       }
-      
+
       .income-value {
         font-size: 18px;
       }
-      
+
       .product-price {
         font-size: 18px;
       }
     }
-    
+
     /* Modal Styles */
     .investment-modal {
       display: none;
@@ -591,7 +600,7 @@
       align-items: center;
       backdrop-filter: blur(5px);
     }
-    
+
     .investment-content {
       background: #1e293b;
       border-radius: 20px;
@@ -601,19 +610,19 @@
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
       border: 1px solid #334155;
     }
-    
+
     .investment-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 25px;
     }
-    
+
     .investment-header h2 {
       color: #f8fafc;
       font-size: 24px;
     }
-    
+
     .close-btn {
       background: none;
       border: none;
@@ -621,38 +630,38 @@
       font-size: 24px;
       cursor: pointer;
     }
-    
+
     .investment-details {
       background: rgba(30, 41, 59, 0.7);
       border-radius: 15px;
       padding: 20px;
       margin-bottom: 25px;
     }
-    
+
     .investment-details div {
       display: flex;
       justify-content: space-between;
       margin-bottom: 12px;
       font-size: 15px;
     }
-    
+
     .investment-details div:last-child {
       margin-bottom: 0;
     }
-    
+
     .detail-label {
       color: #94a3b8;
     }
-    
+
     .detail-value {
       color: #f8fafc;
       font-weight: 500;
     }
-    
+
     .investment-form {
       margin-bottom: 25px;
     }
-    
+
     /* Success Message */
     .success-message {
       position: fixed;
@@ -668,27 +677,43 @@
       display: none;
       animation: fadeInOut 3s ease-in-out;
     }
-    
+
     @keyframes fadeInOut {
-      0% { opacity: 0; top: 0; }
-      10% { opacity: 1; top: 20px; }
-      90% { opacity: 1; top: 20px; }
-      100% { opacity: 0; top: 0; }
+      0% {
+        opacity: 0;
+        top: 0;
+      }
+
+      10% {
+        opacity: 1;
+        top: 20px;
+      }
+
+      90% {
+        opacity: 1;
+        top: 20px;
+      }
+
+      100% {
+        opacity: 0;
+        top: 0;
+      }
     }
-    
+
     /* Form elements */
     .form-group {
       margin-bottom: 20px;
     }
-    
+
     .form-group label {
       display: block;
       margin-bottom: 8px;
       color: #94a3b8;
       font-size: 14px;
     }
-    
-    .form-group input, .form-group select {
+
+    .form-group input,
+    .form-group select {
       width: 100%;
       padding: 12px 15px;
       border-radius: 10px;
@@ -697,7 +722,7 @@
       color: #f8fafc;
       font-size: 16px;
     }
-    
+
     .btn {
       width: 100%;
       padding: 14px;
@@ -710,19 +735,19 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     .btn:hover {
       background: linear-gradient(to right, #60a5fa, #93c5fd);
       box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
     }
-    
+
     .error-message {
       color: #f87171;
       font-size: 14px;
       margin-top: 8px;
       display: none;
     }
-    
+
     /* Quick Actions */
     .quick-actions {
       display: grid;
@@ -730,7 +755,7 @@
       gap: 10px;
       margin-bottom: 25px;
     }
-    
+
     .action-button {
       background: rgba(30, 41, 59, 0.7);
       border: 1px solid #334155;
@@ -740,23 +765,23 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     .action-button:hover {
       background: rgba(56, 189, 248, 0.15);
       border-color: #60a5fa;
     }
-    
+
     .action-button i {
       font-size: 20px;
       color: #60a5fa;
       margin-bottom: 5px;
     }
-    
+
     .action-button span {
       font-size: 12px;
       color: #94a3b8;
     }
-    
+
     /* Loading Spinner */
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.1);
@@ -768,12 +793,17 @@
       margin: 30px auto;
       display: none;
     }
-    
+
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
-    
+
     /* Transaction History Modal */
     .transaction-modal {
       display: none;
@@ -788,7 +818,7 @@
       align-items: center;
       backdrop-filter: blur(5px);
     }
-    
+
     .transaction-content {
       background: #1e293b;
       border-radius: 20px;
@@ -798,24 +828,24 @@
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
       border: 1px solid #334155;
     }
-    
+
     .transaction-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 25px;
     }
-    
+
     .transaction-header h2 {
       color: #f8fafc;
       font-size: 24px;
     }
-    
+
     .tab-buttons {
       display: flex;
       margin-bottom: 20px;
     }
-    
+
     .tab-button {
       flex: 1;
       padding: 12px;
@@ -827,26 +857,26 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     .tab-button.active {
       background: rgba(56, 189, 248, 0.3);
       color: #38bdf8;
     }
-    
+
     .tab-button:first-child {
       border-radius: 10px 0 0 10px;
     }
-    
+
     .tab-button:last-child {
       border-radius: 0 10px 10px 0;
     }
-    
+
     .transaction-list {
       max-height: 300px;
       overflow-y: auto;
       padding-right: 10px;
     }
-    
+
     .transaction-list-item {
       display: flex;
       align-items: center;
@@ -855,7 +885,7 @@
       border-radius: 15px;
       margin-bottom: 10px;
     }
-    
+
     .transaction-list-icon {
       background: rgba(56, 189, 248, 0.2);
       width: 40px;
@@ -866,34 +896,34 @@
       align-items: center;
       margin-right: 15px;
     }
-    
+
     .transaction-list-details {
       flex: 1;
     }
-    
+
     .transaction-list-title {
       font-weight: 600;
       color: #f8fafc;
     }
-    
+
     .transaction-list-time {
       font-size: 13px;
       color: #94a3b8;
     }
-    
+
     .transaction-list-amount {
       font-weight: 700;
     }
-    
+
     .income {
       color: #4ade80;
     }
-    
+
     .expense {
       color: #f87171;
     }
 
-   /* Bottom Navigation */
+    /* Bottom Navigation */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -908,7 +938,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 100;
     }
-    
+
     .nav-item {
       display: flex;
       flex-direction: column;
@@ -918,24 +948,26 @@
       font-size: 0.8rem;
       transition: all 0.3s ease;
     }
-    
+
     .nav-item i {
       font-size: 1.3rem;
       margin-bottom: 4px;
       transition: all 0.3s ease;
     }
-    
-    .nav-item.active, .nav-item:hover {
+
+    .nav-item.active,
+    .nav-item:hover {
       color: var(--accent-color);
     }
-    
-    .nav-item.active i, .nav-item:hover i {
+
+    .nav-item.active i,
+    .nav-item:hover i {
       color: var(--accent-color);
       transform: translateY(-5px);
     }
-    
   </style>
 </head>
+
 <body>
   <div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
 
@@ -951,22 +983,22 @@
         </div>
       </div>
     </div>
-    
+
     <a href="index.html"><i class="fas fa-home"></i> Home</a>
     <a href="wallet.html"><i class="fas fa-credit-card"></i> Wallet</a>
     <a href="recharge.html"><i class="fas fa-wallet"></i> Deposit</a>
     <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
     <a href="history.html"><i class="fas fa-history"></i> History</a>
     <a href="account.html"><i class="fas fa-user-circle"></i> Account</a>
-    
+
     <div class="divider"></div>
 
     <a href="support.html"><i class="fas fa-headset"></i> Support</a>
     <a href="invite.html"><i class="fas fa-gift"></i> Invite Friends</a>
     <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
-    
+
     <div class="divider"></div>
-    
+
     <a href="login.html" style="color: #ff7b87;"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 
@@ -975,7 +1007,7 @@
       <i class="fas fa-chart-line"></i>
       <span>GROW</span>
     </div>
-    
+
     <div class="user-controls">
       <div class="balance-display">
         <i class="fas fa-wallet"></i>
@@ -995,25 +1027,27 @@
   <div class="main-content">
     <!-- Loading Spinner -->
     <div class="spinner" id="loadingSpinner"></div>
-    
+
     <!-- Welcome Banner -->
     <div class="welcome-banner">
       <h1>Welcome, <span id="userName">User</span></h1>
-      <p><h3>Your Ultimate Investment Experience Starts Here</h3></p>
-      
+      <p>
+      <h3>Your Ultimate Investment Experience Starts Here</h3>
+      </p>
+
       <div class="wallet-breakdown">
         <div class="wallet-item">
           <i class="fas fa-credit-card"></i>
           <div class="wallet-label">Available Balance</div>
           <div class="wallet-amount">₹<span id="availableBalance">0.00</span></div>
         </div>
-        
+
         <div class="wallet-item">
           <i class="fas fa-gift"></i>
           <div class="wallet-label">Invested Amount</div>
           <div class="wallet-amount">₹<span id="investedAmount">0.00</span></div>
         </div>
-        
+
         <div class="wallet-item">
           <i class="fas fa-trophy"></i>
           <div class="wallet-label">Total Earnings</div>
@@ -1021,25 +1055,25 @@
         </div>
       </div>
     </div>
-   
-    
+
+
     <!-- Investment Products -->
     <div class="section-title">
       <i class="fas fa-chart-line"></i>
       <h2 style="color: #8ef00e;">Investment Products</h2>
-    
+
     </div>
-    
+
     <div class="products-grid" id="productsContainer">
       <!-- Products will be loaded dynamically -->
     </div>
-    
+
     <!-- Logout Button -->
     <div class="logout">
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
-  
+
   <!-- Investment Modal -->
   <div class="investment-modal" id="investmentModal">
     <div class="investment-content">
@@ -1075,7 +1109,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Deposit Modal -->
   <div class="investment-modal" id="depositModal">
     <div class="investment-content">
@@ -1103,7 +1137,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Withdraw Modal -->
   <div class="investment-modal" id="withdrawModal">
     <div class="investment-content">
@@ -1121,7 +1155,7 @@
           <select id="withdrawMethod">
             <option value="bank_account">Bank Account</option>
             <option value="upi">UPI</option>
-            
+
           </select>
         </div>
         <div class="error-message" id="withdrawError"></div>
@@ -1129,7 +1163,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Transfer Modal -->
   <div class="investment-modal" id="transferModal">
     <div class="investment-content">
@@ -1151,7 +1185,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Transaction History Modal -->
   <div class="transaction-modal" id="transactionModal">
     <div class="transaction-content">
@@ -1194,122 +1228,122 @@
     </a>
   </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-    authDomain: "grow-3e3a1.firebaseapp.com",
-    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-    projectId: "grow-3e3a1",
-  };
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+    };
 
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-
-  const auth = firebase.auth();
-  const db = firebase.database();
-
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      const userId = user.uid;
-
-      db.ref('users/' + userId + '/wallet').on('value', (snapshot) => {
-        const wallet = snapshot.val() || {};
-        const recharge = wallet.recharge || 0;
-        const bonus = wallet.bonus || 0;
-        const totalEarnings = wallet.totalEarnings || 0;
-        const total = recharge + bonus + totalEarnings;
-
-        // 🟢 Home Page Update
-        const rechargeEl = document.getElementById('recharge');
-        const bonusEl = document.getElementById('bonus');
-        const totalEarningsEl = document.getElementById('totalEarnings');
-        const totalEl = document.getElementById('total');
-
-        if (rechargeEl) rechargeEl.textContent = `₹${recharge.toFixed(2)}`;
-        if (bonusEl) bonusEl.textContent = `₹${bonus.toFixed(2)}`;
-        if (totalEarningsEl) totalEarningsEl.textContent = `₹${totalEarnings.toFixed(2)}`;
-        if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
-
-        // 🟢 Drawer Balance Update
-        const drawerTotalEl = document.getElementById('drawer-total');
-        if (drawerTotalEl) drawerTotalEl.textContent = `₹${total.toFixed(2)}`;
-      });
-    } else {
-      auth.signInAnonymously().catch(console.error);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
-  });
 
-  // Toggle drawer function
-  function toggleDrawer() {
-    const drawer = document.getElementById("drawer");
-    const overlay = document.getElementById("overlay");
-    drawer.classList.toggle("open");
-    overlay.style.display = drawer.classList.contains("open") ? "block" : "none";
-  }
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-  // Get UID from LocalStorage
-  const localUid = localStorage.getItem("userId");
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const userId = user.uid;
 
-  if (!localUid) {
-    window.location.href = "login.html";
-  } else {
-    loadUserData(localUid);
-    loadProducts();
-  }
+        db.ref('users/' + userId + '/wallet').on('value', (snapshot) => {
+          const wallet = snapshot.val() || {};
+          const recharge = wallet.recharge || 0;
+          const bonus = wallet.bonus || 0;
+          const totalEarnings = wallet.totalEarnings || 0;
+          const total = recharge + bonus + totalEarnings;
 
-  function loadUserData(uid) {
-    showLoading(true);
-    const userRef = db.ref("users/" + uid);
-    userRef.on("value", snap => {
-      const data = snap.val() || {};
-      currentUserData = data;
-      currentUser = { uid: uid };
+          // 🟢 Home Page Update
+          const rechargeEl = document.getElementById('recharge');
+          const bonusEl = document.getElementById('bonus');
+          const totalEarningsEl = document.getElementById('totalEarnings');
+          const totalEl = document.getElementById('total');
 
-      document.getElementById("userName").textContent = data.name || "User";
-      document.getElementById("drawerUserName").textContent = data.name || "User";
+          if (rechargeEl) rechargeEl.textContent = `₹${recharge.toFixed(2)}`;
+          if (bonusEl) bonusEl.textContent = `₹${bonus.toFixed(2)}`;
+          if (totalEarningsEl) totalEarningsEl.textContent = `₹${totalEarnings.toFixed(2)}`;
+          if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
 
-      // Update balances
-      const recharge = data.wallet?.recharge || 0;
-      const bonus = data.wallet?.bonus || 0;
-      const totalEarnings = data.wallet?.totalEarnings || 0;
-      const total = recharge + bonus + totalEarnings;
-      const invested = data.invested || 0;
-      const totalEarningsEl = data.totalEarnings || 0;
-
-      document.getElementById("totalBalance").textContent = total.toFixed(2);
-      document.getElementById("drawerBalance").textContent = total.toFixed(2);
-      document.getElementById("availableBalance").textContent = recharge.toFixed(2);
-      document.getElementById("investedAmount").textContent = invested.toFixed(2);
-      document.getElementById("totalEarnings").textContent = totalEarnings.toFixed(2);
-
-      // Load transactions
-      if (data.transactions) {
-        transactions = Object.values(data.transactions);
+          // 🟢 Drawer Balance Update
+          const drawerTotalEl = document.getElementById('drawer-total');
+          if (drawerTotalEl) drawerTotalEl.textContent = `₹${total.toFixed(2)}`;
+        });
       } else {
-        transactions = [];
+        auth.signInAnonymously().catch(console.error);
       }
-
-      showLoading(false);
     });
-  }
 
-  function loadProducts() {
-    const productsRef = db.ref("products");
-    productsRef.on("value", snap => {
-      const products = snap.val() || {};
-      const container = document.getElementById("productsContainer");
-      container.innerHTML = '';
-      
-      for (const key in products) {
-        const product = products[key];
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
+    // Toggle drawer function
+    function toggleDrawer() {
+      const drawer = document.getElementById("drawer");
+      const overlay = document.getElementById("overlay");
+      drawer.classList.toggle("open");
+      overlay.style.display = drawer.classList.contains("open") ? "block" : "none";
+    }
+
+    // Get UID from LocalStorage
+    const localUid = localStorage.getItem("userId");
+
+    if (!localUid) {
+      window.location.href = "login.html";
+    } else {
+      loadUserData(localUid);
+      loadProducts();
+    }
+
+    function loadUserData(uid) {
+      showLoading(true);
+      const userRef = db.ref("users/" + uid);
+      userRef.on("value", snap => {
+        const data = snap.val() || {};
+        currentUserData = data;
+        currentUser = { uid: uid };
+
+        document.getElementById("userName").textContent = data.name || "User";
+        document.getElementById("drawerUserName").textContent = data.name || "User";
+
+        // Update balances
+        const recharge = data.wallet?.recharge || 0;
+        const bonus = data.wallet?.bonus || 0;
+        const totalEarnings = data.wallet?.totalEarnings || 0;
+        const total = recharge + bonus + totalEarnings;
+        const invested = data.invested || 0;
+        const totalEarningsEl = data.totalEarnings || 0;
+
+        document.getElementById("totalBalance").textContent = total.toFixed(2);
+        document.getElementById("drawerBalance").textContent = total.toFixed(2);
+        document.getElementById("availableBalance").textContent = recharge.toFixed(2);
+        document.getElementById("investedAmount").textContent = invested.toFixed(2);
+        document.getElementById("totalEarnings").textContent = totalEarnings.toFixed(2);
+
+        // Load transactions
+        if (data.transactions) {
+          transactions = Object.values(data.transactions);
+        } else {
+          transactions = [];
+        }
+
+        showLoading(false);
+      });
+    }
+
+    function loadProducts() {
+      const productsRef = db.ref("products");
+      productsRef.on("value", snap => {
+        const products = snap.val() || {};
+        const container = document.getElementById("productsContainer");
+        container.innerHTML = '';
+
+        for (const key in products) {
+          const product = products[key];
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
           ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
           <div class="product-title">${product.name}</div>
           <div class="product-income">
@@ -1327,306 +1361,340 @@
             <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
           </div>
         `;
-        container.appendChild(card);
-      }
-    });
-  }
-
-  function showInvestmentModal(productId) {
-    const productsRef = db.ref("products/" + productId);
-    productsRef.once("value").then(snap => {
-      const product = snap.val();
-      if (!product) return;
-
-      currentProduct = product;
-      currentProduct.id = productId;
-
-      document.getElementById('investmentTitle').textContent = product.name;
-      document.getElementById('modalDailyIncome').textContent = `₹${product.dailyIncome}`;
-      document.getElementById('modalDuration').textContent = product.duration;
-      document.getElementById('modalMinInvestment').textContent = `₹${product.minInvestment}`;
-      document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
-      document.getElementById('investmentAmount').value = product.minInvestment;
-
-      document.getElementById('investmentModal').style.display = 'flex';
-    });
-  }
-
-  function closeInvestmentModal() {
-    document.getElementById('investmentModal').style.display = 'none';
-    document.getElementById('investmentError').style.display = 'none';
-  }
-
-  function confirmInvestment() {
-    if (!currentUser || !currentUserData || !currentProduct) return;
-    const amountInput = document.getElementById('investmentAmount');
-    const amount = parseFloat(amountInput.value);
-    const errorElement = document.getElementById('investmentError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid investment amount';
-      errorElement.style.display = 'block';
-      return;
+          container.appendChild(card);
+        }
+      });
     }
 
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    if (amount > rechargeBalance) {
-      errorElement.textContent = 'Insufficient funds. Please deposit more money.';
-      errorElement.style.display = 'block';
-      return;
+    function showInvestmentModal(productId) {
+      const productsRef = db.ref("products/" + productId);
+      productsRef.once("value").then(snap => {
+        const product = snap.val();
+        if (!product) return;
+
+        currentProduct = product;
+        currentProduct.id = productId;
+
+        document.getElementById('investmentTitle').textContent = product.name;
+        document.getElementById('modalDailyIncome').textContent = `₹${product.dailyIncome}`;
+        document.getElementById('modalDuration').textContent = product.duration;
+        document.getElementById('modalMinInvestment').textContent = `₹${product.minInvestment}`;
+        document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
+        document.getElementById('investmentAmount').value = product.minInvestment;
+
+        document.getElementById('investmentModal').style.display = 'flex';
+      });
     }
 
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: `Investment: ${currentProduct.name}`,
-      amount: -amount,
-      type: "expense",
-      date: new Date().toISOString(),
-      icon: "fa-arrow-up",
-      category: "investment"
-    };
-
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeInvestmentModal();
-      showSuccessMessage("Investment successful! Funds deducted.");
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Investment failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showDepositModal() {
-    document.getElementById('depositModal').style.display = 'flex';
-  }
-
-  function closeDepositModal() {
-    document.getElementById('depositModal').style.display = 'none';
-    document.getElementById('depositError').style.display = 'none';
-  }
-
-  function processDeposit() {
-    const amountInput = document.getElementById('depositAmount');
-    const amount = parseFloat(amountInput.value);
-    const errorElement = document.getElementById('depositError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid deposit amount';
-      errorElement.style.display = 'block';
-      return;
+    function closeInvestmentModal() {
+      document.getElementById('investmentModal').style.display = 'none';
+      document.getElementById('investmentError').style.display = 'none';
     }
 
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: "Deposit Funds",
-      amount: amount,
-      type: "income",
-      date: new Date().toISOString(),
-      icon: "fa-arrow-down",
-      category: "deposit"
-    };
+    function confirmInvestment() {
+      if (!currentUser || !currentUserData || !currentProduct) return;
+      const amountInput = document.getElementById('investmentAmount');
+      const amount = parseFloat(amountInput.value);
+      const errorElement = document.getElementById('investmentError');
 
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance + amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeDepositModal();
-      showSuccessMessage("Deposit successful! Funds added to your account.");
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Deposit failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showWithdrawModal() {
-    document.getElementById('withdrawModal').style.display = 'flex';
-  }
-
-  function closeWithdrawModal() {
-    document.getElementById('withdrawModal').style.display = 'none';
-    document.getElementById('withdrawError').style.display = 'none';
-  }
-
-  function processWithdrawal() {
-    const amountInput = document.getElementById('withdrawAmount');
-    const amount = parseFloat(amountInput.value);
-    const errorElement = document.getElementById('withdrawError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid withdrawal amount';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    if (amount > rechargeBalance) {
-      errorElement.textContent = 'Insufficient funds. You cannot withdraw more than your available balance.';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: "Withdrawal Request",
-      amount: -amount,
-      type: "expense",
-      date: new Date().toISOString(),
-      icon: "fa-arrow-up",
-      category: "withdrawal"
-    };
-
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeWithdrawModal();
-      showSuccessMessage("Withdrawal request submitted successfully!");
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Withdrawal failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showTransferModal() {
-    document.getElementById('transferModal').style.display = 'flex';
-  }
-
-  function closeTransferModal() {
-    document.getElementById('transferModal').style.display = 'none';
-    document.getElementById('transferError').style.display = 'none';
-  }
-
-  function processTransfer() {
-    const amountInput = document.getElementById('transferAmount');
-    const amount = parseFloat(amountInput.value);
-    const recipientId = document.getElementById('recipientId').value.trim();
-    const errorElement = document.getElementById('transferError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid transfer amount';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    if (amount > rechargeBalance) {
-      errorElement.textContent = 'Insufficient funds. You cannot transfer more than your available balance.';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    if (!recipientId) {
-      errorElement.textContent = 'Please enter recipient member ID';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: `Transfer to ${recipientId}`,
-      amount: -amount,
-      type: "expense",
-      date: new Date().toISOString(),
-      icon: "fa-exchange-alt",
-      category: "transfer"
-    };
-
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeTransferModal();
-      showSuccessMessage(`Transfer of ₹${amount.toFixed(2)} to ${recipientId} completed!`);
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Transfer failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showTransactionModal() {
-    document.getElementById('transactionModal').style.display = 'flex';
-    renderTransactions('all');
-  }
-
-  function closeTransactionModal() {
-    document.getElementById('transactionModal').style.display = 'none';
-  }
-
-  function changeTransactionTab(category) {
-    const tabs = document.querySelectorAll('.tab-button');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    tabs.forEach(tab => {
-      if (tab.textContent.toLowerCase().includes(category)) {
-        tab.classList.add('active');
-      }
-    });
-    
-    renderTransactions(category);
-  }
-
-  function renderTransactions(category) {
-    const container = document.getElementById('transactionList');
-    container.innerHTML = '';
-    
-    let filteredTransactions = transactions;
-    if (category !== 'all') {
-      filteredTransactions = transactions.filter(t => t.category === category);
-    }
-    
-    filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    if (filteredTransactions.length === 0) {
-      container.innerHTML = '<div class="no-transactions">No transactions found</div>';
-      return;
-    }
-    
-    filteredTransactions.forEach(transaction => {
-      const isIncome = transaction.type === "income";
-      const amountClass = isIncome ? 'income' : 'expense';
-      const amountSign = isIncome ? '+' : '-';
-      const absAmount = Math.abs(transaction.amount);
-
-      const now = new Date();
-      const transDate = new Date(transaction.date);
-      const isToday = transDate.toDateString() === now.toDateString();
-      const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
-
-      let dateString;
-      if (isToday) {
-        dateString = `Today, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      } else if (isYesterday) {
-        dateString = `Yesterday, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      } else {
-        dateString = transDate.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+      if (!amount || amount <= 0) {
+        errorElement.textContent = 'Please enter a valid investment amount';
+        errorElement.style.display = 'block';
+        return;
       }
 
-      const item = document.createElement('div');
-      item.className = 'transaction-list-item';
-      item.innerHTML = `
+      const rechargeBalance = currentUserData.wallet?.recharge || 0;
+      if (amount > rechargeBalance) {
+        errorElement.textContent = 'Insufficient funds. Please deposit more money.';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      showLoading(true);
+      const transactionId = 'trans' + new Date().getTime();
+      const transaction = {
+        title: `Investment: ${currentProduct.name}`,
+        amount: -amount,
+        type: "expense",
+        date: new Date().toISOString(),
+        icon: "fa-arrow-up",
+        category: "investment"
+      };
+      const uid = currentUser.uid;
+      const userData = currentUserData || {};
+
+      const rechargeAmount = userData.wallet?.recharge || 0;
+      if (amount > rechargeAmount) {
+        alert("Insufficient balance!");
+        return;
+      }
+
+      // Get product info
+      const productName = selectedProduct.querySelector("h3").innerText;
+      const dailyIncome = parseFloat(selectedProduct.querySelector("p").innerText.split("₹")[1]);
+
+      const updates = {};
+
+      updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
+      updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
+      updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+      // 👇 ADD THIS:
+      updates[`users/${currentUser.uid}/investments/${transactionId}`] = {
+        productName: currentProduct.name,
+        amount: amount,
+        daily: parseFloat(currentProduct.dailyIncome),
+        startDate: new Date().toISOString()
+      };
+
+
+      // Update in DB
+      firebase.database().ref().update(updates)
+        .then(() => {
+          alert("Investment Successful!");
+          location.reload();
+        })
+        .catch(err => {
+          alert("Error: " + err.message);
+        });
+
+
+
+      db.ref().update(updates).then(() => {
+        showLoading(false);
+        closeInvestmentModal();
+        showSuccessMessage("Investment successful! Funds deducted.");
+        loadUserData(currentUser.uid);
+      }).catch(error => {
+        showLoading(false);
+        errorElement.textContent = 'Investment failed: ' + error.message;
+        errorElement.style.display = 'block';
+      });
+    }
+
+    function showDepositModal() {
+      document.getElementById('depositModal').style.display = 'flex';
+    }
+
+    function closeDepositModal() {
+      document.getElementById('depositModal').style.display = 'none';
+      document.getElementById('depositError').style.display = 'none';
+    }
+
+    function processDeposit() {
+      const amountInput = document.getElementById('depositAmount');
+      const amount = parseFloat(amountInput.value);
+      const errorElement = document.getElementById('depositError');
+
+      if (!amount || amount <= 0) {
+        errorElement.textContent = 'Please enter a valid deposit amount';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      showLoading(true);
+      const transactionId = 'trans' + new Date().getTime();
+      const transaction = {
+        title: "Deposit Funds",
+        amount: amount,
+        type: "income",
+        date: new Date().toISOString(),
+        icon: "fa-arrow-down",
+        category: "deposit"
+      };
+
+      const rechargeBalance = currentUserData.wallet?.recharge || 0;
+      const updates = {};
+      updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance + amount;
+      updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+      db.ref().update(updates).then(() => {
+        showLoading(false);
+        closeDepositModal();
+        showSuccessMessage("Deposit successful! Funds added to your account.");
+        loadUserData(currentUser.uid);
+      }).catch(error => {
+        showLoading(false);
+        errorElement.textContent = 'Deposit failed: ' + error.message;
+        errorElement.style.display = 'block';
+      });
+    }
+
+    function showWithdrawModal() {
+      document.getElementById('withdrawModal').style.display = 'flex';
+    }
+
+    function closeWithdrawModal() {
+      document.getElementById('withdrawModal').style.display = 'none';
+      document.getElementById('withdrawError').style.display = 'none';
+    }
+
+    function processWithdrawal() {
+      const amountInput = document.getElementById('withdrawAmount');
+      const amount = parseFloat(amountInput.value);
+      const errorElement = document.getElementById('withdrawError');
+
+      if (!amount || amount <= 0) {
+        errorElement.textContent = 'Please enter a valid withdrawal amount';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      const rechargeBalance = currentUserData.wallet?.recharge || 0;
+      if (amount > rechargeBalance) {
+        errorElement.textContent = 'Insufficient funds. You cannot withdraw more than your available balance.';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      showLoading(true);
+      const transactionId = 'trans' + new Date().getTime();
+      const transaction = {
+        title: "Withdrawal Request",
+        amount: -amount,
+        type: "expense",
+        date: new Date().toISOString(),
+        icon: "fa-arrow-up",
+        category: "withdrawal"
+      };
+
+      const updates = {};
+      updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
+      updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+      db.ref().update(updates).then(() => {
+        showLoading(false);
+        closeWithdrawModal();
+        showSuccessMessage("Withdrawal request submitted successfully!");
+        loadUserData(currentUser.uid);
+      }).catch(error => {
+        showLoading(false);
+        errorElement.textContent = 'Withdrawal failed: ' + error.message;
+        errorElement.style.display = 'block';
+      });
+    }
+
+    function showTransferModal() {
+      document.getElementById('transferModal').style.display = 'flex';
+    }
+
+    function closeTransferModal() {
+      document.getElementById('transferModal').style.display = 'none';
+      document.getElementById('transferError').style.display = 'none';
+    }
+
+    function processTransfer() {
+      const amountInput = document.getElementById('transferAmount');
+      const amount = parseFloat(amountInput.value);
+      const recipientId = document.getElementById('recipientId').value.trim();
+      const errorElement = document.getElementById('transferError');
+
+      if (!amount || amount <= 0) {
+        errorElement.textContent = 'Please enter a valid transfer amount';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      const rechargeBalance = currentUserData.wallet?.recharge || 0;
+      if (amount > rechargeBalance) {
+        errorElement.textContent = 'Insufficient funds. You cannot transfer more than your available balance.';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      if (!recipientId) {
+        errorElement.textContent = 'Please enter recipient member ID';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      showLoading(true);
+      const transactionId = 'trans' + new Date().getTime();
+      const transaction = {
+        title: `Transfer to ${recipientId}`,
+        amount: -amount,
+        type: "expense",
+        date: new Date().toISOString(),
+        icon: "fa-exchange-alt",
+        category: "transfer"
+      };
+
+      const updates = {};
+      updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
+      updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
+
+      db.ref().update(updates).then(() => {
+        showLoading(false);
+        closeTransferModal();
+        showSuccessMessage(`Transfer of ₹${amount.toFixed(2)} to ${recipientId} completed!`);
+        loadUserData(currentUser.uid);
+      }).catch(error => {
+        showLoading(false);
+        errorElement.textContent = 'Transfer failed: ' + error.message;
+        errorElement.style.display = 'block';
+      });
+    }
+
+    function showTransactionModal() {
+      document.getElementById('transactionModal').style.display = 'flex';
+      renderTransactions('all');
+    }
+
+    function closeTransactionModal() {
+      document.getElementById('transactionModal').style.display = 'none';
+    }
+
+    function changeTransactionTab(category) {
+      const tabs = document.querySelectorAll('.tab-button');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      tabs.forEach(tab => {
+        if (tab.textContent.toLowerCase().includes(category)) {
+          tab.classList.add('active');
+        }
+      });
+
+      renderTransactions(category);
+    }
+
+    function renderTransactions(category) {
+      const container = document.getElementById('transactionList');
+      container.innerHTML = '';
+
+      let filteredTransactions = transactions;
+      if (category !== 'all') {
+        filteredTransactions = transactions.filter(t => t.category === category);
+      }
+
+      filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (filteredTransactions.length === 0) {
+        container.innerHTML = '<div class="no-transactions">No transactions found</div>';
+        return;
+      }
+
+      filteredTransactions.forEach(transaction => {
+        const isIncome = transaction.type === "income";
+        const amountClass = isIncome ? 'income' : 'expense';
+        const amountSign = isIncome ? '+' : '-';
+        const absAmount = Math.abs(transaction.amount);
+
+        const now = new Date();
+        const transDate = new Date(transaction.date);
+        const isToday = transDate.toDateString() === now.toDateString();
+        const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
+
+        let dateString;
+        if (isToday) {
+          dateString = `Today, ${transDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        } else if (isYesterday) {
+          dateString = `Yesterday, ${transDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        } else {
+          dateString = transDate.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        const item = document.createElement('div');
+        item.className = 'transaction-list-item';
+        item.innerHTML = `
         <div class="transaction-list-icon" style="background: ${isIncome ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'}">
           <i class="fas ${transaction.icon || 'fa-exchange-alt'}"></i>
         </div>
@@ -1636,80 +1704,81 @@
         </div>
         <div class="transaction-list-amount ${amountClass}">${amountSign}₹${absAmount.toFixed(2)}</div>
       `;
-      container.appendChild(item);
-    });
-  }
+        container.appendChild(item);
+      });
+    }
 
-  function showSuccessMessage(message) {
-    const successElement = document.getElementById('successMessage');
-    successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-    successElement.style.display = 'block';
-    setTimeout(() => {
-      successElement.style.display = 'none';
-    }, 3000);
-  }
+    function showSuccessMessage(message) {
+      const successElement = document.getElementById('successMessage');
+      successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      successElement.style.display = 'block';
+      setTimeout(() => {
+        successElement.style.display = 'none';
+      }, 3000);
+    }
 
-  function showLoading(show) {
-    document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
-  }
+    function showLoading(show) {
+      document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+    }
 
-  function logout() {
-    auth.signOut().catch((error) => {
-      console.error("Logout error:", error);
-    }).finally(() => {
-      localStorage.removeItem("userId");
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "login.html";
-    });
-  }
+    function logout() {
+      auth.signOut().catch((error) => {
+        console.error("Logout error:", error);
+      }).finally(() => {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login.html";
+      });
+    }
 
-  // Initialize products in Firebase
-  function initializeProducts() {
-    const productsRef = db.ref("products");
-    productsRef.once("value").then(snap => {
-      if (!snap.val()) {
-        const products = {
-          "prod1": {
-            name: "Gold Investment",
-            badge: "Hot",
-            dailyIncome: "850",
-            duration: "3 Days",
-            minInvestment: "500",
-            roi: 15.2
-          },
-          "prod2": {
-            name: "Silver Package",
-            badge: "New",
-            dailyIncome: "1200",
-            duration: "5 Days",
-            minInvestment: "800",
-            roi: 18.5
-          },
-          "prod3": {
-            name: "Diamond Plan",
-            badge: "Premium",
-            dailyIncome: "2500",
-            duration: "7 Days",
-            minInvestment: "1500",
-            roi: 22.3
-          },
-          "prod4": {
-            name: "Platinum Offer",
-            badge: "Special",
-            dailyIncome: "4500",
-            duration: "10 Days",
-            minInvestment: "2500",
-            roi: 25.7
-          }
-        };
-        productsRef.set(products);
-      }
-    });
-  }
+    // Initialize products in Firebase
+    function initializeProducts() {
+      const productsRef = db.ref("products");
+      productsRef.once("value").then(snap => {
+        if (!snap.val()) {
+          const products = {
+            "prod1": {
+              name: "Gold Investment",
+              badge: "Hot",
+              dailyIncome: "850",
+              duration: "3 Days",
+              minInvestment: "500",
+              roi: 15.2
+            },
+            "prod2": {
+              name: "Silver Package",
+              badge: "New",
+              dailyIncome: "1200",
+              duration: "5 Days",
+              minInvestment: "800",
+              roi: 18.5
+            },
+            "prod3": {
+              name: "Diamond Plan",
+              badge: "Premium",
+              dailyIncome: "2500",
+              duration: "7 Days",
+              minInvestment: "1500",
+              roi: 22.3
+            },
+            "prod4": {
+              name: "Platinum Offer",
+              badge: "Special",
+              dailyIncome: "4500",
+              duration: "10 Days",
+              minInvestment: "2500",
+              roi: 25.7
+            }
+          };
+          productsRef.set(products);
+        }
+      });
+    }
 
-  // Initialize products when the app starts
-  initializeProducts();
-</script>
+    // Initialize products when the app starts
+    initializeProducts();
+  </script>
 
 </body>
+
 </html>
