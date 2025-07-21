@@ -1429,10 +1429,7 @@
         return;
       }
 
-      // Get product info
-      const productName = selectedProduct.querySelector("h3").innerText;
-      const dailyIncome = parseFloat(selectedProduct.querySelector("p").innerText.split("₹")[1]);
-
+      
       const updates = {};
 
       updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
