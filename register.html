@@ -315,53 +315,36 @@
         if (!phone || !password) {
           alert("❌ Please enter phone and password");
           return;
-        }
-        auth.createUserWithEmailAndPassword(phone + "@investapp.com", password)
-
-          .then(cred => {
-            const uid = cred.user.uid;
-
-            const userData = {
+        } createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            db.ref("users/" + user.uid).set({
+              name: name,
+              email: email,
               phone: phone,
-              name: name, // 👈 This ensures the name is saved
-              referralBy: refCode || null,
+              referralCode: user.uid,
+              referredBy: referralCode,
+              createdAt: Date.now(),
               wallet: {
                 recharge: 0,
-                bonus: refCode ? 100 : 0,
+                bonus: 0,
                 winning: 0,
-                total: refCode ? 100 : 0
+                total: 0
               }
-            };
-
-
-            db.ref("users/" + uid).set(userData).then(() => {
-              if (refCode) {
-                db.ref("users/" + refCode).once("value").then(snap => {
-                  if (snap.exists()) {
-                    const refWallet = snap.child("wallet").val() || {};
-                    const bonus = (refWallet.bonus || 0) + 100;
-                    const total = (refWallet.recharge || 0) + bonus + (refWallet.winning || 0);
-
-                    db.ref("users/" + refCode + "/wallet").update({
-                      bonus: bonus,
-                      total: total
-                    });
-
-                    db.ref("users/" + refCode + "/team/" + uid).set({
-                      joined: new Date().toLocaleString(),
-                      phone: phone
-                    });
-                  }
-                });
+            }).then(() => {
+              // ✅ Add this to update referrer's referral list
+              if (referralCode !== "") {
+                db.ref("users/" + referralCode + "/referrals/" + user.uid).set(true);
               }
 
-              alert("✅ Registered Successfully!");
+              alert("Registration successful!");
               window.location.href = "index.html";
             });
           })
-          .catch(err => {
-            alert("❌ " + err.message);
+          .catch((error) => {
+            alert(error.message);
           });
+
       }
     </script>
 </body>
