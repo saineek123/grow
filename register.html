@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
     body {
       background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
       min-height: 100vh;
@@ -21,7 +22,7 @@
       align-items: center;
       padding: 20px;
     }
-    
+
     .container {
       background: rgba(255, 255, 255, 0.95);
       border-radius: 16px;
@@ -32,7 +33,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .container::before {
       content: '';
       position: absolute;
@@ -42,12 +43,12 @@
       height: 5px;
       background: linear-gradient(90deg, #6a11cb, #2575fc);
     }
-    
+
     .logo {
       text-align: center;
       margin-bottom: 30px;
     }
-    
+
     .logo i {
       font-size: 48px;
       color: #6a11cb;
@@ -55,19 +56,19 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    
+
     .logo h2 {
       margin-top: 15px;
       font-size: 28px;
       color: #333;
       font-weight: 700;
     }
-    
+
     .form-group {
       margin-bottom: 25px;
       position: relative;
     }
-    
+
     .form-group label {
       display: block;
       margin-bottom: 8px;
@@ -75,11 +76,11 @@
       color: #555;
       font-size: 15px;
     }
-    
+
     .input-with-icon {
       position: relative;
     }
-    
+
     .input-with-icon i {
       position: absolute;
       left: 15px;
@@ -88,7 +89,7 @@
       color: #777;
       font-size: 18px;
     }
-    
+
     .form-control {
       width: 100%;
       padding: 15px 15px 15px 50px;
@@ -98,12 +99,12 @@
       transition: all 0.3s;
       outline: none;
     }
-    
+
     .form-control:focus {
       border-color: #6a11cb;
       box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
     }
-    
+
     .referral-note {
       background: #f0f5ff;
       padding: 12px;
@@ -114,12 +115,12 @@
       display: flex;
       align-items: center;
     }
-    
+
     .referral-note i {
       margin-right: 10px;
       font-size: 18px;
     }
-    
+
     .btn {
       width: 100%;
       padding: 16px;
@@ -135,53 +136,53 @@
       letter-spacing: 0.5px;
       box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
     }
-    
+
     .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
     }
-    
+
     .btn:active {
       transform: translateY(0);
     }
-    
+
     .login-link {
       text-align: center;
       margin-top: 25px;
       font-size: 15px;
       color: #666;
     }
-    
+
     .login-link a {
       color: #2575fc;
       text-decoration: none;
       font-weight: 600;
       transition: all 0.3s;
     }
-    
+
     .login-link a:hover {
       text-decoration: underline;
     }
-    
+
     .benefits {
       margin-top: 30px;
       padding-top: 20px;
       border-top: 1px solid #eee;
     }
-    
+
     .benefits h3 {
       text-align: center;
       margin-bottom: 15px;
       color: #444;
     }
-    
+
     .benefits-list {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
     }
-    
+
     .benefit {
       display: flex;
       align-items: center;
@@ -192,39 +193,40 @@
       color: #555;
       font-weight: 500;
     }
-    
+
     .benefit i {
       color: #6a11cb;
       margin-right: 8px;
       font-size: 16px;
     }
-    
+
     @media (max-width: 480px) {
       .container {
         padding: 30px 20px;
       }
-      
+
       .logo h2 {
         font-size: 24px;
       }
-      
+
       .form-control {
         padding: 13px 13px 13px 45px;
       }
-      
+
       .btn {
         padding: 14px;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="logo">
       <i class="fas fa-user-plus"></i>
       <h2>Create Account</h2>
     </div>
-    
+
     <div class="form-group">
       <label for="phone">Phone Number</label>
       <div class="input-with-icon">
@@ -232,133 +234,136 @@
         <input type="text" id="phone" class="form-control" placeholder="Enter your phone number">
       </div>
     </div>
-  <div class="form-group">
+    <div class="form-group">
       <label for="name">Name</label>
       <div class="input-with-icon">
         <i class="fas fa-user"></i>
         <input type="text" id="name" class="form-control" placeholder="Enter your name">
       </div>
-    
-    <div class="form-group">
-      <label for="password">Password</label>
-      <div class="input-with-icon">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="password" class="form-control" placeholder="Create a strong password">
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label for="referralCode">Referral Code (Optional)</label>
-      <div class="input-with-icon">
-        <i class="fas fa-user-friends"></i>
-        <input type="text" id="referralCode" class="form-control" placeholder="Enter referral code if any">
-      </div>
-      <div class="referral-note">
-        <i class="fas fa-gift"></i>
-        <span>Get ₹100 bonus when you use a referral code</span>
-      </div>
-    </div>
-    
-    <button class="btn" onclick="registerUser()">
-      <i class="fas fa-user-plus"></i> Register Now
-    </button>
-    
-    <div class="login-link">
-      Already have an account? <a href="login.html">Sign In</a>
-    </div>
-    
-    <div class="benefits">
-      <h3>Account Benefits</h3>
-      <div class="benefits-list">
-        <div class="benefit">
-          <i class="fas fa-wallet"></i> Wallet
-        </div>
-        <div class="benefit">
-          <i class="fas fa-gift"></i> Referral Bonus
-        </div>
-        <div class="benefit">
-          <i class="fas fa-shield-alt"></i> Security
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" class="form-control" placeholder="Create a strong password">
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="referralCode">Referral Code (Optional)</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user-friends"></i>
+          <input type="text" id="referralCode" class="form-control" placeholder="Enter referral code if any">
+        </div>
+        <div class="referral-note">
+          <i class="fas fa-gift"></i>
+          <span>Get ₹100 bonus when you use a referral code</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="registerUser()">
+        <i class="fas fa-user-plus"></i> Register Now
+      </button>
+
+      <div class="login-link">
+        Already have an account? <a href="login.html">Sign In</a>
+      </div>
+
+      <div class="benefits">
+        <h3>Account Benefits</h3>
+        <div class="benefits-list">
+          <div class="benefit">
+            <i class="fas fa-wallet"></i> Wallet
+          </div>
+          <div class="benefit">
+            <i class="fas fa-gift"></i> Referral Bonus
+          </div>
+          <div class="benefit">
+            <i class="fas fa-shield-alt"></i> Security
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.firebasestorage.app",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
-      measurementId: "G-Q7DPY3BF6C"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+        authDomain: "grow-3e3a1.firebaseapp.com",
+        databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+        projectId: "grow-3e3a1",
+        storageBucket: "grow-3e3a1.firebasestorage.app",
+        messagingSenderId: "285304522946",
+        appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+        measurementId: "G-Q7DPY3BF6C"
+      };
 
-    function registerUser() {
-      const phone = document.getElementById("phone").value.trim();
-      const name = document.getElementById("name").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const refCode = document.getElementById("referralCode").value.trim();
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.database();
 
-      if (!phone || !password) {
-        alert("❌ Please enter phone and password");
-        return;
-      }
-auth.createUserWithEmailAndPassword(phone + "@investapp.com", password)
+      function registerUser() {
+        const phone = document.getElementById("phone").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const refCode = document.getElementById("referralCode").value.trim();
 
-        .then(cred => {
-          const uid = cred.user.uid;
+        if (!phone || !password) {
+          alert("❌ Please enter phone and password");
+          return;
+        }
+        auth.createUserWithEmailAndPassword(phone + "@investapp.com", password)
 
-          const userData = {
-            phone: phone,
-            referralBy: refCode || null,
-            wallet: {
-              recharge: 0,
-              bonus: refCode ? 100 : 0,
-              winning: 0,
-              total: refCode ? 100 : 0
-            }
-          };
+          .then(cred => {
+            const uid = cred.user.uid;
 
-          db.ref("users/" + uid).set(userData).then(() => {
-            if (refCode) {
-              db.ref("users/" + refCode).once("value").then(snap => {
-                if (snap.exists()) {
-                  const refWallet = snap.child("wallet").val() || {};
-                  const bonus = (refWallet.bonus || 0) + 100;
-                  const total = (refWallet.recharge || 0) + bonus + (refWallet.winning || 0);
+            const userData = {
+              phone: phone,
+              name: name, // 👈 This ensures the name is saved
+              referralBy: refCode || null,
+              wallet: {
+                recharge: 0,
+                bonus: refCode ? 100 : 0,
+                winning: 0,
+                total: refCode ? 100 : 0
+              }
+            };
 
-                  db.ref("users/" + refCode + "/wallet").update({
-                    bonus: bonus,
-                    total: total
-                  });
 
-                  db.ref("users/" + refCode + "/team/" + uid).set({
-                    joined: new Date().toLocaleString(),
-                    phone: phone
-                  });
-                }
-              });
-            }
+            db.ref("users/" + uid).set(userData).then(() => {
+              if (refCode) {
+                db.ref("users/" + refCode).once("value").then(snap => {
+                  if (snap.exists()) {
+                    const refWallet = snap.child("wallet").val() || {};
+                    const bonus = (refWallet.bonus || 0) + 100;
+                    const total = (refWallet.recharge || 0) + bonus + (refWallet.winning || 0);
 
-            alert("✅ Registered Successfully!");
-            window.location.href = "index.html";
+                    db.ref("users/" + refCode + "/wallet").update({
+                      bonus: bonus,
+                      total: total
+                    });
+
+                    db.ref("users/" + refCode + "/team/" + uid).set({
+                      joined: new Date().toLocaleString(),
+                      phone: phone
+                    });
+                  }
+                });
+              }
+
+              alert("✅ Registered Successfully!");
+              window.location.href = "index.html";
+            });
+          })
+          .catch(err => {
+            alert("❌ " + err.message);
           });
-        })
-        .catch(err => {
-          alert("❌ " + err.message);
-        });
-    }
-  </script>
+      }
+    </script>
 </body>
+
 </html>
