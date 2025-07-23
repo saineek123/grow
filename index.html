@@ -1,7 +1,5 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,11 +23,6 @@
       --vip-3: #f44336;
       --vip-4: #e91e63;
       --vip-5: #9c27b0;
-      --vip-6: #673ab7;
-      --vip-7: #3f51b5;
-      --vip-8: #2196f3;
-      --vip-9: #03a9f4;
-      --vip-10: #00bcd4;
     }
 
     * {
@@ -226,7 +219,6 @@
       0% {
         background-position: -200% 0;
       }
-
       100% {
         background-position: 200% 0;
       }
@@ -315,7 +307,8 @@
       color: var(--primary);
     }
 
-    .plan-card {
+    /* Product Card Styles */
+    .product-card {
       background: rgba(255, 255, 255, 0.95);
       margin: 15px 0;
       padding: 20px;
@@ -324,24 +317,30 @@
       position: relative;
       overflow: hidden;
       border-left: 4px solid var(--primary);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
     .vip-badge {
       position: absolute;
-      top: -10px;
-      right: -10px;
+      top: 10px;
+      right: -30px;
       background: linear-gradient(135deg, #ffd700, #ff9800);
       color: #7d6608;
-      padding: 8px 20px;
+      padding: 5px 30px;
       font-size: 0.8rem;
       font-weight: bold;
       transform: rotate(45deg);
-      width: 100px;
+      width: 120px;
       text-align: center;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .plan-card h3 {
+    .product-card h3 {
       margin: 0 0 15px;
       font-size: 1.3rem;
       color: var(--primary-dark);
@@ -349,35 +348,33 @@
       align-items: center;
     }
 
-    .plan-card h3 i {
+    .product-card h3 i {
       margin-right: 10px;
       color: var(--primary);
     }
 
-    .plan-details {
-      display: flex;
-      justify-content: space-between;
+    .product-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
       margin: 15px 0;
       font-size: 1rem;
-      flex-wrap: wrap;
     }
 
-    .plan-details div {
-      flex: 1;
-      min-width: 120px;
+    .product-details div {
       text-align: center;
-      padding: 8px;
+      padding: 10px;
       background: rgba(255, 107, 0, 0.1);
-      margin: 5px;
       border-radius: 8px;
       font-weight: 500;
     }
 
-    .plan-details div span {
+    .product-details div span {
       display: block;
       font-weight: bold;
       color: var(--primary-dark);
       font-size: 1.1rem;
+      margin-bottom: 5px;
     }
 
     .buy-btn {
@@ -492,178 +489,107 @@
     }
 
     /* VIP Level Colors */
-    .vip-0 {
-      background: linear-gradient(135deg, var(--vip-0), #757575);
-    }
+    .vip-0 { background: linear-gradient(135deg, var(--vip-0), #757575); }
+    .vip-1 { background: linear-gradient(135deg, var(--vip-1), #f57c00); }
+    .vip-2 { background: linear-gradient(135deg, var(--vip-2), #e64a19); }
+    .vip-3 { background: linear-gradient(135deg, var(--vip-3), #d32f2f); }
+    .vip-4 { background: linear-gradient(135deg, var(--vip-4), #c2185b); }
+    .vip-5 { background: linear-gradient(135deg, var(--vip-5), #7b1fa2); }
 
-    .vip-1 {
-      background: linear-gradient(135deg, var(--vip-1), #f57c00);
-    }
-
-    .vip-2 {
-      background: linear-gradient(135deg, var(--vip-2), #e64a19);
-    }
-
-    .vip-3 {
-      background: linear-gradient(135deg, var(--vip-3), #d32f2f);
-    }
-
-    .vip-4 {
-      background: linear-gradient(135deg, var(--vip-4), #c2185b);
-    }
-
-    .vip-5 {
-      background: linear-gradient(135deg, var(--vip-5), #7b1fa2);
-    }
-
-    .vip-6 {
-      background: linear-gradient(135deg, var(--vip-6), #512da8);
-    }
-
-    .vip-7 {
-      background: linear-gradient(135deg, var(--vip-7), #303f9f);
-    }
-
-    .vip-8 {
-      background: linear-gradient(135deg, var(--vip-8), #0288d1);
-    }
-
-    .vip-9 {
-      background: linear-gradient(135deg, var(--vip-9), #0097a7);
-    }
-
-    .vip-10 {
-      background: linear-gradient(135deg, var(--vip-10), #00838f);
-    }
-
-    /* Admin Panel Styles */
-    .admin-panel {
+    /* Recharge Modal */
+    .modal {
       display: none;
-      background: rgba(255, 255, 255, 0.95);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
       border-radius: 15px;
-      padding: 20px;
-      margin: 25px 0;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      overflow: hidden;
+      animation: modalOpen 0.3s ease-out;
     }
-
-    .admin-panel h3 {
-      color: var(--primary-dark);
+    
+    @keyframes modalOpen {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal-header {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 15px;
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.3rem;
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 10px;
+      position: relative;
     }
-
-    .admin-section {
-      margin-bottom: 25px;
+    
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
-
-    .admin-form {
+    
+    .recharge-options {
+      padding: 20px;
+    }
+    
+    .recharge-option {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
+      background: rgba(255, 107, 0, 0.1);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
     }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
+    
+    .recharge-option:hover {
+      background: rgba(255, 107, 0, 0.2);
+      border-color: var(--primary);
     }
-
-    .form-group label {
-      font-weight: 600;
-      margin-bottom: 5px;
-      color: var(--dark);
+    
+    .recharge-option.selected {
+      background: rgba(255, 107, 0, 0.3);
+      border-color: var(--primary-dark);
     }
-
-    .form-group input,
-    .form-group select {
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      background: #fff;
+    
+    .recharge-amount {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
     }
-
-    .admin-btn {
+    
+    .recharge-btn {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      display: block;
       font-weight: bold;
+      border: none;
+      width: 100%;
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s;
     }
-
-    .admin-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
-    }
-
-    .admin-btn:active {
-      transform: translateY(0);
-    }
-
-    .admin-plans-list {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 15px;
-    }
-
-    .plan-item {
-      background: #f9f9f9;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border-left: 4px solid var(--primary);
-    }
-
-    .plan-item h4 {
-      color: var(--primary-dark);
-      margin-bottom: 8px;
-    }
-
-    .plan-item p {
-      margin-bottom: 5px;
-    }
-
-    .delete-btn {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: 500;
-    }
-
-    .admin-controls {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .admin-toggle {
-      background: var(--secondary);
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 30px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .admin-toggle:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 10px rgba(74, 20, 140, 0.3);
+    
+    .recharge-btn:hover {
+      background: linear-gradient(135deg, var(--primary-dark), #d84315);
     }
   </style>
 </head>
@@ -714,19 +640,19 @@
     </div>
 
     <div class="quick-actions">
-      <a href="recharge.html">
+      <a href="#" id="rechargeBtn">
         <div><i class="fas fa-rupee-sign"></i></div>
         Recharge
       </a>
-      <a href="withdraw.html">
+      <a href="#">
         <div><i class="fas fa-money-bill-wave"></i></div>
         Withdraw
       </a>
-      <a href="invite.html">
+      <a href="#">
         <div><i class="fas fa-share-alt"></i></div>
         Share
       </a>
-      <a href="online.html">
+      <a href="#">
         <div><i class="fas fa-headset"></i></div>
         Support
       </a>
@@ -741,9 +667,7 @@
       <h2 class="section-title"><i class="fas fa-chart-line"></i> Investment Plans</h2>
       <div id="planList"></div>
     </div>
-    <div>
-
-    </div>
+    
     <div id="productList"></div>
 
     <div class="vip-benefits">
@@ -794,7 +718,40 @@
       Profile
     </a>
   </div>
+
+  <!-- Recharge Modal -->
+  <div class="modal" id="rechargeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-rupee-sign"></i> Recharge Wallet</h2>
+        <span class="close-modal" id="closeModal">&times;</span>
+      </div>
+      <div class="recharge-options">
+        <div class="recharge-option" data-amount="500">
+          <span>Basic Recharge</span>
+          <span class="recharge-amount">₹500</span>
+        </div>
+        <div class="recharge-option" data-amount="1000">
+          <span>Standard Recharge</span>
+          <span class="recharge-amount">₹1000</span>
+        </div>
+        <div class="recharge-option" data-amount="2000">
+          <span>Premium Recharge</span>
+          <span class="recharge-amount">₹2000</span>
+        </div>
+        <div class="recharge-option" data-amount="5000">
+          <span>VIP Recharge</span>
+          <span class="recharge-amount">₹5000</span>
+        </div>
+      </div>
+      <button class="recharge-btn" id="confirmRecharge">
+        <i class="fas fa-check-circle"></i> Confirm Recharge
+      </button>
+    </div>
+  </div>
+
 <script>
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
     authDomain: "grow-3e3a1.firebaseapp.com",
@@ -802,25 +759,60 @@
     projectId: "grow-3e3a1"
   };
 
+  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+  const auth = firebase.auth();
 
+  // Current user
   let currentUser = null;
+  
+  // DOM Elements
+  const rechargeBtn = document.getElementById('rechargeBtn');
+  const rechargeModal = document.getElementById('rechargeModal');
+  const closeModal = document.getElementById('closeModal');
+  const rechargeOptions = document.querySelectorAll('.recharge-option');
+  const confirmRecharge = document.getElementById('confirmRecharge');
+  const productList = document.getElementById('productList');
+  const rechargeAmount = document.getElementById('rechargeAmount');
+  const totalIncome = document.getElementById('totalIncome');
+  const balance = document.getElementById('balance');
 
-  firebase.auth().onAuthStateChanged(user => {
+  // Selected recharge amount
+  let selectedAmount = 0;
+
+  // Initialize the app
+  auth.onAuthStateChanged(user => {
     if (user) {
       currentUser = user;
       loadProducts();
+      loadWalletData();
     } else {
-      alert("Please login first");
-      window.location.href = "login.html";
+      // For demo purposes, we'll simulate a user
+      currentUser = { uid: "demoUser123" };
+      loadProducts();
+      loadWalletData();
     }
   });
 
-  const productList = document.getElementById("productList");
+  // Load wallet data
+  function loadWalletData() {
+    const walletRef = db.ref("wallet/" + currentUser.uid);
+    
+    walletRef.on("value", snapshot => {
+      const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
+      
+      // Update UI
+      rechargeAmount.textContent = `₹${wallet.recharge}`;
+      totalIncome.textContent = `₹${wallet.income}`;
+      balance.textContent = `₹${wallet.balance}`;
+    });
+  }
 
+  // Load products
   function loadProducts() {
     const productsRef = db.ref("products");
+    
     productsRef.on("value", snapshot => {
       productList.innerHTML = "";
       snapshot.forEach(child => {
@@ -828,127 +820,214 @@
         const key = child.key;
 
         const card = document.createElement("div");
-        card.style.background = "#222";
-        card.style.padding = "20px";
-        card.style.margin = "10px";
-        card.style.borderRadius = "10px";
-        card.style.color = "white";
+        card.className = "product-card";
         card.innerHTML = `
-          <h3>${product.name}</h3>
-          <p><strong>Daily Income:</strong> ₹${product.dailyIncome}</p>
-          <p><strong>Duration:</strong> ${product.duration} din</p>
-          <p><strong>Min Investment:</strong> ₹${product.minInvestment}</p>
-          <p><strong>ROI:</strong> ${product.roi}%</p>
-          ${product.badge ? `<span style="background:#f97316;padding:4px 10px;border-radius:10px;">${product.badge}</span>` : ''}
-          <p>${product.description}</p>
-          <button onclick="buyProduct('${key}', ${product.minInvestment})" style="margin-top:10px;padding:10px;background:#0f0;border:none;border-radius:5px;">Buy Now</button>
+          ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
+          <h3><i class="fas fa-box"></i> ${product.name}</h3>
+          <p style="color: var(--gray); margin-bottom: 15px;">${product.description}</p>
+          <div class="product-details">
+            <div>
+              <span>₹${product.minInvestment}</span>
+              Min Investment
+            </div>
+            <div>
+              <span>₹${product.dailyIncome}</span>
+              Daily Income
+            </div>
+            <div>
+              <span>${product.duration} days</span>
+              Duration
+            </div>
+            <div>
+              <span>${product.roi}%</span>
+              ROI
+            </div>
+          </div>
+          <button class="buy-btn" data-id="${key}" data-cost="${product.minInvestment}">
+            <i class="fas fa-shopping-cart"></i> Buy Now - ₹${product.minInvestment}
+          </button>
         `;
         productList.appendChild(card);
       });
-    });
-  }
 
-  function buyProduct(planId, cost) {
-    const uid = currentUser.uid;
-    const walletRef = db.ref("wallet/" + uid);
-
-    walletRef.once("value").then(snapshot => {
-      const wallet = snapshot.val() || {};
-      let recharge = wallet.recharge || 0;
-      let bonus = wallet.bonus || 0;
-      let winning = wallet.winning || 0;
-
-      const totalBalance = recharge + bonus + winning;
-
-      if (totalBalance < cost) {
-        alert("❌ Aapke wallet me balance nahi hai!");
-        return;
-      }
-
-      let remaining = cost;
-
-      if (recharge >= remaining) {
-        recharge -= remaining;
-        remaining = 0;
-      } else {
-        remaining -= recharge;
-        recharge = 0;
-      }
-
-      if (remaining > 0 && bonus >= remaining) {
-        bonus -= remaining;
-        remaining = 0;
-      } else if (remaining > 0) {
-        remaining -= bonus;
-        bonus = 0;
-      }
-
-      if (remaining > 0 && winning >= remaining) {
-        winning -= remaining;
-        remaining = 0;
-      } else if (remaining > 0) {
-        alert("❌ Error deducting balance.");
-        return;
-      }
-
-      // Save updated wallet
-      walletRef.set({ recharge, bonus, winning });
-
-      // Save purchase
-      db.ref("purchases/" + uid + "/" + planId).set({
-        planId,
-        amount: cost,
-        purchasedAt: new Date().toISOString(),
-        status: "active"
-      });
-
-      alert("✅ Investment Successful!");
-    });
-  }
-
-  // Daily income simulation (already in your file)
-  function simulateDailyPayouts() {
-    db.ref("purchases").once("value").then(snapshot => {
-      snapshot.forEach(userSnapshot => {
-        const uid = userSnapshot.key;
-        userSnapshot.forEach(planSnapshot => {
-          const planId = planSnapshot.key;
-          const purchase = planSnapshot.val();
-
-          if (purchase.status === "active") {
-            db.ref("products/" + planId).once("value").then(planSnap => {
-              const plan = planSnap.val();
-              if (!plan) return;
-
-              db.ref("wallet/" + uid).once("value").then(userWalletSnap => {
-                const wallet = userWalletSnap.val() || {};
-                const income = plan.dailyIncome || 0;
-
-                const updatedWallet = {
-                  recharge: wallet.recharge || 0,
-                  bonus: wallet.bonus || 0,
-                  winning: wallet.winning || 0
-                };
-
-                // Add to winning balance
-                updatedWallet.winning += income;
-
-                db.ref("wallet/" + uid).set(updatedWallet);
-
-                // Record transaction
-                db.ref("transactions/" + uid).push({
-                  type: "daily_income",
-                  amount: income,
-                  date: new Date().toISOString(),
-                  plan: planId
-                });
-              });
-            });
-          }
+      // Add event listeners to buy buttons
+      document.querySelectorAll('.buy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const planId = this.getAttribute('data-id');
+          const cost = parseInt(this.getAttribute('data-cost'));
+          buyProduct(planId, cost);
         });
       });
     });
   }
 
-  setInterval(simulateDailyPayouts, 10000);
+  // Buy product function
+  function buyProduct(planId, cost) {
+    if (!currentUser) {
+      alert("Please login first");
+      return;
+    }
+
+    const uid = currentUser.uid;
+    const walletRef = db.ref("wallet/" + uid);
+
+    walletRef.once("value").then(snapshot => {
+      const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
+      let recharge = wallet.recharge || 0;
+      let income = wallet.income || 0;
+      let totalBalance = wallet.balance || 0;
+
+      // Check if user has enough balance
+      if (totalBalance < cost) {
+        alert("❌ Insufficient balance! Please recharge your wallet.");
+        return;
+      }
+
+      // Deduct from balance
+      const newBalance = totalBalance - cost;
+      
+      // Update wallet
+      walletRef.set({
+        recharge: recharge,
+        income: income,
+        balance: newBalance
+      });
+      
+      // Save purchase
+      db.ref("purchases/" + uid + "/" + planId).set({
+        planId: planId,
+        amount: cost,
+        purchasedAt: new Date().toISOString(),
+        status: "active"
+      });
+
+      alert("✅ Investment Successful! Your plan is now active.");
+    });
+  }
+
+  // Recharge functionality
+  rechargeBtn.addEventListener('click', () => {
+    rechargeModal.style.display = 'flex';
+  });
+
+  closeModal.addEventListener('click', () => {
+    rechargeModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === rechargeModal) {
+      rechargeModal.style.display = 'none';
+    }
+  });
+
+  // Select recharge option
+  rechargeOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      // Remove selected class from all options
+      rechargeOptions.forEach(opt => opt.classList.remove('selected'));
+      
+      // Add selected class to clicked option
+      option.classList.add('selected');
+      
+      // Store selected amount
+      selectedAmount = parseInt(option.getAttribute('data-amount'));
+    });
+  });
+
+  // Confirm recharge
+  confirmRecharge.addEventListener('click', () => {
+    if (selectedAmount === 0) {
+      alert("Please select a recharge amount");
+      return;
+    }
+
+    if (!currentUser) {
+      alert("Please login first");
+      return;
+    }
+
+    const uid = currentUser.uid;
+    const walletRef = db.ref("wallet/" + uid);
+
+    walletRef.once("value").then(snapshot => {
+      const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
+      
+      // Add to recharge and balance
+      const newRecharge = wallet.recharge + selectedAmount;
+      const newBalance = wallet.balance + selectedAmount;
+      
+      // Update wallet
+      walletRef.set({
+        recharge: newRecharge,
+        income: wallet.income,
+        balance: newBalance
+      });
+      
+      // Close modal and reset
+      rechargeModal.style.display = 'none';
+      selectedAmount = 0;
+      rechargeOptions.forEach(opt => opt.classList.remove('selected'));
+      
+      alert(`✅ Successfully recharged ₹${selectedAmount}`);
+    });
+  });
+
+  // Demo products data
+  function initializeDemoProducts() {
+    const productsRef = db.ref("products");
+    
+    productsRef.once("value").then(snapshot => {
+      if (!snapshot.exists()) {
+        // Add demo products
+        const products = [
+          {
+            name: "Starter Plan",
+            dailyIncome: 50,
+            duration: 10,
+            minInvestment: 500,
+            roi: 100,
+            description: "Perfect for beginners with low investment",
+            badge: "Popular"
+          },
+          {
+            name: "Premium Plan",
+            dailyIncome: 120,
+            duration: 15,
+            minInvestment: 1000,
+            roi: 180,
+            description: "Higher returns for moderate investors",
+            badge: "Best Value"
+          },
+          {
+            name: "VIP Plan",
+            dailyIncome: 300,
+            duration: 20,
+            minInvestment: 2000,
+            roi: 300,
+            description: "Exclusive plan for VIP members",
+            badge: "VIP Only"
+          },
+          {
+            name: "Ultimate Plan",
+            dailyIncome: 750,
+            duration: 30,
+            minInvestment: 5000,
+            roi: 450,
+            description: "Maximum returns for serious investors",
+            badge: "Premium"
+          }
+        ];
+        
+        // Add each product to database
+        products.forEach(product => {
+          productsRef.push(product);
+        });
+      }
+    });
+  }
+
+  // Initialize demo products when page loads
+  window.addEventListener('load', initializeDemoProducts);
 </script>
+</body>
+</html>
