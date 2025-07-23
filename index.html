@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daily Income App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Income App</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
     :root {
       --primary: #ff6b00;
@@ -494,19 +497,148 @@
     .vip-8 { background: linear-gradient(135deg, var(--vip-8), #0288d1); }
     .vip-9 { background: linear-gradient(135deg, var(--vip-9), #0097a7); }
     .vip-10 { background: linear-gradient(135deg, var(--vip-10), #00838f); }
+    
+    /* Admin Panel Styles */
+    .admin-panel {
+      display: none;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    
+    .admin-panel h3 {
+      color: var(--primary-dark);
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 10px;
+    }
+    
+    .admin-section {
+      margin-bottom: 25px;
+    }
+    
+    .admin-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--dark);
+    }
+    
+    .form-group input, .form-group select {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #fff;
+    }
+    
+    .admin-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .admin-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(255,107,0,0.3);
+    }
+    
+    .admin-btn:active {
+      transform: translateY(0);
+    }
+    
+    .admin-plans-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 15px;
+    }
+    
+    .plan-item {
+      background: #f9f9f9;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .plan-item h4 {
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    
+    .plan-item p {
+      margin-bottom: 5px;
+    }
+    
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    
+    .admin-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .admin-toggle {
+      background: var(--secondary);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .admin-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(74, 20, 140, 0.3);
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1><i class="fas fa-wallet"></i> Daily Income App</h1>
-    <p>Earn money with our investment plans</p>
+ <div class="header">
+    <h1><i class="fas fa-wallet"></i> Premium Income App</h1>
+    <p>Earn money with VIP investment plans</p>
   </div>
 
   <div class="app-container">
     <div class="wallet-box">
       <div>
-        <span id="recharge">₹0</span>
+        <span id="rechargeAmount">₹0</span>
         <span>Recharge</span>
       </div>
       <div>
@@ -561,63 +693,13 @@
     </div>
 
     <div class="tabs">
-      <button>Daily Income</button>
+      <button class="active">Daily Income</button>
       <button>Benefits Program</button>
     </div>
 
     <div class="plans-container">
       <h2 class="section-title"><i class="fas fa-chart-line"></i> Investment Plans</h2>
-      
-      <div class="plan-card">
-        <div class="vip-badge">VIP 1+</div>
-        <h3><i class="fas fa-gem"></i> Plan ₹1000</h3>
-        <div class="plan-details">
-          <div>
-            Daily: <span>₹100</span>
-          </div>
-          <div>
-            Days: <span>10</span>
-          </div>
-          <div>
-            Total: <span>₹1000</span>
-          </div>
-        </div>
-        <button class="buy-btn">Buy Now</button>
-      </div>
-
-      <div class="plan-card">
-        <div class="vip-badge">VIP 2+</div>
-        <h3><i class="fas fa-gem"></i> Plan ₹5000</h3>
-        <div class="plan-details"
-          <div>
-            Daily: <span>₹600</span>
-          </div>
-          <div>
-            Days: <span>10</span>
-          </div>
-          <div>
-            Total: <span>₹6000</span>
-          </div>
-        </div>
-        <button class="buy-btn">Buy Now</button>
-      </div>
-
-      <div class="plan-card">
-        <div class="vip-badge">VIP 5+</div>
-        <h3><i class="fas fa-gem"></i> Plan ₹20000</h3>
-        <div class="plan-details">
-          <div>
-            Daily: <span>₹2800</span>
-          </div>
-          <div>
-            Days: <span>10</span>
-          </div>
-          <div>
-            Total: <span>₹28000</span>
-          </div>
-        </div>
-        <button class="buy-btn">Buy Now</button>
-      </div>
+      <div id="planList"></div>
     </div>
 
     <div class="vip-benefits">
@@ -641,6 +723,13 @@
         </div>
       </div>
     </div>
+    
+    <!-- Admin Link Only for Admin Users -->
+    <div id="adminLink" style="text-align: center; margin-top: 20px; display: none;">
+      <a href="admin.html" style="color: white; text-decoration: none; font-weight: bold;">
+        <i class="fas fa-user-shield"></i> Admin Panel
+      </a>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -661,67 +750,246 @@
       Profile
     </a>
   </div>
- <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.appspot.com",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b"
-    };
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+    authDomain: "grow-3e3a1.firebaseapp.com",
+    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+    projectId: "grow-3e3a1",
+    storageBucket: "grow-3e3a1.appspot.com",
+    messagingSenderId: "285304522946",
+    appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  let currentUser = null;
+  const adminUID = "admin123"; // Replace with your admin user ID
+
+  // VIP thresholds
+  const vipThresholds = [
+    0,    // VIP 0
+    1000, // VIP 1
+    2000, // VIP 2
+    5000, // VIP 3
+    10000, // VIP 4
+    20000, // VIP 5
+    50000, // VIP 6
+    100000, // VIP 7
+    200000, // VIP 8
+    500000, // VIP 9
+    1000000  // VIP 10
+  ];
+
+  // Update VIP level based on recharge amount
+  function updateVipLevel(recharge) {
+    let vipLevel = 0;
     
+    // Determine current VIP level
+    for (let i = vipThresholds.length - 1; i >= 0; i--) {
+      if (recharge >= vipThresholds[i]) {
+        vipLevel = i;
+        break;
+      }
+    }
+    
+    // Update display
+    document.getElementById('vipLevel').textContent = vipLevel;
+    document.getElementById('currentVip').textContent = vipLevel;
+    
+    // Update next VIP level
+    const nextVip = vipLevel < vipThresholds.length - 1 ? vipLevel + 1 : vipLevel;
+    document.getElementById('nextVip').textContent = nextVip;
+    
+    // Calculate progress to next level
+    let progress = 0;
+    let rechargeNeeded = 0;
+    
+    if (vipLevel < vipThresholds.length - 1) {
+      const currentThreshold = vipThresholds[vipLevel];
+      const nextThreshold = vipThresholds[vipLevel + 1];
+      rechargeNeeded = nextThreshold - recharge;
+      progress = ((recharge - currentThreshold) / (nextThreshold - currentThreshold)) * 100;
+    } else {
+      // Max VIP level reached
+      progress = 100;
+      rechargeNeeded = 0;
+    }
+    
+    // Update progress bar
+    document.getElementById('vipProgress').style.width = Math.min(progress, 100) + '%';
+    document.getElementById('rechargeNeeded').textContent = rechargeNeeded.toLocaleString();
+    
+    // Update banner color based on VIP level
+    const vipBanner = document.getElementById('vipBanner');
+    vipBanner.className = 'vip-banner vip-' + vipLevel;
+  }
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+  // Load investment plans from Firebase
+  function loadPlans() {
+    db.ref("plans").on("value", snapshot => {
+      const planList = document.getElementById("planList");
+      planList.innerHTML = "";
+      
+      snapshot.forEach(planSnapshot => {
+        const plan = planSnapshot.val();
+        const planId = planSnapshot.key;
+        
+        const planCard = document.createElement('div');
+        planCard.className = 'plan-card';
+        planCard.innerHTML = `
+          <div class="vip-badge">VIP ${plan.vipRequired || 0}+</div>
+          <h3><i class="fas fa-gem"></i> ${plan.title}</h3>
+          <div class="plan-details">
+            <div>
+              Daily: <span>₹${plan.daily}</span>
+            </div>
+            <div>
+              Days: <span>${plan.days}</span>
+            </div>
+            <div>
+              Total: <span>₹${plan.daily * plan.days}</span>
+            </div>
+          </div>
+          <button class="buy-btn" data-id="${planId}" data-price="${plan.price}">Buy Now</button>
+        `;
+        
+        planList.appendChild(planCard);
+      });
+    });
+  }
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        const uid = user.uid;
-        const userRef = db.ref("users/" + uid);
-        userRef.on("value", snapshot => {
-          const data = snapshot.val();
-          if (data) {
-            document.getElementById("username").innerText = data.name || "-";
-            document.getElementById("referralCode").innerText = data.referralCode || "-";
-            document.getElementById("rechargeBalance").innerText = data.recharge || 0;
-            document.getElementById("bonusBalance").innerText = data.bonus || 0;
-            document.getElementById("winningBalance").innerText = data.winning || 0;
+  // Authentication state change handler
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      const uid = user.uid;
+      
+      // Load user data
+      db.ref("users/" + uid).on("value", snapshot => {
+        const userData = snapshot.val();
+        if (userData) {
+          // Update wallet display
+          const recharge = userData.recharge || 0;
+          const income = userData.income || 0;
+          const balance = userData.balance || 0;
+          
+          document.getElementById('rechargeAmount').textContent = `₹${recharge}`;
+          document.getElementById('totalIncome').textContent = `₹${income}`;
+          document.getElementById('balance').textContent = `₹${balance}`;
+          
+          // Update VIP level
+          updateVipLevel(recharge);
+          
+          // Show admin link for admin user
+          if (uid === adminUID) {
+            document.getElementById('adminLink').style.display = 'block';
+          }
+        }
+      });
+      
+      // Load plans
+      loadPlans();
+    } else {
+      alert("Please login first");
+      window.location.href = "login.html";
+    }
+  });
 
-            const total = (data.recharge || 0) + (data.bonus || 0) + (data.winning || 0);
-            document.getElementById("totalBalance").innerText = total;
+  // Handle plan purchases
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('buy-btn')) {
+      const planId = e.target.dataset.id;
+      const price = parseFloat(e.target.dataset.price);
+      
+      if (!currentUser) {
+        alert("Please login first");
+        return;
+      }
+      
+      const uid = currentUser.uid;
+      
+      // Check user balance
+      db.ref("users/" + uid).once("value").then(snapshot => {
+        const userData = snapshot.val();
+        const balance = userData.balance || 0;
+        
+        if (balance < price) {
+          alert("Insufficient balance!");
+          return;
+        }
+        
+        // Deduct from balance
+        const newBalance = balance - price;
+        db.ref("users/" + uid).update({
+          balance: newBalance
+        });
+        
+        // Add to recharge amount
+        const newRecharge = (userData.recharge || 0) + price;
+        db.ref("users/" + uid).update({
+          recharge: newRecharge
+        });
+        
+        // Add to purchases
+        db.ref("purchases/" + uid + "/" + planId).set({
+          purchaseDate: new Date().toISOString(),
+          status: "active"
+        });
+        
+        alert("Plan purchased successfully!");
+      });
+    }
+  });
 
-            const daily = data.daily_income || 0;
-            document.getElementById("dailyIncome").innerText = daily;
-
-            // Invite Count
-            db.ref("users").orderByChild("referredBy").equalTo(data.referralCode || "").once("value", snap => {
-              document.getElementById("inviteCount").innerText = snap.size || 0;
+  // Simulate daily income payouts
+  function simulateDailyPayouts() {
+    db.ref("purchases").once("value").then(snapshot => {
+      snapshot.forEach(userSnapshot => {
+        const uid = userSnapshot.key;
+        userSnapshot.forEach(planSnapshot => {
+          const planId = planSnapshot.key;
+          const purchase = planSnapshot.val();
+          
+          if (purchase.status === "active") {
+            // Get plan details
+            db.ref("plans/" + planId).once("value").then(planSnap => {
+              const plan = planSnap.val();
+              
+              // Add daily income to user
+              db.ref("users/" + uid).once("value").then(userSnap => {
+                const user = userSnap.val();
+                const newIncome = (user.income || 0) + plan.daily;
+                const newBalance = (user.balance || 0) + plan.daily;
+                
+                db.ref("users/" + uid).update({
+                  income: newIncome,
+                  balance: newBalance
+                });
+                
+                // Record transaction
+                db.ref("transactions/" + uid).push({
+                  type: "daily_income",
+                  amount: plan.daily,
+                  date: new Date().toISOString(),
+                  plan: planId
+                });
+              });
             });
-
-            // VIP System (example: based on recharge)
-            let vip = 0;
-            if (data.recharge >= 5000) vip = 5;
-            else if (data.recharge >= 2000) vip = 4;
-            else if (data.recharge >= 1000) vip = 3;
-            else if (data.recharge >= 500) vip = 2;
-            else if (data.recharge >= 100) vip = 1;
-            document.getElementById("vipLevel").innerText = vip;
           }
         });
-      } else {
-        alert("Please login first");
-        window.location.href = "login.html";
-      }
+      });
     });
-  </script>
+  }
+
+  // For demo: simulate payouts every 10 seconds
+  setInterval(simulateDailyPayouts, 10000);
+</script>
 
 </body>
 </html>
