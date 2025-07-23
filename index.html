@@ -803,20 +803,18 @@
 
   // Selected recharge amount
   let selectedAmount = 0;
+auth.onAuthStateChanged(user => {
+  if (user) {
+    currentUser = user;
+    loadProducts();
+    loadWalletData();
+    checkIfAdmin(user.uid); // Check if admin
+  } else {
+    // Redirect to login page
+    window.location.href = "login.html";
+  }
+});
 
-  // Initialize the app
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      currentUser = user;
-      loadProducts();
-      loadWalletData();
-    } else {
-      // For demo purposes, we'll simulate a user
-      currentUser = { uid: "demoUser123" };
-      loadProducts();
-      loadWalletData();
-    }
-  });
 
   // Load wallet data
   function loadWalletData() {
