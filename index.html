@@ -4,302 +4,724 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Daily Income App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f2f2f2;
+    :root {
+      --primary: #ff6b00;
+      --primary-dark: #e65100;
+      --secondary: #4a148c;
+      --dark: #222;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --success: #28a745;
+      --vip-0: #9e9e9e;
+      --vip-1: #ff9800;
+      --vip-2: #ff5722;
+      --vip-3: #f44336;
+      --vip-4: #e91e63;
+      --vip-5: #9c27b0;
+      --vip-6: #673ab7;
+      --vip-7: #3f51b5;
+      --vip-8: #2196f3;
+      --vip-9: #03a9f4;
+      --vip-10: #00bcd4;
     }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      background-attachment: fixed;
+      color: #333;
+      padding-bottom: 60px;
+      min-height: 100vh;
+    }
+    
     .header {
-      background: #ff9800;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
       color: white;
       padding: 20px;
       text-align: center;
-      font-size: 18px;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
     }
+    
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%);
+      background-size: 50px 50px;
+    }
+    
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    
     .wallet-box {
       display: flex;
       justify-content: space-around;
-      padding: 10px;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
+      padding: 20px 10px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      margin: 20px 0;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .wallet-box::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    }
+    
     .wallet-box div {
       text-align: center;
+      flex: 1;
+      position: relative;
+      padding: 0 5px;
     }
-    .wallet-box div span {
+    
+    .wallet-box div:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      height: 40px;
+      width: 1px;
+      background: rgba(0,0,0,0.1);
+    }
+    
+    .wallet-box div span:first-child {
       display: block;
       font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      margin-bottom: 5px;
     }
+    
+    .wallet-box div span:last-child {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+    
+    .vip-container {
+      margin: 25px 0;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    
     .vip-banner {
-      background: linear-gradient(90deg, #ff9800, #ff5722);
-      color: white;
-      padding: 10px;
+      padding: 15px;
       text-align: center;
       font-weight: bold;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
     }
+    
+    .vip-banner::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, 
+        rgba(255,255,255,0.1) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255,255,255,0.1) 50%, 
+        rgba(255,255,255,0.1) 75%, 
+        transparent 75%
+      );
+      background-size: 50px 50px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    
+    .vip-level {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    
+    .vip-level .crown {
+      margin-right: 10px;
+      font-size: 1.4rem;
+      color: gold;
+      text-shadow: 0 0 5px rgba(255,215,0,0.7);
+    }
+    
+    .vip-progress {
+      padding: 15px;
+      background: rgba(0,0,0,0.2);
+    }
+    
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+    
+    .progress-container {
+      height: 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), gold);
+      border-radius: 10px;
+      width: 45%;
+      position: relative;
+    }
+    
+    .progress-bar::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background-size: 200% 100%;
+      animation: shine 2s infinite;
+    }
+    
+    @keyframes shine {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
     .quick-actions {
       display: flex;
       justify-content: space-around;
-      background: #fff;
-      padding: 15px 0;
-      border-bottom: 1px solid #ddd;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px 0;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      margin: 25px 0;
     }
+    
     .quick-actions a {
       text-align: center;
       text-decoration: none;
-      color: #333;
-      font-size: 14px;
+      color: var(--dark);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: transform 0.3s;
+      flex: 1;
     }
+    
+    .quick-actions a:hover {
+      transform: translateY(-5px);
+    }
+    
     .quick-actions a div {
-      font-size: 20px;
+      font-size: 1.8rem;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 4px 8px rgba(255,107,0,0.3);
     }
+    
     .tabs {
       display: flex;
       justify-content: center;
-      margin: 10px 0;
+      margin: 25px 0;
+      gap: 10px;
     }
+    
     .tabs button {
-      background: #fff;
-      border: 1px solid #ff9800;
-      color: #ff9800;
-      padding: 5px 10px;
-      margin: 0 5px;
-      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
       cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(255,107,0,0.3);
+      transition: all 0.3s;
     }
+    
+    .tabs button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(255,107,0,0.4);
+    }
+    
+    .tabs button:active {
+      transform: translateY(0);
+    }
+    
+    .plans-container {
+      margin: 20px 0;
+    }
+    
+    .section-title {
+      color: white;
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .section-title i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+    
     .plan-card {
-      background: #fff;
-      margin: 10px;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.95);
+      margin: 15px 0;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid var(--primary);
     }
+    
+    .vip-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      color: #7d6608;
+      padding: 8px 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      transform: rotate(45deg);
+      width: 100px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    
     .plan-card h3 {
-      margin: 0;
-      font-size: 16px;
+      margin: 0 0 15px;
+      font-size: 1.3rem;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
     }
+    
+    .plan-card h3 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+    
     .plan-details {
       display: flex;
       justify-content: space-between;
-      margin: 10px 0;
-      font-size: 14px;
+      margin: 15px 0;
+      font-size: 1rem;
+      flex-wrap: wrap;
     }
-    .buy-btn {
-      background: #ff9800;
-      color: white;
-      padding: 10px;
+    
+    .plan-details div {
+      flex: 1;
+      min-width: 120px;
       text-align: center;
-      border-radius: 5px;
+      padding: 8px;
+      background: rgba(255,107,0,0.1);
+      margin: 5px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    
+    .plan-details div span {
+      display: block;
+      font-weight: bold;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+    }
+    
+    .buy-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 12px;
+      text-align: center;
+      border-radius: 8px;
       text-decoration: none;
       display: block;
       font-weight: bold;
+      margin-top: 15px;
+      border: none;
+      width: 100%;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255,107,0,0.3);
+      transition: all 0.3s;
     }
+    
+    .buy-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(255,107,0,0.4);
+    }
+    
+    .buy-btn:active {
+      transform: translateY(0);
+    }
+    
     .bottom-nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background: #fff;
-      border-top: 1px solid #ccc;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(0,0,0,0.1);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      padding: 12px 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(5px);
+      z-index: 100;
     }
+    
     .bottom-nav a {
-      color: #333;
+      color: var(--gray);
       text-decoration: none;
       text-align: center;
-      font-size: 13px;
+      font-size: 0.8rem;
+      flex: 1;
+      transition: color 0.3s;
     }
+    
     .bottom-nav a.active {
-      color: #ff9800;
+      color: var(--primary-dark);
       font-weight: bold;
     }
+    
+    .bottom-nav a div {
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+    }
+    
+    .vip-benefits {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    
+    .vip-benefits h3 {
+      color: var(--primary-dark);
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .vip-benefits h3 i {
+      margin-right: 10px;
+      color: gold;
+    }
+    
+    .benefit-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .benefit-item {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      padding: 10px;
+      background: rgba(255,215,0,0.1);
+      border-radius: 10px;
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+    
+    .benefit-item i {
+      font-size: 1.5rem;
+      color: gold;
+      margin-bottom: 8px;
+    }
+    
+    .benefit-item span {
+      display: block;
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    
+    /* VIP Level Colors */
+    .vip-0 { background: linear-gradient(135deg, var(--vip-0), #757575); }
+    .vip-1 { background: linear-gradient(135deg, var(--vip-1), #f57c00); }
+    .vip-2 { background: linear-gradient(135deg, var(--vip-2), #e64a19); }
+    .vip-3 { background: linear-gradient(135deg, var(--vip-3), #d32f2f); }
+    .vip-4 { background: linear-gradient(135deg, var(--vip-4), #c2185b); }
+    .vip-5 { background: linear-gradient(135deg, var(--vip-5), #7b1fa2); }
+    .vip-6 { background: linear-gradient(135deg, var(--vip-6), #512da8); }
+    .vip-7 { background: linear-gradient(135deg, var(--vip-7), #303f9f); }
+    .vip-8 { background: linear-gradient(135deg, var(--vip-8), #0288d1); }
+    .vip-9 { background: linear-gradient(135deg, var(--vip-9), #0097a7); }
+    .vip-10 { background: linear-gradient(135deg, var(--vip-10), #00838f); }
   </style>
 </head>
 <body>
 
-  <div class="header">Welcome to Income App</div>
-
-  <div class="wallet-box">
-    <div><span>₹0</span>Recharge</div>
-    <div><span>₹0</span>Total Income</div>
-    <div><span>₹0</span>Balance</div>
+  <div class="header">
+    <h1><i class="fas fa-wallet"></i> Daily Income App</h1>
+    <p>Earn money with our investment plans</p>
   </div>
 
-  <div class="vip-banner">VIP 1 Activated - Get More Benefits</div>
-
-  <div class="quick-actions">
-    <a href="recharge.html">
-      <div>💰</div>Recharge
-    </a>
-    <a href="withdraw.html">
-      <div>🏧</div>Withdraw
-    </a>
-    <a href="invite.html">
-      <div>📤</div>Share
-    </a>
-    <a href="online.html">
-      <div>🧑‍💻</div>Online
-    </a>
-  </div>
-
-  <div class="tabs">
-    <button>Daily Income</button>
-    <button>Benefits Program</button>
-  </div>
-
-  <!-- Sample Product Card -->
-  <div class="plan-card">
-    <h3>Plan ₹1000</h3>
-    <div class="plan-details">
-      <div>Daily: ₹100</div>
-      <div>Days: 10</div>
-      <div>Total: ₹1000</div>
+  <div class="app-container">
+    <div class="wallet-box">
+      <div>
+        <span id="recharge">₹0</span>
+        <span>Recharge</span>
+      </div>
+      <div>
+        <span id="totalIncome">₹0</span>
+        <span>Total Income</span>
+      </div>
+      <div>
+        <span id="balance">₹0</span>
+        <span>Balance</span>
+      </div>
     </div>
-    <a href="investment.html" class="buy-btn">Buy Now</a>
+
+    <div class="vip-container">
+      <div class="vip-banner vip-1" id="vipBanner">
+        <h3>VIP <span id="vipLevel">0</span> Activated</h3>
+        <div class="vip-level">
+          <i class="fas fa-crown"></i>
+          <p>Get More Benefits & Higher Returns</p>
+        </div>
+      </div>
+      <div class="vip-progress">
+        <div class="progress-label">
+          <span>VIP <span id="currentVip">0</span></span>
+          <span>VIP <span id="nextVip">1</span></span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="vipProgress"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.7); text-align: center; margin-top: 10px; font-size: 0.9rem;">
+          Recharge ₹<span id="rechargeNeeded">1000</span> more to reach next level
+        </p>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <a href="recharge.html">
+        <div><i class="fas fa-rupee-sign"></i></div>
+        Recharge
+      </a>
+      <a href="withdraw.html">
+        <div><i class="fas fa-money-bill-wave"></i></div>
+        Withdraw
+      </a>
+      <a href="invite.html">
+        <div><i class="fas fa-share-alt"></i></div>
+        Share
+      </a>
+      <a href="online.html">
+        <div><i class="fas fa-headset"></i></div>
+        Support
+      </a>
+    </div>
+
+    <div class="tabs">
+      <button>Daily Income</button>
+      <button>Benefits Program</button>
+    </div>
+
+    <div class="plans-container">
+      <h2 class="section-title"><i class="fas fa-chart-line"></i> Investment Plans</h2>
+      
+      <div class="plan-card">
+        <div class="vip-badge">VIP 1+</div>
+        <h3><i class="fas fa-gem"></i> Plan ₹1000</h3>
+        <div class="plan-details">
+          <div>
+            Daily: <span>₹100</span>
+          </div>
+          <div>
+            Days: <span>10</span>
+          </div>
+          <div>
+            Total: <span>₹1000</span>
+          </div>
+        </div>
+        <button class="buy-btn">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="vip-badge">VIP 2+</div>
+        <h3><i class="fas fa-gem"></i> Plan ₹5000</h3>
+        <div class="plan-details"
+          <div>
+            Daily: <span>₹600</span>
+          </div>
+          <div>
+            Days: <span>10</span>
+          </div>
+          <div>
+            Total: <span>₹6000</span>
+          </div>
+        </div>
+        <button class="buy-btn">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="vip-badge">VIP 5+</div>
+        <h3><i class="fas fa-gem"></i> Plan ₹20000</h3>
+        <div class="plan-details">
+          <div>
+            Daily: <span>₹2800</span>
+          </div>
+          <div>
+            Days: <span>10</span>
+          </div>
+          <div>
+            Total: <span>₹28000</span>
+          </div>
+        </div>
+        <button class="buy-btn">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="vip-benefits">
+      <h3><i class="fas fa-crown"></i> VIP Benefits</h3>
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <i class="fas fa-percentage"></i>
+          <span>Higher Returns</span>
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-gift"></i>
+          <span>Daily Bonus</span>
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-user-friends"></i>
+          <span>Priority Support</span>
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-rocket"></i>
+          <span>Faster Withdrawals</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Repeat more cards if needed -->
-
-<div class="bottom-nav">
-     <a href="index.html"><div>🏠<br/>Home</div></a>
-    <a href="team.html"><div>👥<br/>Team</div></a>
-    <a href="investment.html"><div>🍪<br/>Devices</div></a>
-    <a href="my.html"><div>👤<br/>My</div></a>
+  <div class="bottom-nav">
+    <a href="index.html" class="active">
+      <div><i class="fas fa-home"></i></div>
+      Home
+    </a>
+    <a href="team.html">
+      <div><i class="fas fa-users"></i></div>
+      Team
+    </a>
+    <a href="investment.html">
+      <div><i class="fas fa-mobile-alt"></i></div>
+      Devices
+    </a>
+    <a href="my.html">
+      <div><i class="fas fa-user"></i></div>
+      Profile
+    </a>
   </div>
-<!-- Firebase Scripts -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+ <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
 
-<script>
-   const firebaseConfig = {
-            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-            authDomain: "grow-3e3a1.firebaseapp.com",
-            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-            projectId: "grow-3e3a1",
-           
-        };
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1",
+      storageBucket: "grow-3e3a1.appspot.com",
+      messagingSenderId: "285304522946",
+      appId: "1:285304522946:web:c423e49a8e0968ce63535b"
+    };
+    
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const auth = firebase.auth();
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-  let currentUser = null;
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const uid = user.uid;
+        const userRef = db.ref("users/" + uid);
+        userRef.on("value", snapshot => {
+          const data = snapshot.val();
+          if (data) {
+            document.getElementById("username").innerText = data.name || "-";
+            document.getElementById("referralCode").innerText = data.referralCode || "-";
+            document.getElementById("rechargeBalance").innerText = data.recharge || 0;
+            document.getElementById("bonusBalance").innerText = data.bonus || 0;
+            document.getElementById("winningBalance").innerText = data.winning || 0;
 
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      currentUser = user;
-      loadAll(user.uid);
-    } else {
-      alert("Please login first");
-      location.href = "login.html";
-    }
-  });
+            const total = (data.recharge || 0) + (data.bonus || 0) + (data.winning || 0);
+            document.getElementById("totalBalance").innerText = total;
 
-  function loadAll(uid) {
-    const userRef = db.ref("users/" + uid);
-    userRef.on("value", snap => {
-      const d = snap.val();
-      document.getElementById("username").innerText = d.name || "User";
-      document.getElementById("recharge").innerText = d.wallet.recharge || 0;
-      document.getElementById("bonus").innerText = d.wallet.bonus || 0;
-      document.getElementById("winning").innerText = d.wallet.winning || 0;
-      document.getElementById("totalRecharge").innerText = d.wallet.recharge || 0;
-      document.getElementById("refCode").innerText = d.referralCode || "None";
-      document.getElementById("vipLevel").innerText = "VIP-" + (d.vipLevel || 0);
-      const total = (d.wallet.recharge || 0) + (d.wallet.bonus || 0) + (d.wallet.winning || 0);
-      document.getElementById("total").innerText = total;
+            const daily = data.daily_income || 0;
+            document.getElementById("dailyIncome").innerText = daily;
+
+            // Invite Count
+            db.ref("users").orderByChild("referredBy").equalTo(data.referralCode || "").once("value", snap => {
+              document.getElementById("inviteCount").innerText = snap.size || 0;
+            });
+
+            // VIP System (example: based on recharge)
+            let vip = 0;
+            if (data.recharge >= 5000) vip = 5;
+            else if (data.recharge >= 2000) vip = 4;
+            else if (data.recharge >= 1000) vip = 3;
+            else if (data.recharge >= 500) vip = 2;
+            else if (data.recharge >= 100) vip = 1;
+            document.getElementById("vipLevel").innerText = vip;
+          }
+        });
+      } else {
+        alert("Please login first");
+        window.location.href = "login.html";
+      }
     });
-
-    db.ref("plans").on("value", snap => {
-      const planList = document.getElementById("planList");
-      planList.innerHTML = "<h3>📦 Available Investment Plans</h3>";
-      snap.forEach(p => {
-        const d = p.val();
-        const key = p.key;
-        planList.innerHTML += `
-        <div class="plan-card">
-          <img src="${d.image || 'https://via.placeholder.com/300'}" />
-          <h4>${d.title}</h4>
-          <p>Price: ₹${d.price}</p>
-          <p>Daily: ₹${d.daily} x ${d.days} days</p>
-          <button class="btn-buy" onclick="buyPlan('${key}', ${d.price}, ${d.daily}, ${d.days})">Buy Now</button>
-        </div>`;
-      });
-    });
-
-    db.ref("purchases/" + uid).on("value", snap => {
-      const list = document.getElementById("purchaseList");
-      list.innerHTML = "<h3>🛒 My Active Plans</h3>";
-      snap.forEach(p => {
-        const d = p.val();
-        list.innerHTML += `
-        <div class="purchase-card">
-          <p>Daily Income: ₹${d.daily}</p>
-          <p>Days Left: ${d.days_left}</p>
-          <p>Start: ${d.start_date}</p>
-        </div>`;
-      });
-    });
-
-    db.ref("users/" + uid + "/referredUsers").on("value", s => {
-      document.getElementById("referred").innerText = s.numChildren();
-    });
-
-    db.ref("daily_income_logs/" + uid).on("value", s => {
-      document.getElementById("refIncome").innerText = s.numChildren() * 10; // adjust as needed
-    });
-
-    db.ref("wallet_logs/" + uid).limitToLast(10).on("value", s => {
-      const list = document.getElementById("historyList");
-      list.innerHTML = "";
-      s.forEach(l => {
-        const d = l.val();
-        list.innerHTML += <li>${d.type} – ₹${d.amount} – ${d.status}</li>;
-      });
-    });
-
-    db.ref("notice").on("value", s => {
-      document.getElementById("notice").innerText = "📢 " + (s.val() || "Welcome!");
-    });
-  }
-
-  function buyPlan(id, price, daily, days) {
-    const uid = currentUser.uid;
-    db.ref("users/" + uid + "/wallet").once("value").then(snap => {
-      let w = snap.val();
-      let total = (w.recharge || 0) + (w.bonus || 0) + (w.winning || 0);
-      if (total < price) return alert("Insufficient balance!");
-
-      // Deduct from recharge -> bonus -> winning
-      let remaining = price;
-      let r = w.recharge, b = w.bonus, win = w.winning;
-      if (r >= remaining) r -= remaining, remaining = 0;
-      else remaining -= r, r = 0;
-      if (remaining && b >= remaining) b -= remaining, remaining = 0;
-      else remaining -= b, b = 0;
-      if (remaining && win >= remaining) win -= remaining, remaining = 0;
-
-      db.ref("users/" + uid + "/wallet").set({ recharge: r, bonus: b, winning: win });
-
-      db.ref("purchases/" + uid + "/" + id).set({
-        daily: daily,
-        days_left: days,
-        start_date: new Date().toISOString().split("T")[0]
-      });
-
-      alert("Plan purchased!");
-    });
-  }
-
-  function copyCode() {
-    const text = document.getElementById("refCode").innerText;
-    navigator.clipboard.writeText(text);
-    alert("Referral code copied!");
-  }
-</script>
+  </script>
 
 </body>
 </html>
