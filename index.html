@@ -1,1620 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WealthGrow | Investment Platform</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Income App</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #0c1015, #000);
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
     }
-
-    /* Header Styles */
-    header {
-      background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
-      padding: 15px 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .logo i {
-      color: #00f7ff;
-    }
-
-    .user-controls {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .balance-display {
-      background: rgba(0, 247, 255, 0.1);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-      border-radius: 20px;
-      padding: 8px 15px;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .balance-display i {
-      color: #00f7ff;
-    }
-
-    .menu-icon {
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    /* Drawer Navigation */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 998;
-      display: none;
-    }
-
-    .drawer {
-      position: fixed;
-      top: 0;
-      left: -280px;
-      width: 280px;
-      height: 100%;
-      background: #1a1a2e;
-      padding: 20px 0;
-      transition: 0.4s ease;
-      z-index: 999;
-      overflow-y: auto;
-    }
-
-    .drawer.open {
-      left: 0;
-    }
-
-    .drawer-header {
-      padding: 0 20px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 15px;
-    }
-
-    .drawer .user-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .drawer .user-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00f7ff, #302b63);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-
-    .drawer .user-name {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-
-    .drawer .user-balance {
-      font-size: 0.9rem;
-      color: #00f7ff;
-    }
-
-    .drawer a {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 14px 25px;
-      margin: 5px 0;
-      transition: 0.3s ease;
-      font-size: 1rem;
-    }
-
-    .drawer a i {
-      width: 24px;
-      text-align: center;
-      font-size: 1.2rem;
-    }
-
-    .drawer a:hover {
-      background: rgba(0, 247, 255, 0.15);
-      color: #00f7ff;
-    }
-
-    .drawer .divider {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.1);
-      margin: 15px 0;
-    }
-
-    /* Main Content */
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    .welcome-banner {
-      background: linear-gradient(135deg, #1a1a2e, #0f3460);
-      border-radius: 15px;
-      padding: 25px;
-      margin: 20px 0;
-      text-align: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-    }
-
-    .welcome-banner h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #00f7ff, #0077ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      display: inline-block;
-    }
-
-    .welcome-banner p {
-      font-size: 1.1rem;
-      color: #bbb;
-      margin-bottom: 15px;
-    }
-
-    .wallet-breakdown {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .wallet-item {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 12px 20px;
-      border-radius: 10px;
-      min-width: 150px;
-      border: 1px solid rgba(0, 247, 255, 0.2);
-    }
-
-    .wallet-item i {
-      font-size: 1.5rem;
-      margin-bottom: 8px;
-      color: #00f7ff;
-    }
-
-    .wallet-label {
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-bottom: 5px;
-    }
-
-    .wallet-amount {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-
-    .promo-banner {
-      background: linear-gradient(135deg, #1a1a2e, #0f3460);
-      border-radius: 20px;
-      padding: 20px;
-      margin: 20px 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(0, 247, 255, 0.3);
-    }
-
-    .promo-card {
-      flex: 1;
-      min-width: 300px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-      border: 1px solid rgba(0, 247, 255, 0.2);
-    }
-
-    .promo-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 247, 255, 0.2);
-    }
-
-    .promo-image {
-      height: 150px;
-      background: linear-gradient(135deg, #24243e, #302b63);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: #00f7ff;
-    }
-
-    .promo-content {
-      padding: 15px;
-      text-align: center;
-    }
-
-    .promo-content h3 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      color: #00f7ff;
-    }
-
-    .promo-content p {
-      font-size: 0.9rem;
-      color: #ccc;
-      margin-bottom: 15px;
-    }
-
-    .btn-promo {
-      display: inline-block;
-      background: linear-gradient(to right, #00f7ff, #0077ff);
-      color: #000;
-      padding: 8px 20px;
-      border-radius: 30px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .btn-promo:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
-    }
-
-    /* Logout Button */
-    .logout {
-      text-align: center;
-      margin: 40px 0 20px;
-    }
-
-    .logout-btn {
-      padding: 12px 40px;
-      background: linear-gradient(to right, #ff4b5c, #ff7b87);
-      border: none;
-      border-radius: 30px;
+    .header {
+      background: #ff9800;
       color: white;
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .logout-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(255, 75, 92, 0.5);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .logo {
-        font-size: 1.5rem;
-      }
-      
-      .balance-display {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-      }
-      
-      .cards {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      }
-      
-      .card-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-      }
-      
-      .card h3 {
-        font-size: 1.1rem;
-      }
-      
-      .promo-card {
-        min-width: 100%;
-      }
-      
-      .wallet-breakdown {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .wallet-item {
-        width: 100%;
-        max-width: 250px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .user-controls {
-        gap: 10px;
-      }
-      
-      .balance-display span {
-        display: none;
-      }
-      
-      .cards {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 15px;
-      }
-      
-      .card {
-        padding: 15px;
-      }
-      
-      .card-btn {
-        padding: 8px 15px;
-        font-size: 0.85rem;
-      }
-      
-      .welcome-banner h1 {
-        font-size: 1.7rem;
-      }
-    }
-
-    .notification {
-      position: fixed;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 700px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
-      border-radius: 0 0 30px 30px;
-      padding: 10px 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      font-family: Arial, sans-serif;
-      z-index: 9999;
-      animation: slideDown 0.5s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        transform: translateX(-50%) translateY(-100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .sound-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-    }
-
-    .text {
-      font-size: 14px;
-      color: #333;
-      transition: opacity 0.3s;
-      flex: 1;
-      text-align: center;
-    }
-
-    .btn-detail {
-      margin-left: 15px;
-      background: #ff4e50;
-      border: none;
-      color: white;
-      padding: 6px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-detail:hover {
-      background: #ff2e30;
-    }
-    
-    /* NEW STYLES FOR INVESTMENT SECTION */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-    
-    .product-card {
-      background: linear-gradient(145deg, rgba(31, 31, 47, 0.8), rgba(46, 46, 62, 0.8));
-      border-radius: 20px;
       padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .product-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(0, 247, 255, 0.3);
-      box-shadow: 0 10px 25px rgba(0, 247, 255, 0.3);
-    }
-    
-    .product-badge {
-      background: linear-gradient(to right, #f97316, #f59e0b);
-      color: white;
-      font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 15px;
-    }
-    
-    .product-title {
+      text-align: center;
       font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #f8fafc;
     }
-    
-    .product-income {
+    .wallet-box {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
+      justify-content: space-around;
+      padding: 10px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
     }
-    
-    .income-item {
+    .wallet-box div {
       text-align: center;
     }
-    
-    .income-value {
-      font-size: 22px;
-      font-weight: 700;
-      color: #4ade80;
-    }
-    
-    .income-label {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 5px;
-    }
-    
-    .product-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .product-price {
-      font-size: 20px;
-      font-weight: 700;
-      color: #f8fafc;
-    }
-    
-    .product-button {
-      background: linear-gradient(to right, #00f7ff, #0077ff);
-      color: #000;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 30px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .product-button:hover {
-      background: linear-gradient(to right, #60a5fa, #93c5fd);
-      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-      transform: scale(1.05);
-    }
-    
-    @media (max-width: 768px) {
-      .products-grid {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      }
-      
-      .product-card {
-        padding: 15px;
-      }
-      
-      .product-title {
-        font-size: 16px;
-      }
-      
-      .income-value {
-        font-size: 18px;
-      }
-      
-      .product-price {
-        font-size: 18px;
-      }
-    }
-    
-    /* Modal Styles */
-    .investment-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(5px);
-    }
-    
-    .investment-content {
-      background: #1e293b;
-      border-radius: 20px;
-      padding: 30px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      border: 1px solid #334155;
-    }
-    
-    .investment-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-    
-    .investment-header h2 {
-      color: #f8fafc;
-      font-size: 24px;
-    }
-    
-    .close-btn {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    
-    .investment-details {
-      background: rgba(30, 41, 59, 0.7);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 25px;
-    }
-    
-    .investment-details div {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 15px;
-    }
-    
-    .investment-details div:last-child {
-      margin-bottom: 0;
-    }
-    
-    .detail-label {
-      color: #94a3b8;
-    }
-    
-    .detail-value {
-      color: #f8fafc;
-      font-weight: 500;
-    }
-    
-    .investment-form {
-      margin-bottom: 25px;
-    }
-    
-    /* Success Message */
-    .success-message {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(to right, #4ade80, #22c55e);
-      color: white;
-      padding: 15px 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      z-index: 300;
-      display: none;
-      animation: fadeInOut 3s ease-in-out;
-    }
-    
-    @keyframes fadeInOut {
-      0% { opacity: 0; top: 0; }
-      10% { opacity: 1; top: 20px; }
-      90% { opacity: 1; top: 20px; }
-      100% { opacity: 0; top: 0; }
-    }
-    
-    /* Form elements */
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
+    .wallet-box div span {
       display: block;
-      margin-bottom: 8px;
-      color: #94a3b8;
-      font-size: 14px;
+      font-weight: bold;
     }
-    
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 12px 15px;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: rgba(30, 41, 59, 0.7);
-      color: #f8fafc;
-      font-size: 16px;
-    }
-    
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      background: linear-gradient(to right, #3b82f6, #60a5fa);
+    .vip-banner {
+      background: linear-gradient(90deg, #ff9800, #ff5722);
       color: white;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
     }
-    
-    .btn:hover {
-      background: linear-gradient(to right, #60a5fa, #93c5fd);
-      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-    }
-    
-    .error-message {
-      color: #f87171;
-      font-size: 14px;
-      margin-top: 8px;
-      display: none;
-    }
-    
-    /* Quick Actions */
     .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-around;
+      background: #fff;
+      padding: 15px 0;
+      border-bottom: 1px solid #ddd;
     }
-    
-    .action-button {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 12px 5px;
+    .quick-actions a {
       text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      text-decoration: none;
+      color: #333;
+      font-size: 14px;
     }
-    
-    .action-button:hover {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: #60a5fa;
-    }
-    
-    .action-button i {
+    .quick-actions a div {
       font-size: 20px;
-      color: #60a5fa;
-      margin-bottom: 5px;
     }
-    
-    .action-button span {
-      font-size: 12px;
-      color: #94a3b8;
-    }
-    
-    /* Loading Spinner */
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      border-top: 4px solid #60a5fa;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 30px auto;
-      display: none;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Transaction History Modal */
-    .transaction-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      z-index: 200;
+    .tabs {
+      display: flex;
       justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(5px);
+      margin: 10px 0;
     }
-    
-    .transaction-content {
-      background: #1e293b;
+    .tabs button {
+      background: #fff;
+      border: 1px solid #ff9800;
+      color: #ff9800;
+      padding: 5px 10px;
+      margin: 0 5px;
       border-radius: 20px;
-      padding: 30px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      border: 1px solid #334155;
-    }
-    
-    .transaction-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-    
-    .transaction-header h2 {
-      color: #f8fafc;
-      font-size: 24px;
-    }
-    
-    .tab-buttons {
-      display: flex;
-      margin-bottom: 20px;
-    }
-    
-    .tab-button {
-      flex: 1;
-      padding: 12px;
-      text-align: center;
-      background: rgba(30, 41, 59, 0.7);
-      border: none;
-      color: #94a3b8;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    
-    .tab-button.active {
-      background: rgba(56, 189, 248, 0.3);
-      color: #38bdf8;
-    }
-    
-    .tab-button:first-child {
-      border-radius: 10px 0 0 10px;
-    }
-    
-    .tab-button:last-child {
-      border-radius: 0 10px 10px 0;
-    }
-    
-    .transaction-list {
-      max-height: 300px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-    
-    .transaction-list-item {
-      display: flex;
-      align-items: center;
+    .plan-card {
+      background: #fff;
+      margin: 10px;
       padding: 15px;
-      background: rgba(30, 41, 59, 0.7);
-      border-radius: 15px;
-      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    
-    .transaction-list-icon {
-      background: rgba(56, 189, 248, 0.2);
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+    .plan-card h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .plan-details {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 15px;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 14px;
     }
-    
-    .transaction-list-details {
-      flex: 1;
+    .buy-btn {
+      background: #ff9800;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px;
+      text-decoration: none;
+      display: block;
+      font-weight: bold;
     }
-    
-    .transaction-list-title {
-      font-weight: 600;
-      color: #f8fafc;
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
     }
-    
-    .transaction-list-time {
+    .bottom-nav a {
+      color: #333;
+      text-decoration: none;
+      text-align: center;
       font-size: 13px;
-      color: #94a3b8;
     }
-    
-    .transaction-list-amount {
-      font-weight: 700;
-    }
-    
-    .income {
-      color: #4ade80;
-    }
-    
-    .expense {
-      color: #f87171;
+    .bottom-nav a.active {
+      color: #ff9800;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
 
-  <div class="drawer" id="drawer">
-    <div class="drawer-header">
-      <div class="user-info">
-        <div class="user-avatar">
-          <i class="fas fa-user"></i>
-        </div>
-        <div>
-          <div class="user-name" id="drawerUserName">User</div>
-          <div class="user-balance">₹<span id="drawerBalance">0.00</span></div>
-        </div>
-      </div>
-    </div>
-    
-    <a href="index.html"><i class="fas fa-home"></i> Home</a>
-    <a href="wallet.html"><i class="fas fa-credit-card"></i> Wallet</a>
-    <a href="recharge.html"><i class="fas fa-wallet"></i> Recharge</a>
-    <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
-    <a href="history.html"><i class="fas fa-history"></i> History</a>
-    <a href="account.html"><i class="fas fa-user-circle"></i> Account</a>
-    
-    <div class="divider"></div>
+  <div class="header">Welcome to Income App</div>
 
-    <a href="support.html"><i class="fas fa-headset"></i> Support</a>
-    <a href="invite.html"><i class="fas fa-gift"></i> Invite Friends</a>
-    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
-    
-    <div class="divider"></div>
-    
-    <a href="login.html" style="color: #ff7b87;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  <div class="wallet-box">
+    <div><span>₹0</span>Recharge</div>
+    <div><span>₹0</span>Total Income</div>
+    <div><span>₹0</span>Balance</div>
   </div>
 
-  <header>
-    <div class="logo">
-      <i class="fas fa-chart-line"></i>
-      <span>GROW</span>
-    </div>
-    
-    <div class="user-controls">
-      <div class="balance-display">
-        <i class="fas fa-wallet"></i>
-        <span>₹<span id="totalBalance">0.00</span></span>
-      </div>
-      <div class="menu-icon" onclick="toggleDrawer()">
-        <i class="fas fa-bars"></i>
-      </div>
-    </div>
-  </header>
+  <div class="vip-banner">VIP 1 Activated - Get More Benefits</div>
 
-  <!-- Success Message -->
-  <div class="success-message" id="successMessage">
-    <i class="fas fa-check-circle"></i> Investment successful!
+  <div class="quick-actions">
+    <a href="recharge.html">
+      <div>💰</div>Recharge
+    </a>
+    <a href="withdraw.html">
+      <div>🏧</div>Withdraw
+    </a>
+    <a href="invite.html">
+      <div>📤</div>Share
+    </a>
+    <a href="online.html">
+      <div>🧑‍💻</div>Online
+    </a>
   </div>
 
-  <div class="main-content">
-    <!-- Loading Spinner -->
-    <div class="spinner" id="loadingSpinner"></div>
-    
-    <!-- Welcome Banner -->
-    <div class="welcome-banner">
-      <h1>Welcome, <span id="userName">User</span>!</h1>
-      <p><h3>Your Ultimate Investment Experience Starts Here</h3></p>
-      
-      <div class="wallet-breakdown">
-        <div class="wallet-item">
-          <i class="fas fa-credit-card"></i>
-          <div class="wallet-label">Available Balance</div>
-          <div class="wallet-amount">₹<span id="availableBalance">0.00</span></div>
-        </div>
-        
-        <div class="wallet-item">
-          <i class="fas fa-gift"></i>
-          <div class="wallet-label">Invested Amount</div>
-          <div class="wallet-amount">₹<span id="investedAmount">0.00</span></div>
-        </div>
-        
-        <div class="wallet-item">
-          <i class="fas fa-trophy"></i>
-          <div class="wallet-label">Total Earnings</div>
-          <div class="wallet-amount">₹<span id="totalEarnings">0.00</span></div>
-        </div>
-      </div>
-    </div>
-   
-    
-    <!-- Investment Products -->
-    <div class="section-title">
-      <i class="fas fa-chart-line"></i>
-      <h2 style="color: #8ef00e;">Investment Products</h2>
-    
-    </div>
-    
-    <div class="products-grid" id="productsContainer">
-      <!-- Products will be loaded dynamically -->
-    </div>
-    
-    <!-- Logout Button -->
-    <div class="logout">
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </div>
-  
-  <!-- Investment Modal -->
-  <div class="investment-modal" id="investmentModal">
-    <div class="investment-content">
-      <div class="investment-header">
-        <h2 id="investmentTitle">Special Offer</h2>
-        <button class="close-btn" onclick="closeInvestmentModal()">&times;</button>
-      </div>
-      <div class="investment-details">
-        <div>
-          <span class="detail-label">Daily Income:</span>
-          <span class="detail-value" id="modalDailyIncome">₹0</span>
-        </div>
-        <div>
-          <span class="detail-label">Duration:</span>
-          <span class="detail-value" id="modalDuration">0 Days</span>
-        </div>
-        <div>
-          <span class="detail-label">Minimum Investment:</span>
-          <span class="detail-value" id="modalMinInvestment">₹0</span>
-        </div>
-        <div>
-          <span class="detail-label">Expected Return:</span>
-          <span class="detail-value" id="modalReturn">+0%</span>
-        </div>
-      </div>
-      <div class="investment-form">
-        <div class="form-group">
-          <label for="investmentAmount">Investment Amount (₹)</label>
-          <input type="number" id="investmentAmount" placeholder="Enter amount">
-        </div>
-        <div class="error-message" id="investmentError"></div>
-        <button class="btn" id="investButton" onclick="confirmInvestment()">Confirm Investment</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Deposit Modal -->
-  <div class="investment-modal" id="depositModal">
-    <div class="investment-content">
-      <div class="investment-header">
-        <h2>Deposit Funds</h2>
-        <button class="close-btn" onclick="closeDepositModal()">&times;</button>
-      </div>
-      <div class="investment-form">
-        <div class="form-group">
-          <label for="depositAmount">Amount (₹)</label>
-          <input type="number" id="depositAmount" placeholder="Enter amount">
-        </div>
-        <div class="form-group">
-          <label for="depositMethod">Payment Method</label>
-          <select id="depositMethod">
-            <option value="upi">UPI</option>
-            <option value="paytm">Paytm</option>
-            <option value="phonepe">PhonePe</option>
-            <option value="googlepay">Google Pay</option>
-          </select>
-        </div>
-        <div class="error-message" id="depositError"></div>
-        <button class="btn"><a href="recharge.html">Deposit</a></button>
-
-      </div>
-    </div>
-  </div>
-  
-  <!-- Withdraw Modal -->
-  <div class="investment-modal" id="withdrawModal">
-    <div class="investment-content">
-      <div class="investment-header">
-        <h2>Withdraw</h2>
-        <button class="close-btn" onclick="closeWithdrawModal()">&times;</button>
-      </div>
-      <div class="investment-form">
-        <div class="form-group">
-          <label for="withdrawAmount">Amount (₹)</label>
-          <input type="number" id="withdrawAmount" placeholder="Enter amount">
-        </div>
-        <div class="form-group">
-          <label for="withdrawMethod">Withdrawal Method</label>
-          <select id="withdrawMethod">
-            <option value="bank_account">Bank Account</option>
-            <option value="upi">UPI</option>
-            
-          </select>
-        </div>
-        <div class="error-message" id="withdrawError"></div>
-        <button class="btn"><a href="withdraw.html">Withdraw Now </a></button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Transfer Modal -->
-  <div class="investment-modal" id="transferModal">
-    <div class="investment-content">
-      <div class="investment-header">
-        <h2>Transfer Funds</h2>
-        <button class="close-btn" onclick="closeTransferModal()">&times;</button>
-      </div>
-      <div class="investment-form">
-        <div class="form-group">
-          <label for="transferAmount">Amount (₹)</label>
-          <input type="number" id="transferAmount" placeholder="Enter amount">
-        </div>
-        <div class="form-group">
-          <label for="recipientId">Recipient ID</label>
-          <input type="text" id="recipientId" placeholder="Enter member ID">
-        </div>
-        <div class="error-message" id="transferError"></div>
-        <button class="btn" onclick="processTransfer()">Transfer Now</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Transaction History Modal -->
-  <div class="transaction-modal" id="transactionModal">
-    <div class="transaction-content">
-      <div class="transaction-header">
-        <h2>Transaction History</h2>
-        <button class="close-btn" onclick="closeTransactionModal()">&times;</button>
-      </div>
-      <div class="tab-buttons">
-        <button class="tab-button active" onclick="changeTransactionTab('all')">All</button>
-        <button class="tab-button" onclick="changeTransactionTab('deposit')">Deposits</button>
-        <button class="tab-button" onclick="changeTransactionTab('withdraw')">Withdrawals</button>
-        <button class="tab-button" onclick="changeTransactionTab('investment')">Investments</button>
-      </div>
-      <div class="transaction-list" id="transactionList">
-        <!-- Transactions will be loaded dynamically -->
-      </div>
-    </div>
+  <div class="tabs">
+    <button>Daily Income</button>
+    <button>Benefits Program</button>
   </div>
 
+  <!-- Sample Product Card -->
+  <div class="plan-card">
+    <h3>Plan ₹1000</h3>
+    <div class="plan-details">
+      <div>Daily: ₹100</div>
+      <div>Days: 10</div>
+      <div>Total: ₹1000</div>
+    </div>
+    <a href="investment.html" class="buy-btn">Buy Now</a>
+  </div>
+
+  <!-- Repeat more cards if needed -->
+
+<div class="bottom-nav">
+     <a href="index.html"><div>🏠<br/>Home</div></a>
+    <a href="team.html"><div>👥<br/>Team</div></a>
+    <a href="investment.html"><div>🍪<br/>Devices</div></a>
+    <a href="my.html"><div>👤<br/>My</div></a>
+  </div>
+<!-- Firebase Scripts -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-    authDomain: "grow-3e3a1.firebaseapp.com",
-    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-    projectId: "grow-3e3a1",
-  };
+   const firebaseConfig = {
+            apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+            authDomain: "grow-3e3a1.firebaseapp.com",
+            databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+            projectId: "grow-3e3a1",
+           
+        };
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const auth = firebase.auth();
 
   let currentUser = null;
-  let currentUserData = null;
-  let currentProduct = null;
-  let transactions = [];
 
-  // Toggle drawer function
-  function toggleDrawer() {
-    const drawer = document.getElementById("drawer");
-    const overlay = document.getElementById("overlay");
-    drawer.classList.toggle("open");
-    overlay.style.display = drawer.classList.contains("open") ? "block" : "none";
-  }
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      loadAll(user.uid);
+    } else {
+      alert("Please login first");
+      location.href = "login.html";
+    }
+  });
 
-  // Get UID from LocalStorage
-  const localUid = localStorage.getItem("userId");
-
-  if (!localUid) {
-    window.location.href = "login.html";
-  } else {
-    loadUserData(localUid);
-    loadProducts();
-  }
-
-  function loadUserData(uid) {
-    showLoading(true);
+  function loadAll(uid) {
     const userRef = db.ref("users/" + uid);
     userRef.on("value", snap => {
-      const data = snap.val() || {};
-      currentUserData = data;
-      currentUser = { uid: uid };
+      const d = snap.val();
+      document.getElementById("username").innerText = d.name || "User";
+      document.getElementById("recharge").innerText = d.wallet.recharge || 0;
+      document.getElementById("bonus").innerText = d.wallet.bonus || 0;
+      document.getElementById("winning").innerText = d.wallet.winning || 0;
+      document.getElementById("totalRecharge").innerText = d.wallet.recharge || 0;
+      document.getElementById("refCode").innerText = d.referralCode || "None";
+      document.getElementById("vipLevel").innerText = "VIP-" + (d.vipLevel || 0);
+      const total = (d.wallet.recharge || 0) + (d.wallet.bonus || 0) + (d.wallet.winning || 0);
+      document.getElementById("total").innerText = total;
+    });
 
-      document.getElementById("userName").textContent = data.name || "User";
-      document.getElementById("drawerUserName").textContent = data.name || "User";
+    db.ref("plans").on("value", snap => {
+      const planList = document.getElementById("planList");
+      planList.innerHTML = "<h3>📦 Available Investment Plans</h3>";
+      snap.forEach(p => {
+        const d = p.val();
+        const key = p.key;
+        planList.innerHTML += `
+        <div class="plan-card">
+          <img src="${d.image || 'https://via.placeholder.com/300'}" />
+          <h4>${d.title}</h4>
+          <p>Price: ₹${d.price}</p>
+          <p>Daily: ₹${d.daily} x ${d.days} days</p>
+          <button class="btn-buy" onclick="buyPlan('${key}', ${d.price}, ${d.daily}, ${d.days})">Buy Now</button>
+        </div>`;
+      });
+    });
 
-      // Update balances
-      const recharge = data.wallet?.recharge || 0;
-      const bonus = data.wallet?.bonus || 0;
-      const winning = data.wallet?.winning || 0;
-      const total = recharge + bonus + winning;
-      const invested = data.invested || 0;
-      const earnings = data.earnings || 0;
+    db.ref("purchases/" + uid).on("value", snap => {
+      const list = document.getElementById("purchaseList");
+      list.innerHTML = "<h3>🛒 My Active Plans</h3>";
+      snap.forEach(p => {
+        const d = p.val();
+        list.innerHTML += `
+        <div class="purchase-card">
+          <p>Daily Income: ₹${d.daily}</p>
+          <p>Days Left: ${d.days_left}</p>
+          <p>Start: ${d.start_date}</p>
+        </div>`;
+      });
+    });
 
-      document.getElementById("totalBalance").textContent = total.toFixed(2);
-      document.getElementById("drawerBalance").textContent = total.toFixed(2);
-      document.getElementById("availableBalance").textContent = recharge.toFixed(2);
-      document.getElementById("investedAmount").textContent = invested.toFixed(2);
-      document.getElementById("totalEarnings").textContent = earnings.toFixed(2);
+    db.ref("users/" + uid + "/referredUsers").on("value", s => {
+      document.getElementById("referred").innerText = s.numChildren();
+    });
 
-      // Load transactions
-      if (data.transactions) {
-        transactions = Object.values(data.transactions);
-      } else {
-        transactions = [];
-      }
+    db.ref("daily_income_logs/" + uid).on("value", s => {
+      document.getElementById("refIncome").innerText = s.numChildren() * 10; // adjust as needed
+    });
 
-      showLoading(false);
+    db.ref("wallet_logs/" + uid).limitToLast(10).on("value", s => {
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      s.forEach(l => {
+        const d = l.val();
+        list.innerHTML += <li>${d.type} – ₹${d.amount} – ${d.status}</li>;
+      });
+    });
+
+    db.ref("notice").on("value", s => {
+      document.getElementById("notice").innerText = "📢 " + (s.val() || "Welcome!");
     });
   }
 
-  function loadProducts() {
-    const productsRef = db.ref("products");
-    productsRef.on("value", snap => {
-      const products = snap.val() || {};
-      const container = document.getElementById("productsContainer");
-      container.innerHTML = '';
-      
-      for (const key in products) {
-        const product = products[key];
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
-          <div class="product-title">${product.name}</div>
-          <div class="product-income">
-            <div class="income-item">
-              <div class="income-value">₹${product.dailyIncome}</div>
-              <div class="income-label">Daily Income</div>
-            </div>
-            <div class="income-item">
-              <div class="income-value">${product.duration}</div>
-              <div class="income-label">Duration</div>
-            </div>
-          </div>
-          <div class="product-footer">
-            <div class="product-price">₹${product.minInvestment}</div>
-            <button class="product-button" onclick="showInvestmentModal('${key}')">Invest</button>
-          </div>
-        `;
-        container.appendChild(card);
-      }
+  function buyPlan(id, price, daily, days) {
+    const uid = currentUser.uid;
+    db.ref("users/" + uid + "/wallet").once("value").then(snap => {
+      let w = snap.val();
+      let total = (w.recharge || 0) + (w.bonus || 0) + (w.winning || 0);
+      if (total < price) return alert("Insufficient balance!");
+
+      // Deduct from recharge -> bonus -> winning
+      let remaining = price;
+      let r = w.recharge, b = w.bonus, win = w.winning;
+      if (r >= remaining) r -= remaining, remaining = 0;
+      else remaining -= r, r = 0;
+      if (remaining && b >= remaining) b -= remaining, remaining = 0;
+      else remaining -= b, b = 0;
+      if (remaining && win >= remaining) win -= remaining, remaining = 0;
+
+      db.ref("users/" + uid + "/wallet").set({ recharge: r, bonus: b, winning: win });
+
+      db.ref("purchases/" + uid + "/" + id).set({
+        daily: daily,
+        days_left: days,
+        start_date: new Date().toISOString().split("T")[0]
+      });
+
+      alert("Plan purchased!");
     });
   }
 
-  function showInvestmentModal(productId) {
-    const productsRef = db.ref("products/" + productId);
-    productsRef.once("value").then(snap => {
-      const product = snap.val();
-      if (!product) return;
-
-      currentProduct = product;
-      currentProduct.id = productId;
-
-      document.getElementById('investmentTitle').textContent = product.name;
-      document.getElementById('modalDailyIncome').textContent = `₹${product.dailyIncome}`;
-      document.getElementById('modalDuration').textContent = product.duration;
-      document.getElementById('modalMinInvestment').textContent = `₹${product.minInvestment}`;
-      document.getElementById('modalReturn').textContent = `+${(product.roi || 15.2).toFixed(1)}%`;
-      document.getElementById('investmentAmount').value = product.minInvestment;
-
-      document.getElementById('investmentModal').style.display = 'flex';
-    });
+  function copyCode() {
+    const text = document.getElementById("refCode").innerText;
+    navigator.clipboard.writeText(text);
+    alert("Referral code copied!");
   }
-
-  function closeInvestmentModal() {
-    document.getElementById('investmentModal').style.display = 'none';
-    document.getElementById('investmentError').style.display = 'none';
-  }
-
-  function confirmInvestment() {
-    if (!currentUser || !currentUserData || !currentProduct) return;
-    const amountInput = document.getElementById('investmentAmount');
-    const amount = parseFloat(amountInput.value);
-    const errorElement = document.getElementById('investmentError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid investment amount';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    if (amount > rechargeBalance) {
-      errorElement.textContent = 'Insufficient funds. Please deposit more money.';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: `Investment: ${currentProduct.name}`,
-      amount: -amount,
-      type: "expense",
-      date: new Date().toISOString(),
-      icon: "fa-arrow-up",
-      category: "investment"
-    };
-
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/invested`] = (currentUserData.invested || 0) + amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeInvestmentModal();
-      showSuccessMessage("Investment successful! Funds deducted.");
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Investment failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showDepositModal() {
-    document.getElementById('depositModal').style.display = 'flex';
-  }
-
-  function closeDepositModal() {
-    document.getElementById('depositModal').style.display = 'none';
-    document.getElementById('depositError').style.display = 'none';
-  }
-
-  function processDeposit() {
-    const amountInput = document.getElementById('depositAmount');
-    const amount = parseFloat(amountInput.value);
-    const errorElement = document.getElementById('depositError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid deposit amount';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: "Deposit Funds",
-      amount: amount,
-      type: "income",
-      date: new Date().toISOString(),
-      icon: "fa-arrow-down",
-      category: "deposit"
-    };
-
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance + amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeDepositModal();
-      showSuccessMessage("Deposit successful! Funds added to your account.");
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Deposit failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showWithdrawModal() {
-    document.getElementById('withdrawModal').style.display = 'flex';
-  }
-
-  function closeWithdrawModal() {
-    document.getElementById('withdrawModal').style.display = 'none';
-    document.getElementById('withdrawError').style.display = 'none';
-  }
-
-  function processWithdrawal() {
-    const amountInput = document.getElementById('withdrawAmount');
-    const amount = parseFloat(amountInput.value);
-    const errorElement = document.getElementById('withdrawError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid withdrawal amount';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    if (amount > rechargeBalance) {
-      errorElement.textContent = 'Insufficient funds. You cannot withdraw more than your available balance.';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: "Withdrawal Request",
-      amount: -amount,
-      type: "expense",
-      date: new Date().toISOString(),
-      icon: "fa-arrow-up",
-      category: "withdrawal"
-    };
-
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeWithdrawModal();
-      showSuccessMessage("Withdrawal request submitted successfully!");
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Withdrawal failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showTransferModal() {
-    document.getElementById('transferModal').style.display = 'flex';
-  }
-
-  function closeTransferModal() {
-    document.getElementById('transferModal').style.display = 'none';
-    document.getElementById('transferError').style.display = 'none';
-  }
-
-  function processTransfer() {
-    const amountInput = document.getElementById('transferAmount');
-    const amount = parseFloat(amountInput.value);
-    const recipientId = document.getElementById('recipientId').value.trim();
-    const errorElement = document.getElementById('transferError');
-    
-    if (!amount || amount <= 0) {
-      errorElement.textContent = 'Please enter a valid transfer amount';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    const rechargeBalance = currentUserData.wallet?.recharge || 0;
-    if (amount > rechargeBalance) {
-      errorElement.textContent = 'Insufficient funds. You cannot transfer more than your available balance.';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    if (!recipientId) {
-      errorElement.textContent = 'Please enter recipient member ID';
-      errorElement.style.display = 'block';
-      return;
-    }
-
-    showLoading(true);
-    const transactionId = 'trans' + new Date().getTime();
-    const transaction = {
-      title: `Transfer to ${recipientId}`,
-      amount: -amount,
-      type: "expense",
-      date: new Date().toISOString(),
-      icon: "fa-exchange-alt",
-      category: "transfer"
-    };
-
-    const updates = {};
-    updates[`users/${currentUser.uid}/wallet/recharge`] = rechargeBalance - amount;
-    updates[`users/${currentUser.uid}/transactions/${transactionId}`] = transaction;
-
-    db.ref().update(updates).then(() => {
-      showLoading(false);
-      closeTransferModal();
-      showSuccessMessage(`Transfer of ₹${amount.toFixed(2)} to ${recipientId} completed!`);
-      loadUserData(currentUser.uid);
-    }).catch(error => {
-      showLoading(false);
-      errorElement.textContent = 'Transfer failed: ' + error.message;
-      errorElement.style.display = 'block';
-    });
-  }
-
-  function showTransactionModal() {
-    document.getElementById('transactionModal').style.display = 'flex';
-    renderTransactions('all');
-  }
-
-  function closeTransactionModal() {
-    document.getElementById('transactionModal').style.display = 'none';
-  }
-
-  function changeTransactionTab(category) {
-    const tabs = document.querySelectorAll('.tab-button');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    tabs.forEach(tab => {
-      if (tab.textContent.toLowerCase().includes(category)) {
-        tab.classList.add('active');
-      }
-    });
-    
-    renderTransactions(category);
-  }
-
-  function renderTransactions(category) {
-    const container = document.getElementById('transactionList');
-    container.innerHTML = '';
-    
-    let filteredTransactions = transactions;
-    if (category !== 'all') {
-      filteredTransactions = transactions.filter(t => t.category === category);
-    }
-    
-    filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    if (filteredTransactions.length === 0) {
-      container.innerHTML = '<div class="no-transactions">No transactions found</div>';
-      return;
-    }
-    
-    filteredTransactions.forEach(transaction => {
-      const isIncome = transaction.type === "income";
-      const amountClass = isIncome ? 'income' : 'expense';
-      const amountSign = isIncome ? '+' : '-';
-      const absAmount = Math.abs(transaction.amount);
-
-      const now = new Date();
-      const transDate = new Date(transaction.date);
-      const isToday = transDate.toDateString() === now.toDateString();
-      const isYesterday = transDate.toDateString() === new Date(now - 86400000).toDateString();
-
-      let dateString;
-      if (isToday) {
-        dateString = `Today, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      } else if (isYesterday) {
-        dateString = `Yesterday, ${transDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      } else {
-        dateString = transDate.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
-      }
-
-      const item = document.createElement('div');
-      item.className = 'transaction-list-item';
-      item.innerHTML = `
-        <div class="transaction-list-icon" style="background: ${isIncome ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'}">
-          <i class="fas ${transaction.icon || 'fa-exchange-alt'}"></i>
-        </div>
-        <div class="transaction-list-details">
-          <div class="transaction-list-title">${transaction.title}</div>
-          <div class="transaction-list-time">${dateString}</div>
-        </div>
-        <div class="transaction-list-amount ${amountClass}">${amountSign}₹${absAmount.toFixed(2)}</div>
-      `;
-      container.appendChild(item);
-    });
-  }
-
-  function showSuccessMessage(message) {
-    const successElement = document.getElementById('successMessage');
-    successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-    successElement.style.display = 'block';
-    setTimeout(() => {
-      successElement.style.display = 'none';
-    }, 3000);
-  }
-
-  function showLoading(show) {
-    document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
-  }
-
-  function logout() {
-    auth.signOut().catch((error) => {
-      console.error("Logout error:", error);
-    }).finally(() => {
-      localStorage.removeItem("userId");
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "login.html";
-    });
-  }
-
-  // Initialize products in Firebase
-  function initializeProducts() {
-    const productsRef = db.ref("products");
-    productsRef.once("value").then(snap => {
-      if (!snap.val()) {
-        const products = {
-          "prod1": {
-            name: "Gold Investment",
-            badge: "Hot",
-            dailyIncome: "850",
-            duration: "3 Days",
-            minInvestment: "500",
-            roi: 15.2
-          },
-          "prod2": {
-            name: "Silver Package",
-            badge: "New",
-            dailyIncome: "1200",
-            duration: "5 Days",
-            minInvestment: "800",
-            roi: 18.5
-          },
-          "prod3": {
-            name: "Diamond Plan",
-            badge: "Premium",
-            dailyIncome: "2500",
-            duration: "7 Days",
-            minInvestment: "1500",
-            roi: 22.3
-          },
-          "prod4": {
-            name: "Platinum Offer",
-            badge: "Special",
-            dailyIncome: "4500",
-            duration: "10 Days",
-            minInvestment: "2500",
-            roi: 25.7
-          }
-        };
-        productsRef.set(products);
-      }
-    });
-  }
-
-  // Initialize products when the app starts
-  initializeProducts();
 </script>
 
 </body>
