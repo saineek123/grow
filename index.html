@@ -1,240 +1,892 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daily Income App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Funds | WealthGrow</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { margin: 0; font-family: Arial; background: #f9f9f9; }
-    .top-box, .button-row, .product-card, .navbar { margin: 10px; }
-    .top-box { display: flex; justify-content: space-around; background: #fff; padding: 10px; border-radius: 10px; }
-    .top-box div { text-align: center; }
-    .button-row button, .buy-btn { width: 48%; padding: 12px; margin: 5px 1%; border: none; border-radius: 10px; font-weight: bold; }
-    .product-card { background: white; border-radius: 10px; padding: 10px; text-align: center; }
-    .product-details { display: flex; justify-content: space-between; padding: 5px 0; }
-    .buy-btn { background: orange; color: white; margin-top: 10px; }
-    .navbar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: white; padding: 10px; border-top: 1px solid #ccc; }
-    body {
+    :root {
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --secondary: #9c27b0;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-light: #ffffff;
+      --text-gray: #b0b0b0;
+      --header-height: 70px;
+      --footer-height: 60px;
+    }
+
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
-    }
-    .top-box {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px;
-      background: white;
-      border-radius: 10px;
-      margin: 10px;
-      text-align: center;
-    }
-    .top-box div {
-      flex: 1;
-    }
-    .top-box h3 {
-      margin: 5px 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .button-row {
-      display: flex;
-      justify-content: space-around;
-      margin: 10px;
-    }
-    .button-row button {
-      flex: 1;
-      margin: 5px;
-      padding: 12px;
-      border: none;
-      background: #ffe4c4;
-      border-radius: 10px;
-      font-weight: bold;
+    body {
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding-top: var(--header-height);
+      padding-bottom: var(--footer-height);
+      position: relative;
     }
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin: 10px;
-    }
-    .tabs button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: #f0f0f0;
-      font-weight: bold;
-    }
-    .tabs .active {
-      background: orange;
-      color: white;
-    }
-
-    .product-card {
-      background: white;
-      border-radius: 10px;
-      margin: 10px;
-      padding: 10px;
-      text-align: center;
-    }
-    .product-card img {
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      border-radius: 10px;
-    }
-    .product-details {
+      height: var(--header-height);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-between;
-      margin: 10px 0;
-      font-size: 14px;
-    }
-    .buy-btn {
-      background: linear-gradient(to right, orange, #fca311);
-      color: white;
-      padding: 10px;
-      border: none;
-      width: 100%;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 16px;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 247, 255, 0.2);
     }
 
-    .navbar {
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo i {
+      color: var(--primary);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .user-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .balance-display {
+      background: rgba(0, 247, 255, 0.1);
+      border: 1px solid rgba(0, 247, 255, 0.3);
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .balance-display i {
+      color: var(--primary);
+    }
+
+    .menu-icon {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 480px;
+      width: 100%;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .withdraw-card {
+      background: rgba(30, 30, 40, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .withdraw-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(156, 39, 176, 0.1) 0%, transparent 70%);
+      z-index: -1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      background: linear-gradient(90deg, #9c27b0, #00bcd4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .balance-card {
+      background: rgba(42, 42, 42, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .balance-label {
+      font-size: 1rem;
+      color: var(--text-gray);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .balance-amount {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .form-section {
+      background: rgba(42, 42, 42, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .form-title {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-container {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      background: rgba(42, 42, 42, 0.5);
+      color: var(--text-light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-gray);
+      font-size: 1.2rem;
+    }
+
+    .amount-input {
+      position: relative;
+    }
+
+    .amount-input::before {
+      content: '₹';
+      position: absolute;
+      left: 45px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--secondary), #7b1fa2);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(156, 39, 176, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: rotate(30deg);
+      transition: all 0.6s ease;
+    }
+
+    button:hover::after {
+      transform: rotate(30deg) translate(20%, 20%);
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .back-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .back-link a:hover {
+      color: #fff;
+      transform: translateX(-5px);
+    }
+
+    .info-box {
+      background: rgba(42, 42, 42, 0.3);
+      border-left: 4px solid var(--warning);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+
+    .info-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--warning);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Notification System */
+    .notification {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 1000;
+      transform: translateX(150%);
+      transition: transform 0.5s ease;
+      max-width: 400px;
+      backdrop-filter: blur(10px);
+      background: rgba(30, 30, 30, 0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.success {
+      border-left: 4px solid var(--success);
+    }
+    
+    .notification.error {
+      border-left: 4px solid var(--danger);
+    }
+    
+    .notification-icon {
+      font-size: 24px;
+    }
+    
+    .notification.success .notification-icon {
+      color: var(--success);
+    }
+    
+    .notification.error .notification-icon {
+      color: var(--danger);
+    }
+    
+    .notification-content h4 {
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+    
+    .notification-content p {
+      font-size: 14px;
+      color: var(--text-gray);
+      line-height: 1.5;
+    }
+    
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      animation: progress 3s linear forwards;
+    }
+    
+    .notification.success .progress-bar::after {
+      background: var(--success);
+    }
+    
+    .notification.error .progress-bar::after {
+      background: var(--danger);
+    }
+    
+    @keyframes progress {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(0); }
+    }
+    
+    .processing-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .processing-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .processing-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .processing-icon {
+      font-size: 50px;
+      color: var(--primary);
+      margin-bottom: 20px;
+      animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .processing-text {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--text-light);
+    }
+    
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: 0.3;
+    }
+    
+    .dot:nth-child(1) { animation: bounce 1.2s infinite ease-in-out; }
+    .dot:nth-child(2) { animation: bounce 1.2s infinite 0.2s ease-in-out; }
+    .dot:nth-child(3) { animation: bounce 1.2s infinite 0.4s ease-in-out; }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.3; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+
+    /* Footer */
+    .footer {
       position: fixed;
       bottom: 0;
       left: 0;
-      right: 0;
-      background: white;
+      width: 100%;
+      height: var(--footer-height);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #ccc;
+      align-items: center;
+      padding: 0 10px;
+      z-index: 100;
+      border-top: 1px solid rgba(0, 247, 255, 0.2);
     }
-    .navbar button {
-      border: none;
-      background: none;
-      font-weight: bold;
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-gray);
+      text-decoration: none;
+      font-size: 0.7rem;
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+    
+    .nav-item i {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-item.active, .nav-item:hover {
+      color: var(--primary);
+      background: rgba(0, 247, 255, 0.1);
+    }
+    
+    .nav-item.active i, .nav-item:hover i {
+      color: var(--primary);
+      transform: translateY(-5px);
     }
 
-    @media(max-width: 600px) {
-      .product-details {
-        flex-direction: column;
-        text-align: left;
+    /* Animations */
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .container {
+        padding: 0 15px;
+      }
+      
+      .withdraw-card {
+        padding: 25px 20px;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .balance-amount {
+        font-size: 1.8rem;
       }
     }
   </style>
 </head>
 <body>
-
-  <div class="top-box">
-    <div><h3 id="balance">₹ 1000</h3><p>Balance</p></div>
-    <div><h3>₹ 0</h3><p>Recharge</p></div>
-    <div><h3>₹ 0</h3><p>Total income</p></div>
-     <div><h3 id="vipLevel">VIP 0</h3><p>VIP Level</p></div>
-  </div>
-
-  <div class="button-row">
-    <button onclick="location.href='recharge.html'">Recharge</button>
-    <button onclick="location.href='withdraw.html'">Withdraw</button>
-    <button onclick="location.href='share.html'">Share</button>
-    <button onclick="location.href='online.html'">Online</button>
-  </div>
-
-  <div class="tabs">
-    <button class="active">Daily income</button>
-    <button onclick="location.href='benefits.html'">Benefits Program</button>
-  </div>
-
-  <div class="product-card">
-    <img src="https://i.ibb.co/Pz0J4QC/lays-yellow.jpg" alt="Plan-A" />
-    <h3>Plan-A</h3>
-    <div class="product-details">
-      <div>₹ 530.00<br/>Price</div>
-      <div>₹ 132.00<br/>Daily</div>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <i class="fas fa-chart-line"></i>
+      <span>GROW</span>
     </div>
-    <div class="product-details">
-      <div>130 Days</div>
-      <div>Total: ₹ 17160.00</div>
+    
+    <div class="user-controls">
+      <div class="balance-display">
+        <i class="fas fa-wallet"></i>
+        <span>₹<span id="totalBalance">18,500.00</span></span>
+      </div>
     </div>
-    <button class="buy-btn" onclick="buyPlan(530)">Buy Now</button>
+  </header>
+
+  <!-- Notification System -->
+  <div class="notification" id="notification">
+    <div class="notification-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div class="notification-content">
+      <h4 id="notification-title">Success</h4>
+      <p id="notification-message">Withdrawal request submitted successfully!</p>
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+  
+  <!-- Processing Overlay -->
+  <div class="processing-overlay" id="processingOverlay">
+    <div class="processing-card">
+      <div class="processing-icon">
+        <i class="fas fa-sync-alt"></i>
+      </div>
+      <h2 class="processing-text">Processing Withdrawal</h2>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <p>Please wait while we process your request...</p>
+    </div>
   </div>
 
-  <div class="navbar">
-    <button onclick="location.href='index.html'">Home</button>
-    <button onclick="location.href='team.html'">Team</button>
-    <button onclick="location.href='devices.html'">Devices</button>
-    <button onclick="location.href='my.html'">My</button>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="withdraw-card">
+      <h2><i class="fas fa-money-bill-wave"></i> Withdraw Funds</h2>
+      
+      <div class="balance-card">
+        <div class="balance-label">
+          <i class="fas fa-trophy"></i> Withdrawable Balance
+        </div>
+        <div class="balance-amount" id="balanceAmount">₹0.00</div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-title">
+          <i class="fas fa-wallet"></i> Withdrawal Method
+        </div>
+        
+        <form id="withdrawForm">
+          <div class="form-group">
+            <label for="amount"><i class="fas fa-rupee-sign"></i> Amount</label>
+            <div class="input-container">
+              <i class="fas fa-money-bill-wave input-icon"></i>
+              <input type="number" id="amount" placeholder="Minimum ₹100" required class="amount-input" min="100" step="1">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="accountNumber"><i class="fas fa-credit-card"></i> Account Number</label>
+            <div class="input-container">
+              <i class="fas fa-hashtag input-icon"></i>
+              <input type="text" id="accountNumber" placeholder="Enter account number" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="ifsc"><i class="fas fa-code"></i> IFSC Code</label>
+            <div class="input-container">
+              <i class="fas fa-bank input-icon"></i>
+              <input type="text" id="ifsc" placeholder="Enter IFSC code" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="accountHolderName"><i class="fas fa-user"></i> Account Holder Name</label>
+            <div class="input-container">
+              <i class="fas fa-signature input-icon"></i>
+              <input type="text" id="accountHolderName" placeholder="Enter name as in bank" required>
+            </div>
+          </div>
+          
+          <button type="submit" id="submitWithdrawBtn">
+            <i class="fas fa-paper-plane"></i> Submit Withdrawal Request
+          </button>
+        </form>
+      </div>
+      
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> Important Notes</div>
+        <div>
+          • Ensure bank details are correct<br>
+          • Minimum withdrawal amount is ₹100<br>
+          • Withdrawals processed within 24 hours<br>
+          • Only winning balance can be withdrawn<br>
+          • Bank transfers may take 1-3 business days<br>
+          • Contact support for any issues
+        </div>
+      </div>
+      
+      <div class="back-link">
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+      </div>
+    </div>
   </div>
-   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
- <script>
-    // Firebase configuration and initialization
+
+  <!-- Footer Navigation -->
+  <div class="footer">
+    <a href="index.html" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="wallet.html" class="nav-item">
+      <i class="fas fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+    <a href="#" class="nav-item active">
+      <i class="fas fa-money-bill-wave"></i>
+      <span>Withdraw</span>
+    </a>
+    <a href="history.html" class="nav-item">
+      <i class="fas fa-history"></i>
+      <span>History</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Account</span>
+    </a>
+  </div>
+
+  <!-- Firebase Integration -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
       databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
       projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.appspot.com",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const firestore = firebase.firestore();
     const auth = firebase.auth();
 
+    // Global variables
+    let winningBalance = 0;
+    let userId = null;
+
+    // Authentication state observer
     auth.onAuthStateChanged(user => {
-      if (!user) return location.href = 'login.html';
-
-      const userId = user.uid;
-      const userRef = db.ref("users/" + userId);
-
-      userRef.once("value").then(snapshot => {
-        const data = snapshot.val() || {};
-        const wallet = data.wallet || { recharge: 0, bonus: 0, winning: 0 };
-        const total = wallet.recharge + wallet.bonus + wallet.winning;
-
-        document.getElementById("recharge").innerText = "₹ " + wallet.recharge;
-        document.getElementById("totalBalance").innerText = "₹ " + total;
-        document.getElementById("vipLevel").innerText = data.vipLevel || "VIP 0";
-      });
-
-      const productContainer = document.getElementById("productContainer");
-      db.ref("products").on("value", snap => {
-        productContainer.innerHTML = '';
-        snap.forEach(child => {
-          const p = child.val();
-          const card = document.createElement("div");
-          card.className = "product-card";
-          card.innerHTML = `
-            <img src="${p.image}" style="width:100%; border-radius:10px;">
-            <h3>${p.title}</h3>
-            <div class="product-details">
-              <div>₹ ${p.price}<br/>Price</div>
-              <div>₹ ${p.daily}<br/>Daily</div>
-            </div>
-            <div class="product-details">
-              <div>${p.days} Days</div>
-              <div>Total: ₹ ${p.daily * p.days}</div>
-            </div>
-            <button class="buy-btn" onclick="buyNow('${child.key}', ${p.price})">Buy Now</button>
-          `;
-          productContainer.appendChild(card);
+      if (user) {
+        userId = user.uid;
+        console.log("User authenticated:", userId);
+        
+        // Fetch user's winning balance
+        db.ref(`users/${userId}/wallet`).on("value", snap => {
+          const wallet = snap.val() || {};
+          winningBalance = wallet.winning || 0;
+          document.getElementById("balanceAmount").textContent = "₹" + winningBalance.toFixed(2);
+          document.getElementById("totalBalance").textContent = (wallet.recharge + wallet.bonus + wallet.winning).toFixed(2);
         });
-      });
+        
+        // Setup form submission handler
+        document.getElementById("withdrawForm").addEventListener("submit", handleWithdrawalSubmit);
+      } else {
+        // Redirect to login if not authenticated
+        console.log("User not authenticated, redirecting to login");
+        window.location.href = "login.html";
+      }
     });
 
-    function buyNow(productId, price) {
-      const user = firebase.auth().currentUser;
-      if (!user) return alert("Login first");
-      const userRef = db.ref("users/" + user.uid);
-      userRef.once("value").then(snapshot => {
-        const wallet = snapshot.val().wallet || {};
-        const total = (wallet.recharge || 0) + (wallet.bonus || 0) + (wallet.winning || 0);
-        if (total < price) return alert("Insufficient balance");
-
-        userRef.child("wallet/recharge").set((wallet.recharge || 0) - price);
-        alert("✅ Plan Purchased Successfully!");
-      });
+    // Handle withdrawal form submission
+    async function handleWithdrawalSubmit(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const amount = parseFloat(document.getElementById("amount").value);
+      const account = document.getElementById("accountNumber").value.trim();
+      const ifsc = document.getElementById("ifsc").value.trim();
+      const holder = document.getElementById("accountHolderName").value.trim();
+      
+      // Validate inputs
+      if (!validateInputs(amount, account, ifsc, holder)) {
+        return;
+      }
+      
+      // Show processing overlay
+      document.getElementById("processingOverlay").classList.add("show");
+      
+      try {
+        // Refresh user token
+        await auth.currentUser.getIdToken(true);
+        
+        // Create withdrawal request in Realtime Database
+        const withdrawalRef = db.ref(`withdrawals/${userId}`).push();
+        const withdrawalId = withdrawalRef.key;
+        
+        // Withdrawal data
+        const withdrawalData = {
+          id: withdrawalId,
+          userId: userId,
+          amount: amount,
+          account: account,
+          ifsc: ifsc,
+          holder: holder,
+          status: "pending",
+          timestamp: Date.now(),
+          processed: false
+        };
+        
+        // Save withdrawal request
+        await withdrawalRef.set(withdrawalData);
+        console.log("Withdrawal request saved:", withdrawalId);
+        
+        // Deduct from winning balance
+        await db.ref(`users/${userId}/wallet/winning`).transaction(balance => {
+          return (balance || 0) - amount;
+        });
+        
+        // Create transaction record in Firestore
+        await firestore.collection("transactions").add({
+          userId: userId,
+          type: "withdrawal",
+          amount: amount,
+          status: "pending",
+          date: new Date().toISOString(),
+          title: "Withdrawal Request",
+          withdrawalId: withdrawalId
+        });
+        
+        // Show success notification
+        showNotification("Success", "Withdrawal request submitted successfully! Admin will process it soon.", true);
+        
+        // Reset form
+        document.getElementById("withdrawForm").reset();
+      } catch (error) {
+        console.error("Withdrawal error:", error);
+        showNotification("Error", "Failed to submit withdrawal: " + error.message, false);
+      } finally {
+        // Hide processing overlay
+        document.getElementById("processingOverlay").classList.remove("show");
+      }
     }
+    
+    // Validate form inputs
+    function validateInputs(amount, account, ifsc, holder) {
+      if (amount < 100) {
+        showNotification("Error", "Minimum withdrawal amount is ₹100", false);
+        return false;
+      }
+      
+      if (amount > winningBalance) {
+        showNotification("Error", "Insufficient winning balance", false);
+        return false;
+      }
+      
+      if (account.length < 9 || account.length > 18) {
+        showNotification("Error", "Account number must be 9-18 digits", false);
+        return false;
+      }
+      
+      if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) {
+        showNotification("Error", "Invalid IFSC code format", false);
+        return false;
+      }
+      
+      if (holder.length < 3) {
+        showNotification("Error", "Please enter valid account holder name", false);
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // Show notification
+    function showNotification(title, message, success) {
+      const notification = document.getElementById("notification");
+      const titleEl = document.getElementById("notification-title");
+      const msgEl = document.getElementById("notification-message");
+      
+      titleEl.textContent = title;
+      msgEl.textContent = message;
+      
+      // Update notification styling
+      notification.className = "notification show " + (success ? "success" : "error");
+      
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove("show");
+      }, 3000);
+    }
+    
+    // Simulate balance on initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animation for the withdraw button
+      const withdrawBtn = document.getElementById('submitWithdrawBtn');
+      withdrawBtn.addEventListener('click', () => {
+        withdrawBtn.classList.add('pulse');
+        setTimeout(() => withdrawBtn.classList.remove('pulse'), 300);
+      });
+      
+      // Show loading state for Firebase initialization
+      setTimeout(() => {
+        if (!userId) {
+          document.getElementById('balanceAmount').textContent = '₹0.00';
+        }
+      }, 1500);
+    });
   </script>
 </body>
 </html>
-
