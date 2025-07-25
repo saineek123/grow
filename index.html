@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Premium Income App</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -781,428 +782,143 @@
       </button>
     </div>
   </div>
+<script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+    authDomain: "grow-3e3a1.firebaseapp.com",
+    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+    projectId: "grow-3e3a1"
+  };
 
-  <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1"
-    };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const auth = firebase.auth();
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const auth = firebase.auth();
+  let currentUser = null;
 
+  // DOM references
+  const rechargeAmount = document.getElementById('rechargeAmount');
+  const totalIncome = document.getElementById('earningsAmount');
+  const bonusAmount = document.getElementById('bonusAmount');
+  const totalBalance = document.getElementById('totalBalance');
 
-    // Current user
-    let currentUser = null;
+  // Firebase Auth check
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      loadWalletData();
+      loadProducts();
+    } else {
+      currentUser = { uid: "demoUser123" }; // fallback/demo
+      loadWalletData();
+      loadProducts();
+    }
+  });
 
-    // DOM Elements
-    const rechargeBtn = document.getElementById('rechargeBtn');
-    const rechargeModal = document.getElementById('rechargeModal');
-    const closeModal = document.getElementById('closeModal');
-    const rechargeOptions = document.querySelectorAll('.recharge-option');
-    const confirmRecharge = document.getElementById('confirmRecharge');
-    const productList = document.getElementById('productList');
-    const rechargeAmount = document.getElementById('rechargeAmount');
-    const totalIncome = document.getElementById('totalIncome');
-    const balance = document.getElementById('balance');
-    const vipLevel = document.getElementById('vipLevel');
-    const currentVip = document.getElementById('currentVip');
-    const nextVip = document.getElementById('nextVip');
-    const vipProgress = document.getElementById('vipProgress');
-    const rechargeNeeded = document.getElementById('rechargeNeeded');
-    const vipBanner = document.getElementById('vipBanner');
+  // Load Wallet Data from /users/UID/wallet
+  function loadWalletData() {
+    const walletRef = db.ref("users/" + currentUser.uid + "/wallet");
+    walletRef.on("value", snapshot => {
+      const wallet = snapshot.val() || { recharge: 0, bonus: 0, Earnings: 0 };
+      const recharge = wallet.recharge || 0;
+      const bonus = wallet.bonus || 0;
+      const earnings = wallet.Earnings || 0;
+      const total = recharge + bonus + earnings;
 
-    // Selected recharge amount
-    let selectedAmount = 0;
-
-    // VIP Levels configuration
-    const vipLevels = [
-      { min: 0, max: 999, level: 0, name: "VIP 0", color: "vip-0" },
-      { min: 1000, max: 4999, level: 1, name: "VIP 1", color: "vip-1" },
-      { min: 5000, max: 9999, level: 2, name: "VIP 2", color: "vip-2" },
-      { min: 10000, max: 19999, level: 3, name: "VIP 3", color: "vip-3" },
-      { min: 20000, max: 49999, level: 4, name: "VIP 4", color: "vip-4" },
-      { min: 50000, max: Infinity, level: 5, name: "VIP 5", color: "vip-5" }
-    ];
-
-    // Initialize the app
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUser = user;
-        loadProducts();
-        loadWalletData();
-        updateVipLevel();
-      } else {
-        // For demo purposes, we'll simulate a user
-        currentUser = { uid: "demoUser123" };
-        loadProducts();
-        loadWalletData();
-        updateVipLevel();
-      }
+      rechargeAmount.textContent = `₹${recharge.toFixed(2)}`;
+      bonusAmount.textContent = `₹${bonus.toFixed(2)}`;
+      totalIncome.textContent = `₹${earnings.toFixed(2)}`;
+      totalBalance.textContent = `₹${total.toFixed(2)}`;
     });
+  }
 
-    // Load wallet data
-    function loadWalletData() {
-      const walletRef = db.ref("users/" + currentUser.uid + "/wallet");
+  // Load Product Plans from /products
+  function loadProducts() {
+    const productList = document.getElementById('productList');
+    const productsRef = db.ref("products");
 
+    productsRef.on("value", snapshot => {
+      productList.innerHTML = "";
+      snapshot.forEach(child => {
+        const product = child.val();
+        const key = child.key;
 
-     walletRef.on("value", snapshot => {
-  const wallet = snapshot.val() || { recharge: 0, bonus: 0, Earnings: 0 };
-  const recharge = wallet.recharge || 0;
-  const bonus = wallet.bonus || 0;
-  const earnings = wallet.Earnings || 0;
-  const total = recharge + bonus + earnings;
-
-  rechargeAmount.textContent = `₹${recharge.toFixed(2)}`;
-  document.getElementById('bonusAmount').textContent = `₹${bonus.toFixed(2)}`;
-  document.getElementById('earningsAmount').textContent = `₹${earnings.toFixed(2)}`;
-  document.getElementById('totalBalance').textContent = `₹${total.toFixed(2)}`;
-});
-
-      
-    // Update VIP level based on recharge amount
-    function updateVipLevel(rechargeTotal = 0) {
-      let currentLevel = 0;
-      let nextLevel = 1;
-      let progress = 0;
-      let needed = 0;
-
-      // Find current VIP level
-      for (let i = vipLevels.length - 1; i >= 0; i--) {
-        if (rechargeTotal >= vipLevels[i].min) {
-          currentLevel = vipLevels[i].level;
-          break;
-        }
-      }
-
-      // Find next VIP level
-      if (currentLevel < 5) {
-        nextLevel = currentLevel + 1;
-        const nextLevelData = vipLevels.find(l => l.level === nextLevel);
-        const currentLevelData = vipLevels.find(l => l.level === currentLevel);
-
-        // Calculate progress
-        const range = nextLevelData.min - currentLevelData.min;
-        const progressAmount = rechargeTotal - currentLevelData.min;
-        progress = Math.min(100, (progressAmount / range) * 100);
-        needed = Math.max(0, nextLevelData.min - rechargeTotal);
-      } else {
-        nextLevel = currentLevel;
-        progress = 100;
-        needed = 0;
-      }
-
-      // Update UI
-      vipLevel.textContent = currentLevel;
-      currentVip.textContent = currentLevel;
-      nextVip.textContent = nextLevel;
-      vipProgress.style.width = `${progress}%`;
-      rechargeNeeded.textContent = needed;
-
-      // Update VIP banner color
-      vipBanner.className = 'vip-banner';
-      vipBanner.classList.add(`vip-${currentLevel}`);
-    }
-
-    // ... (existing loadProducts function remains the same) ...
-
-    // Buy product function
-    function buyProduct(planId, cost) {
-      if (!currentUser) {
-        alert("Please login first");
-        return;
-      }
-
-      const uid = currentUser.uid;
-      const walletRef = db.ref("wallet/" + uid);
-
-      walletRef.once("value").then(snapshot => {
-        const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
-        let recharge = wallet.recharge || 0;
-        let income = wallet.income || 0;
-        let totalBalance = wallet.balance || 0;
-
-        // Check if user has enough balance
-        if (totalBalance < cost) {
-          alert("❌ Insufficient balance! Please recharge your wallet.");
-          return;
-        }
-
-        // Deduct from balance
-        const newBalance = totalBalance - cost;
-
-        // Update wallet
-        walletRef.set({
-          recharge: recharge,
-          income: income,
-          balance: newBalance
-        });
-
-        // Save purchase
-        db.ref("purchases/" + uid + "/" + planId).set({
-          planId: planId,
-          amount: cost,
-          purchasedAt: new Date().toISOString(),
-          status: "active"
-        }).then(() => {
-          // Add to income after purchase
-          const productsRef = db.ref("products/" + planId);
-          productsRef.once("value").then(snap => {
-            const product = snap.val();
-            if (product) {
-              const dailyIncome = product.dailyIncome || 0;
-              const newIncome = income + dailyIncome;
-
-              walletRef.update({
-                income: newIncome,
-                balance: newBalance + dailyIncome
-              });
-            }
-          });
-        });
-
-        alert("✅ Investment Successful! Your plan is now active.");
-      });
-    }
-    // Load wallet data
-    function loadWalletData() {
-      const walletRef = db.ref("wallet/" + currentUser.uid);
-
-      walletRef.on("value", snapshot => {
-        const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
-
-        // Update UI
-        rechargeAmount.textContent = `₹${wallet.recharge}`;
-        totalIncome.textContent = `₹${wallet.income}`;
-        balance.textContent = `₹${wallet.balance}`;
-      });
-    }
-
-    // Load products
-    function loadProducts() {
-      const productsRef = db.ref("products");
-
-      productsRef.on("value", snapshot => {
-        productList.innerHTML = "";
-        snapshot.forEach(child => {
-          const product = child.val();
-          const key = child.key;
-
-          const card = document.createElement("div");
-          card.className = "product-card";
-          card.innerHTML = `
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
           ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
           <h3><i class="fas fa-box"></i> ${product.name}</h3>
           <p style="color: var(--gray); margin-bottom: 15px;">${product.description}</p>
           <div class="product-details">
-            <div>
-              <span>₹${product.minInvestment}</span>
-              Min Investment
-            </div>
-            <div>
-              <span>₹${product.dailyIncome}</span>
-              Daily Income
-            </div>
-            <div>
-              <span>${product.duration} days</span>
-              Duration
-            </div>
-            <div>
-              <span>${product.roi}%</span>
-              ROI
-            </div>
+            <div><span>₹${product.minInvestment}</span>Min Investment</div>
+            <div><span>₹${product.dailyIncome}</span>Daily Income</div>
+            <div><span>${product.duration} days</span>Duration</div>
+            <div><span>${product.roi}%</span>ROI</div>
           </div>
           <button class="buy-btn" data-id="${key}" data-cost="${product.minInvestment}">
             <i class="fas fa-shopping-cart"></i> Buy Now - ₹${product.minInvestment}
           </button>
         `;
-          productList.appendChild(card);
-        });
+        productList.appendChild(card);
+      });
 
-        // Add event listeners to buy buttons
-        document.querySelectorAll('.buy-btn').forEach(button => {
-          button.addEventListener('click', function () {
-            const planId = this.getAttribute('data-id');
-            const cost = parseInt(this.getAttribute('data-cost'));
-            buyProduct(planId, cost);
-          });
+      document.querySelectorAll('.buy-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const planId = this.getAttribute('data-id');
+          const cost = parseInt(this.getAttribute('data-cost'));
+          buyProduct(planId, cost);
         });
       });
+    });
+  }
+
+  // Buy Product
+  function buyProduct(planId, cost) {
+    if (!currentUser) {
+      alert("Please login first");
+      return;
     }
 
-    // Buy product function
-    function buyProduct(planId, cost) {
-      if (!currentUser) {
-        alert("Please login first");
+    const uid = currentUser.uid;
+    const walletRef = db.ref("users/" + uid + "/wallet");
+
+    walletRef.once("value").then(snapshot => {
+      const wallet = snapshot.val() || { recharge: 0, bonus: 0, Earnings: 0 };
+      const total = (wallet.recharge || 0) + (wallet.bonus || 0) + (wallet.Earnings || 0);
+
+      if (total < cost) {
+        alert("❌ Insufficient balance!");
         return;
       }
 
-      const uid = currentUser.uid;
-      const walletRef = db.ref("wallet/" + uid);
+      // Deduct from Earnings first
+      let remaining = cost;
+      let updated = { ...wallet };
 
-      walletRef.once("value").then(snapshot => {
-        const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
-        let recharge = wallet.recharge || 0;
-        let income = wallet.income || 0;
-        let totalBalance = wallet.balance || 0;
-
-        // Check if user has enough balance
-        if (totalBalance < cost) {
-          alert("❌ Insufficient balance! Please recharge your wallet.");
-          return;
-        }
-
-        // Deduct from balance
-        const newBalance = totalBalance - cost;
-
-        // Update wallet
-        walletRef.set({
-          recharge: recharge,
-          income: income,
-          balance: newBalance
-        });
-
-        // Save purchase
-        db.ref("purchases/" + uid + "/" + planId).set({
-          planId: planId,
-          amount: cost,
-          purchasedAt: new Date().toISOString(),
-          status: "active"
-        });
-
-        alert("✅ Investment Successful! Your plan is now active.");
-      });
-    }
-
-    // Recharge functionality
-    rechargeBtn.addEventListener('click', () => {
-      rechargeModal.style.display = 'flex';
-    });
-
-    closeModal.addEventListener('click', () => {
-      rechargeModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === rechargeModal) {
-        rechargeModal.style.display = 'none';
-      }
-    });
-
-    // Select recharge option
-    rechargeOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        // Remove selected class from all options
-        rechargeOptions.forEach(opt => opt.classList.remove('selected'));
-
-        // Add selected class to clicked option
-        option.classList.add('selected');
-
-        // Store selected amount
-        selectedAmount = parseInt(option.getAttribute('data-amount'));
-      });
-    });
-
-    // Confirm recharge
-    confirmRecharge.addEventListener('click', () => {
-      if (selectedAmount === 0) {
-        alert("Please select a recharge amount");
-        return;
-      }
-
-      if (!currentUser) {
-        alert("Please login first");
-        return;
-      }
-
-      const uid = currentUser.uid;
-      const walletRef = db.ref("wallet/" + uid);
-
-      walletRef.once("value").then(snapshot => {
-        const wallet = snapshot.val() || { recharge: 0, income: 0, balance: 0 };
-
-        // Add to recharge and balance
-        const newRecharge = wallet.recharge + selectedAmount;
-        const newBalance = wallet.balance + selectedAmount;
-
-        // Update wallet
-        walletRef.set({
-          recharge: newRecharge,
-          income: wallet.income,
-          balance: newBalance
-        });
-
-        // Close modal and reset
-        rechargeModal.style.display = 'none';
-        selectedAmount = 0;
-        rechargeOptions.forEach(opt => opt.classList.remove('selected'));
-
-        alert(`✅ Successfully recharged ₹${selectedAmount}`);
-      });
-    });
-    }
-
-
-    // Demo products data
-    function initializeDemoProducts() {
-      const productsRef = db.ref("products");
-
-      productsRef.once("value").then(snapshot => {
-        if (!snapshot.exists()) {
-          // Add demo products
-          const products = [
-            {
-              name: "Starter Plan",
-              dailyIncome: 50,
-              duration: 10,
-              minInvestment: 500,
-              roi: 100,
-              description: "Perfect for beginners with low investment",
-              badge: "Popular"
-            },
-            {
-              name: "Premium Plan",
-              dailyIncome: 120,
-              duration: 15,
-              minInvestment: 1000,
-              roi: 180,
-              description: "Higher returns for moderate investors",
-              badge: "Best Value"
-            },
-            {
-              name: "VIP Plan",
-              dailyIncome: 300,
-              duration: 20,
-              minInvestment: 2000,
-              roi: 300,
-              description: "Exclusive plan for VIP members",
-              badge: "VIP Only"
-            },
-            {
-              name: "Ultimate Plan",
-              dailyIncome: 750,
-              duration: 30,
-              minInvestment: 5000,
-              roi: 450,
-              description: "Maximum returns for serious investors",
-              badge: "Premium"
-            }
-          ];
-
-          // Add each product to database
-          products.forEach(product => {
-            productsRef.push(product);
-          });
+      ['Earnings', 'bonus', 'recharge'].forEach(key => {
+        const val = updated[key] || 0;
+        if (remaining > 0) {
+          const deduct = Math.min(val, remaining);
+          updated[key] = val - deduct;
+          remaining -= deduct;
         }
       });
-    }
 
-   
-  </script> 
+      db.ref("users/" + uid + "/wallet").set(updated);
+      db.ref("purchases/" + uid + "/" + planId).set({
+        planId: planId,
+        amount: cost,
+        purchasedAt: new Date().toISOString(),
+        status: "active"
+      });
+
+      alert("✅ Plan purchased successfully!");
+    });
+  }
+
+</script>
+
 </body>
 </html>
