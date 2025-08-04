@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Premium Income App</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -40,6 +38,7 @@
       color: #333;
       padding-bottom: 60px;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     .header {
@@ -68,6 +67,12 @@
       max-width: 500px;
       margin: 0 auto;
       padding: 15px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .wallet-box {
@@ -201,7 +206,7 @@
       height: 100%;
       background: linear-gradient(90deg, var(--primary), gold);
       border-radius: 10px;
-      width: 45%;
+      width: 65%;
       position: relative;
     }
 
@@ -516,112 +521,189 @@
       background: linear-gradient(135deg, var(--vip-5), #7b1fa2);
     }
 
-    /* Recharge Modal */
-    .modal {
+    /* Celebration Modal */
+    .celebration-modal {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
       align-items: center;
       justify-content: center;
+      animation: fadeIn 0.5s;
     }
 
-    .modal-content {
-      background: white;
-      border-radius: 15px;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .celebration-content {
+      position: relative;
+      background: linear-gradient(135deg, #ff6b00, #ff9800);
       width: 90%;
       max-width: 400px;
+      border-radius: 20px;
       overflow: hidden;
-      animation: modalOpen 0.3s ease-out;
-    }
-
-    @keyframes modalOpen {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-header {
-      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 15px;
       text-align: center;
-      position: relative;
+      padding: 30px;
+      box-shadow: 0 15px 50px rgba(255, 107, 0, 0.5);
+      animation: scaleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .close-modal {
+    @keyframes scaleIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .celebration-content::before {
+      content: "";
       position: absolute;
-      top: 10px;
-      right: 15px;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .celebration-icon {
+      font-size: 5rem;
+      color: gold;
+      margin: 20px 0;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      animation: bounce 1.5s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .celebration-content h2 {
+      font-size: 2rem;
       color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
+      margin: 15px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
-    .recharge-options {
-      padding: 20px;
-    }
-
-    .recharge-option {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      margin: 10px 0;
-      background: rgba(255, 107, 0, 0.1);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 2px solid transparent;
-    }
-
-    .recharge-option:hover {
-      background: rgba(255, 107, 0, 0.2);
-      border-color: var(--primary);
-    }
-
-    .recharge-option.selected {
-      background: rgba(255, 107, 0, 0.3);
-      border-color: var(--primary-dark);
-    }
-
-    .recharge-amount {
-      font-weight: bold;
+    .celebration-content p {
       font-size: 1.2rem;
-      color: var(--primary-dark);
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 25px;
+      line-height: 1.5;
     }
 
-    .recharge-btn {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 15px;
-      text-align: center;
-      display: block;
-      font-weight: bold;
+    .celebration-btn {
+      background: white;
+      color: #ff6b00;
       border: none;
-      width: 100%;
-      font-size: 1rem;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
     }
 
-    .recharge-btn:hover {
-      background: linear-gradient(135deg, var(--primary-dark), #d84315);
+    .celebration-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .celebration-btn:active {
+      transform: translateY(0);
+    }
+
+    .countdown-timer {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      margin-top: 15px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Confetti effect */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #f00;
+      opacity: 0.8;
+      animation: confetti-fall 5s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
+    }
+
+    /* Fireworks effect */
+    .firework {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      animation: explode 1s ease-out;
+    }
+
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px #fff; }
+      100% { transform: scale(10); opacity: 0; }
+    }
+    
+    .connection-status {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      background: #28a745;
+      color: white;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    .loading i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 
 <body>
+
+  <div class="connection-status">
+    <i class="fas fa-wifi"></i> Online
+  </div>
 
   <div class="header">
     <h1><i class="fas fa-wallet"></i> Premium Income App</h1>
@@ -629,25 +711,20 @@
   </div>
 
   <div class="app-container">
+    <!-- Wallet Box -->
     <div class="wallet-box">
       <div>
         <span id="rechargeAmount">₹0</span>
         <span>Recharge</span>
       </div>
       <div>
-        <span id="bonusAmount">₹0</span>
-        <span>Bonus</span>
-      </div>
-      <div>
         <span id="earningsAmount">₹0</span>
         <span>Total Income</span>
       </div>
       <div>
-  <span id="totalBalance">₹0</span>
-  <span>Total Balance</span>
-</div>
-
-
+        <span id="totalBalance">₹0</span>
+        <span>Total Balance</span>
+      </div>
     </div>
 
     <div class="vip-container">
@@ -664,28 +741,28 @@
           <span>VIP <span id="nextVip">1</span></span>
         </div>
         <div class="progress-container">
-          <div class="progress-bar" id="vipProgress"></div>
+          <div class="progress-bar" id="vipProgress" style="width: 0%"></div>
         </div>
         <p style="color: rgba(255,255,255,0.7); text-align: center; margin-top: 10px; font-size: 0.9rem;">
-          Recharge ₹<span id="rechargeNeeded">1000</span> more to reach next level
+          Recharge ₹<span id="rechargeNeeded">0</span> more to reach next level
         </p>
       </div>
     </div>
 
     <div class="quick-actions">
-      <a href="recharge.html" id="rechargeBtn">
+      <a href="#" id="rechargeBtn">
         <div><i class="fas fa-rupee-sign"></i></div>
         Recharge
       </a>
-      <a href="withdraw.html">
+      <a href="#">
         <div><i class="fas fa-money-bill-wave"></i></div>
         Withdraw
       </a>
-      <a href="invite.html">
+      <a href="#">
         <div><i class="fas fa-share-alt"></i></div>
         Share
       </a>
-      <a href="support.html">
+      <a href="#">
         <div><i class="fas fa-headset"></i></div>
         Support
       </a>
@@ -698,10 +775,16 @@
 
     <div class="plans-container">
       <h2 class="section-title"><i class="fas fa-chart-line"></i> Investment Plans</h2>
+      <div id="loadingPlans" class="loading">
+        <i class="fas fa-spinner"></i>
+        <p>Loading investment plans...</p>
+      </div>
       <div id="planList"></div>
     </div>
 
-    <div id="productList"></div>
+    <div id="productList">
+      <!-- Product cards will be loaded dynamically -->
+    </div>
 
     <div class="vip-benefits">
       <h3><i class="fas fa-crown"></i> VIP Benefits</h3>
@@ -724,13 +807,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Admin Link Only for Admin Users -->
-    <div id="adminLink" style="text-align: center; margin-top: 20px; display: none;">
-      <a href="admin.html" style="color: white; text-decoration: none; font-weight: bold;">
-        <i class="fas fa-user-shield"></i> Admin Panel
-      </a>
-    </div>
   </div>
 
   <div class="bottom-nav">
@@ -752,173 +828,324 @@
     </a>
   </div>
 
-  <!-- Recharge Modal -->
-  <div class="modal" id="rechargeModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2><i class="fas fa-rupee-sign"></i> Recharge Wallet</h2>
-        <span class="close-modal" id="closeModal">&times;</span>
+  <!-- Celebration Modal -->
+  <div class="celebration-modal" id="celebrationModal">
+    <div class="celebration-content">
+      <div class="celebration-icon">
+        <i class="fas fa-trophy"></i>
       </div>
-      <div class="recharge-options">
-        <div class="recharge-option" data-amount="500">
-          <span>Basic Recharge</span>
-          <span class="recharge-amount">₹500</span>
-        </div>
-        <div class="recharge-option" data-amount="1000">
-          <span>Standard Recharge</span>
-          <span class="recharge-amount">₹1000</span>
-        </div>
-        <div class="recharge-option" data-amount="2000">
-          <span>Premium Recharge</span>
-          <span class="recharge-amount">₹2000</span>
-        </div>
-        <div class="recharge-option" data-amount="5000">
-          <span>VIP Recharge</span>
-          <span class="recharge-amount">₹5000</span>
-        </div>
+      <h2>Congratulations!</h2>
+      <p>You've successfully invested in a premium plan!</p>
+      <p>Your journey to financial growth begins now.</p>
+      
+      <div class="countdown-timer" id="countdownTimer">
+        Closing in 3 seconds...
       </div>
-      <button class="recharge-btn" id="confirmRecharge">
-        <i class="fas fa-check-circle"></i> Confirm Recharge
+      
+      <button class="celebration-btn" id="closeCelebration">
+        <i class="fas fa-check-circle"></i> Continue Now
       </button>
     </div>
   </div>
-<script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-    authDomain: "grow-3e3a1.firebaseapp.com",
-    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-    projectId: "grow-3e3a1"
-  };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const auth = firebase.auth();
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1"
+    };
 
-  let currentUser = null;
-
-  // DOM references
-  const rechargeAmount = document.getElementById('rechargeAmount');
-  const totalIncome = document.getElementById('earningsAmount');
-  const bonusAmount = document.getElementById('bonusAmount');
-  const totalBalance = document.getElementById('totalBalance');
-
-  // Firebase Auth check
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      currentUser = user;
-      loadWalletData();
-      loadProducts();
-    } else {
-      currentUser = { uid: "demoUser123" }; // fallback/demo
-      loadWalletData();
-      loadProducts();
-    }
-  });
-
-  // Load Wallet Data from /users/UID/wallet
-  function loadWalletData() {
-    const walletRef = db.ref("users/" + currentUser.uid + "/wallet");
-    walletRef.on("value", snapshot => {
-      const wallet = snapshot.val() || { recharge: 0, bonus: 0, Earnings: 0 };
-      const recharge = wallet.recharge || 0;
-      const bonus = wallet.bonus || 0;
-      const earnings = wallet.Earnings || 0;
-      const total = recharge + bonus + earnings;
-
-      rechargeAmount.textContent = `₹${recharge.toFixed(2)}`;
-      bonusAmount.textContent = `₹${bonus.toFixed(2)}`;
-      totalIncome.textContent = `₹${earnings.toFixed(2)}`;
-      totalBalance.textContent = `₹${total.toFixed(2)}`;
-    });
-  }
-
-  // Load Product Plans from /products
-  function loadProducts() {
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    
+    // DOM references
+    const rechargeAmount = document.getElementById('rechargeAmount');
+    const totalIncome = document.getElementById('earningsAmount');
+    const totalBalance = document.getElementById('totalBalance');
+    const celebrationModal = document.getElementById('celebrationModal');
+    const closeCelebrationBtn = document.getElementById('closeCelebration');
+    const countdownTimer = document.getElementById('countdownTimer');
+    const loadingPlans = document.getElementById('loadingPlans');
     const productList = document.getElementById('productList');
-    const productsRef = db.ref("products");
+    const vipLevel = document.getElementById('vipLevel');
+    const currentVip = document.getElementById('currentVip');
+    const nextVip = document.getElementById('nextVip');
+    const vipProgress = document.getElementById('vipProgress');
+    const rechargeNeeded = document.getElementById('rechargeNeeded');
+    
+    let currentUser = null;
+    let countdownInterval;
 
-    productsRef.on("value", snapshot => {
-      productList.innerHTML = "";
-      snapshot.forEach(child => {
-        const product = child.val();
-        const key = child.key;
-
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-          ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
-          <h3><i class="fas fa-box"></i> ${product.name}</h3>
-          <p style="color: var(--gray); margin-bottom: 15px;">${product.description}</p>
-          <div class="product-details">
-            <div><span>₹${product.minInvestment}</span>Min Investment</div>
-            <div><span>₹${product.dailyIncome}</span>Daily Income</div>
-            <div><span>${product.duration} days</span>Duration</div>
-            <div><span>${product.roi}%</span>ROI</div>
-          </div>
-          <button class="buy-btn" data-id="${key}" data-cost="${product.minInvestment}">
-            <i class="fas fa-shopping-cart"></i> Buy Now - ₹${product.minInvestment}
-          </button>
-        `;
-        productList.appendChild(card);
-      });
-
-      document.querySelectorAll('.buy-btn').forEach(button => {
-        button.addEventListener('click', function () {
-          const planId = this.getAttribute('data-id');
-          const cost = parseInt(this.getAttribute('data-cost'));
-          buyProduct(planId, cost);
-        });
-      });
-    });
-  }
-
-  // Buy Product
-  function buyProduct(planId, cost) {
-    if (!currentUser) {
-      alert("Please login first");
-      return;
+    // Close celebration modal
+    function closeCelebration() {
+      celebrationModal.style.display = 'none';
+      clearInterval(countdownInterval);
     }
 
-    const uid = currentUser.uid;
-    const walletRef = db.ref("users/" + uid + "/wallet");
+    closeCelebrationBtn.addEventListener('click', closeCelebration);
 
-    walletRef.once("value").then(snapshot => {
-      const wallet = snapshot.val() || { recharge: 0, bonus: 0, Earnings: 0 };
-      const total = (wallet.recharge || 0) + (wallet.bonus || 0) + (wallet.Earnings || 0);
+    // Create confetti effect
+    function createConfetti() {
+      const colors = ['#ff6b00', '#ff9800', '#4CAF50', '#2196F3', '#9C27B0', '#FFEB3B'];
+      const container = document.body;
+      
+      for (let i = 0; i < 150; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDelay = Math.random() * 5 + 's';
+        confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+        container.appendChild(confetti);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+          if (confetti.parentNode) {
+            confetti.parentNode.removeChild(confetti);
+          }
+        }, 8000);
+      }
+    }
 
-      if (total < cost) {
-        alert("❌ Insufficient balance!");
+    // Create fireworks effect
+    function createFireworks() {
+      const container = document.body;
+      const colors = ['#ff6b00', '#ff9800', '#FFEB3B', '#4CAF50', '#2196F3'];
+      
+      for (let i = 0; i < 20; i++) {
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        firework.style.left = Math.random() * 100 + 'vw';
+        firework.style.top = Math.random() * 50 + 'vh';
+        firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        firework.style.animationDelay = Math.random() * 1 + 's';
+        container.appendChild(firework);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+          if (firework.parentNode) {
+            firework.parentNode.removeChild(firework);
+          }
+        }, 1000);
+      }
+    }
+
+    // Show celebration modal with countdown
+    function showCelebration() {
+      celebrationModal.style.display = 'flex';
+      createConfetti();
+      createFireworks();
+      
+      let seconds = 3;
+      countdownTimer.textContent = `Closing in ${seconds} seconds...`;
+      
+      countdownInterval = setInterval(() => {
+        seconds--;
+        countdownTimer.textContent = `Closing in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
+        
+        if (seconds <= 0) {
+          closeCelebration();
+        }
+      }, 1000);
+      
+      // Create more fireworks periodically
+      const fireworksInterval = setInterval(() => {
+        createFireworks();
+      }, 1500);
+      
+      // Stop after 10 seconds
+      setTimeout(() => {
+        clearInterval(fireworksInterval);
+      }, 10000);
+    }
+
+    // Load user wallet data from Firebase
+    function loadWalletData(uid) {
+      const walletRef = db.ref("users/" + uid + "/wallet");
+      walletRef.on("value", snapshot => {
+        const wallet = snapshot.val() || { recharge: 0, Earnings: 0 };
+        const recharge = wallet.recharge || 0;
+        const earnings = wallet.Earnings || 0;
+        const total = recharge + earnings;
+
+        rechargeAmount.textContent = `₹${recharge.toFixed(2)}`;
+        totalIncome.textContent = `₹${earnings.toFixed(2)}`;
+        totalBalance.textContent = `₹${total.toFixed(2)}`;
+      });
+    }
+
+    // Load investment products from Firebase
+    function loadProducts() {
+      const productsRef = db.ref("products");
+      
+      productsRef.on("value", snapshot => {
+        loadingPlans.style.display = "none";
+        productList.innerHTML = "";
+        
+        if (!snapshot.exists()) {
+          productList.innerHTML = `
+            <div class="loading">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>No investment plans available at the moment</p>
+            </div>
+          `;
+          return;
+        }
+        
+        snapshot.forEach(child => {
+          const product = child.val();
+          const key = child.key;
+
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.innerHTML = `
+            ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
+            <h3><i class="fas fa-box"></i> ${product.name}</h3>
+            <p style="color: var(--gray); margin-bottom: 15px;">${product.description}</p>
+            <div class="product-details">
+              <div><span>₹${product.minInvestment}</span>Min Investment</div>
+              <div><span>₹${product.dailyIncome}</span>Daily Income</div>
+              <div><span>${product.duration} days</span>Duration</div>
+              <div><span>${product.roi}%</span>ROI</div>
+            </div>
+            <button class="buy-btn" data-id="${key}" data-cost="${product.minInvestment}">
+              <i class="fas fa-shopping-cart"></i> Buy Now - ₹${product.minInvestment}
+            </button>
+          `;
+          productList.appendChild(card);
+        });
+
+        document.querySelectorAll('.buy-btn').forEach(button => {
+          button.addEventListener('click', function() {
+            const planId = this.getAttribute('data-id');
+            const cost = parseFloat(this.getAttribute('data-cost'));
+            buyProduct(planId, cost);
+          });
+        });
+      }, error => {
+        loadingPlans.style.display = "none";
+        productList.innerHTML = `
+          <div class="loading">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load investment plans: ${error.message}</p>
+          </div>
+        `;
+      });
+    }
+
+    // Buy product function
+    function buyProduct(planId, cost) {
+      if (!currentUser) {
+        alert("Please login first");
         return;
       }
 
-      // Deduct from Earnings first
-      let remaining = cost;
-      let updated = { ...wallet };
+      const uid = currentUser.uid;
+      const walletRef = db.ref("users/" + uid + "/wallet");
 
-      ['Earnings', 'bonus', 'recharge'].forEach(key => {
-        const val = updated[key] || 0;
-        if (remaining > 0) {
-          const deduct = Math.min(val, remaining);
-          updated[key] = val - deduct;
-          remaining -= deduct;
+      walletRef.once("value").then(snapshot => {
+        const wallet = snapshot.val() || { recharge: 0, Earnings: 0 };
+        const total = (wallet.recharge || 0) + (wallet.Earnings || 0);
+
+        if (total < cost) {
+          alert("❌ Insufficient balance!");
+          return;
+        }
+
+        // Deduct from wallet
+        let updated = { ...wallet };
+        if (wallet.recharge >= cost) {
+          updated.recharge = wallet.recharge - cost;
+        } else {
+          const remaining = cost - wallet.recharge;
+          updated.recharge = 0;
+          updated.Earnings = wallet.Earnings - remaining;
+        }
+
+        // Update wallet
+        db.ref("users/" + uid + "/wallet").set(updated);
+        
+        // Record purchase
+        db.ref("purchases/" + uid + "/" + planId).set({
+          planId: planId,
+          amount: cost,
+          purchasedAt: new Date().toISOString(),
+          status: "active"
+        });
+
+        // Show celebration
+        showCelebration();
+      }).catch(error => {
+        alert("Error processing purchase: " + error.message);
+      });
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up recharge button
+      document.getElementById('rechargeBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Recharge feature is in development. Coming soon!');
+      });
+      
+      // Initialize Firebase auth
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          loadWalletData(user.uid);
+          loadProducts();
+          
+          // For demo - set VIP level based on recharge amount
+          db.ref("users/" + user.uid + "/wallet").once("value").then(snapshot => {
+            const wallet = snapshot.val() || { recharge: 0 };
+            const rechargeAmount = wallet.recharge || 0;
+            
+            // Simple VIP calculation for demo
+            if (rechargeAmount >= 10000) {
+              vipLevel.textContent = "3";
+              currentVip.textContent = "3";
+              nextVip.textContent = "4";
+              vipProgress.style.width = "40%";
+              rechargeNeeded.textContent = "5000";
+              document.getElementById('vipBanner').className = "vip-banner vip-3";
+            } else if (rechargeAmount >= 5000) {
+              vipLevel.textContent = "2";
+              currentVip.textContent = "2";
+              nextVip.textContent = "3";
+              vipProgress.style.width = "60%";
+              rechargeNeeded.textContent = "3000";
+              document.getElementById('vipBanner').className = "vip-banner vip-2";
+            } else if (rechargeAmount >= 1000) {
+              vipLevel.textContent = "1";
+              currentVip.textContent = "1";
+              nextVip.textContent = "2";
+              vipProgress.style.width = "30%";
+              rechargeNeeded.textContent = "2000";
+              document.getElementById('vipBanner').className = "vip-banner vip-1";
+            }
+          });
+        } else {
+          // Not logged in - use demo mode
+          currentUser = { uid: "demoUser" };
+          rechargeAmount.textContent = "₹5000";
+          totalIncome.textContent = "₹1250";
+          totalBalance.textContent = "₹6250";
+          vipLevel.textContent = "1";
+          currentVip.textContent = "1";
+          nextVip.textContent = "2";
+          vipProgress.style.width = "65%";
+          rechargeNeeded.textContent = "3500";
+          document.getElementById('vipBanner').className = "vip-banner vip-1";
+          loadProducts();
         }
       });
-
-      db.ref("users/" + uid + "/wallet").set(updated);
-      db.ref("purchases/" + uid + "/" + planId).set({
-        planId: planId,
-        amount: cost,
-        purchasedAt: new Date().toISOString(),
-        status: "active"
-      });
-
-      alert("✅ Plan purchased successfully!");
     });
-  }
-
-</script>
-
+  </script>
 </body>
 </html>
