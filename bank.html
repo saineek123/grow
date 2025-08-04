@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bank Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+    h2 {
+      text-align: center;
+      color: #ff6b00;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #ff6b00;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e65100;
+    }
+    .info {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>🏦 Add / View Bank Details</h2>
+
+  <input type="text" id="accountHolder" placeholder="Account Holder Name" />
+  <input type="text" id="accountNumber" placeholder="Account Number" />
+  <input type="text" id="ifsc" placeholder="IFSC Code" />
+  <button onclick="saveBank()">💾 Save Bank Details</button>
+
+  <div class="info" id="bankInfo">
+    <p>Loading saved details...</p>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    let uid = null;
+
+    function saveBank() {
+      const name = document.getElementById("accountHolder").value;
+      const number = document.getElementById("accountNumber").value;
+      const ifsc = document.getElementById("ifsc").value;
+
+      if (!name || !number || !ifsc) return alert("All fields required");
+
+      db.ref("users/" + uid + "/bank").set({
+        accountHolder: name,
+        accountNumber: number,
+        ifsc: ifsc
+      }).then(() => {
+        alert("✅ Bank details saved!");
+        loadBank();
+      });
+    }
+
+    function loadBank() {
+      db.ref("users/" + uid + "/bank").once("value").then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById("bankInfo").innerHTML = `
+            <strong>Saved Bank Details:</strong><br>
+            👤 ${data.accountHolder}<br>
+            💳 ${data.accountNumber}<br>
+            🏦 ${data.ifsc}
+          `;
+        } else {
+          document.getElementById("bankInfo").innerHTML = `<p>No bank details saved.</p>`;
+        }
+      });
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        uid = user.uid;
+        loadBank();
+      } else {
+        alert("Please login");
+        location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>
