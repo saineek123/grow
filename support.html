@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel | Payout Control</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      --dark: #0f172a;
+      --light: #f8f9fa;
+      --gray: #64748b;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: var(--light);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+    
+    /* Header */
+    header {
+      background: var(--card-bg);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 24px;
+    }
+    
+    .logo h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .admin-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .admin-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 15px;
+      background: rgba(67, 97, 238, 0.1);
+      border-radius: 30px;
+      border: 1px solid var(--primary);
+    }
+    
+    .admin-info i {
+      color: var(--primary);
+    }
+    
+    .logout-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background: #d12f5a;
+      transform: translateY(-2px);
+    }
+    
+    /* Login Section */
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .login-header {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      padding: 25px;
+      text-align: center;
+    }
+    
+    .login-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+    
+    .login-header p {
+      opacity: 0.8;
+    }
+    
+    .login-body {
+      padding: 25px;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--light);
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+    }
+    
+    .login-error {
+      background: rgba(239, 71, 111, 0.2);
+      color: var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+      border: 1px solid var(--danger);
+    }
+    
+    /* Admin Panel */
+    .admin-panel {
+      display: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card .icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .icon.blue { background: rgba(67, 97, 238, 0.2); color: var(--primary); }
+    .icon.green { background: rgba(6, 214, 160, 0.2); color: var(--success); }
+    .icon.yellow { background: rgba(255, 209, 102, 0.2); color: var(--warning); }
+    .icon.red { background: rgba(239, 71, 111, 0.2); color: var(--danger); }
+    
+    .stat-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .stat-card p {
+      color: var(--gray);
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .card-header h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card-header i {
+      color: var(--primary);
+    }
+    
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+    
+    th {
+      background: rgba(67, 97, 238, 0.1);
+      text-align: left;
+      padding: 12px 15px;
+      font-weight: 600;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+      color: var(--light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    
+    .btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+    
+    .btn.approve {
+      background: var(--success);
+      color: #023020;
+    }
+    
+    .btn.reject {
+      background: var(--danger);
+      color: white;
+    }
+    
+    .btn.payincome {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .action-group {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .pending { background: rgba(255, 209, 102, 0.2); color: var(--warning); }
+    .completed { background: rgba(6, 214, 160, 0.2); color: var(--success); }
+    .rejected { background: rgba(239, 71, 111, 0.2); color: var(--danger); }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .admin-panel {
+        padding: 15px;
+      }
+      
+      .card {
+        padding: 15px;
+      }
+      
+      .card-header h2 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔐 LOGIN SECTION -->
+  <div id="loginSection" class="login-container">
+    <div class="login-header">
+      <h2><i class="fas fa-lock"></i> Admin Login</h2>
+      <p>Access the payout control panel</p>
+    </div>
+    <div class="login-body">
+      <div class="input-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="admin@example.com">
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password">
+      </div>
+      <button class="login-btn" onclick="adminLogin()">
+        <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+      </button>
+      <div id="loginError" class="login-error">
+        Invalid credentials. Please try again.
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ MAIN PANEL SECTION -->
+  <div id="adminPanel" style="display:none;">
+    <header>
+      <div class="logo">
+        <i class="fas fa-chart-line"></i>
+        <h1>Payout Control Dashboard</h1>
+      </div>
+      <div class="admin-controls">
+        <div class="admin-info">
+          <i class="fas fa-user-shield"></i>
+          <span>admin@premiumincome.com</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </header>
+    
+    <div class="admin-panel">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="icon blue">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 id="totalUsers">2,458</h3>
+          <p>Total Users</p>
+        </div>
+        
+        <div class="stat-card">
+          <div class="icon green">
+            <i class="fas fa-rupee-sign"></i>
+          </div>
+          <h3 id="totalPayouts">₹1,42,850</h3>
+          <p>Total Payouts</p>
+        </div>
+        
+        <div class="stat-card">
+          <div class="icon yellow">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <h3 id="pendingRequests">18</h3>
+          <p>Pending Requests</p>
+        </div>
+        
+        <div class="stat-card">
+          <div class="icon red">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <h3 id="rejectedRequests">5</h3>
+          <p>Rejected Requests</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-money-check-alt"></i> Withdrawal Requests</h2>
+        </div>
+        <div class="table-container">
+          <table id="withdrawTable">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>U-45892</td>
+                <td>Raj Sharma</td>
+                <td>₹1,500</td>
+                <td>Paytm</td>
+                <td><span class="status-badge pending">Pending</span></td>
+                <td>24 Jun 2023</td>
+                <td class="action-group">
+                  <button class="btn approve" onclick="approveWithdraw('W-001', 1500, 'U-45892')">
+                    <i class="fas fa-check"></i> Approve
+                  </button>
+                  <button class="btn reject" onclick="rejectWithdraw('W-001')">
+                    <i class="fas fa-times"></i> Reject
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>U-78231</td>
+                <td>Priya Patel</td>
+                <td>₹2,500</td>
+                <td>Bank Transfer</td>
+                <td><span class="status-badge pending">Pending</span></td>
+                <td>23 Jun 2023</td>
+                <td class="action-group">
+                  <button class="btn approve" onclick="approveWithdraw('W-002', 2500, 'U-78231')">
+                    <i class="fas fa-check"></i> Approve
+                  </button>
+                  <button class="btn reject" onclick="rejectWithdraw('W-002')">
+                    <i class="fas fa-times"></i> Reject
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>U-34512</td>
+                <td>Amit Kumar</td>
+                <td>₹1,200</td>
+                <td>Google Pay</td>
+                <td><span class="status-badge completed">Completed</span></td>
+                <td>22 Jun 2023</td>
+                <td class="action-group">
+                  <span style="color: var(--success);">Paid</span>
+                </td>
+              </tr>
+              <tr>
+                <td>U-90125</td>
+                <td>Sneha Gupta</td>
+                <td>₹3,000</td>
+                <td>Paytm</td>
+                <td><span class="status-badge rejected">Rejected</span></td>
+                <td>21 Jun 2023</td>
+                <td class="action-group">
+                  <span style="color: var(--danger);">Rejected</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-chart-pie"></i> All Users Investment Summary</h2>
+        </div>
+        <div class="table-container">
+          <table id="userTable">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Invested</th>
+                <th>Wallet</th>
+                <th>Earnings</th>
+                <th>Daily Income</th>
+                <th>Last Payout</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>U-45892</td>
+                <td>Raj Sharma</td>
+                <td>₹12,500</td>
+                <td>₹3,200</td>
+                <td>₹8,500</td>
+                <td>₹450</td>
+                <td>24 Jun 2023</td>
+                <td>
+                  <button class="btn payincome" onclick="creditIncome('U-45892', 450)">
+                    <i class="fas fa-coins"></i> Pay Income
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>U-78231</td>
+                <td>Priya Patel</td>
+                <td>₹8,000</td>
+                <td>₹1,500</td>
+                <td>₹4,200</td>
+                <td>₹280</td>
+                <td>23 Jun 2023</td>
+                <td>
+                  <button class="btn payincome" onclick="creditIncome('U-78231', 280)">
+                    <i class="fas fa-coins"></i> Pay Income
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>U-34512</td>
+                <td>Amit Kumar</td>
+                <td>₹15,000</td>
+                <td>₹4,800</td>
+                <td>₹9,500</td>
+                <td>₹620</td>
+                <td>24 Jun 2023</td>
+                <td>
+                  <button class="btn payincome" onclick="creditIncome('U-34512', 620)">
+                    <i class="fas fa-coins"></i> Pay Income
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>U-90125</td>
+                <td>Sneha Gupta</td>
+                <td>₹5,500</td>
+                <td>₹1,200</td>
+                <td>₹2,800</td>
+                <td>₹180</td>
+                <td>22 Jun 2023</td>
+                <td>
+                  <button class="btn payincome" onclick="creditIncome('U-90125', 180)">
+                    <i class="fas fa-coins"></i> Pay Income
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+
+    // 🔐 Login Function
+    function adminLogin() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorBox = document.getElementById("loginError");
+
+      if (!email || !password) {
+        showError("Please fill in all fields");
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const uid = userCredential.user.uid;
+          return db.ref("admins/" + uid).once("value");
+        })
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
+            loadWithdrawRequests();
+            loadUserData();
+          } else {
+            showError("Not authorized as admin!");
+            auth.signOut();
+          }
+        })
+        .catch(err => {
+          showError("Login Failed: " + err.message);
+        });
+    }
+
+    // Show error message
+    function showError(message) {
+      const errorBox = document.getElementById("loginError");
+      errorBox.textContent = message;
+      errorBox.style.display = "block";
+      
+      setTimeout(() => {
+        errorBox.style.display = "none";
+      }, 5000);
+    }
+
+    // Logout function
+    function logout() {
+      auth.signOut().then(() => {
+        document.getElementById("loginSection").style.display = "block";
+        document.getElementById("adminPanel").style.display = "none";
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+      });
+    }
+
+    // ✅ Load Withdrawal Requests
+    function loadWithdrawRequests() {
+      db.ref("withdraw_requests").on("value", snapshot => {
+        const tableBody = document.querySelector("#withdrawTable tbody");
+        tableBody.innerHTML = "";
+        
+        if (!snapshot.exists()) {
+          tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--gray);">No pending withdrawal requests</td></tr>`;
+          return;
+        }
+        
+        snapshot.forEach(child => {
+          const data = child.val();
+          const tr = document.createElement("tr");
+          
+          let statusBadge = "";
+          if (data.status === "completed") {
+            statusBadge = `<span class="status-badge completed">Completed</span>`;
+          } else if (data.status === "rejected") {
+            statusBadge = `<span class="status-badge rejected">Rejected</span>`;
+          } else {
+            statusBadge = `<span class="status-badge pending">Pending</span>`;
+          }
+          
+          tr.innerHTML = `
+            <td>${data.userId}</td>
+            <td>${data.name || 'N/A'}</td>
+            <td>₹${data.amount}</td>
+            <td>${data.method}</td>
+            <td>${statusBadge}</td>
+            <td>${new Date(data.timestamp).toLocaleDateString()}</td>
+            <td class="action-group">
+              ${data.status === "pending" ? `
+                <button class="btn approve" onclick="approveWithdraw('${child.key}', ${data.amount}, '${data.userId}')">
+                  <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="btn reject" onclick="rejectWithdraw('${child.key}')">
+                  <i class="fas fa-times"></i> Reject
+                </button>
+              ` : data.status === "completed" ? `
+                <span style="color: var(--success);">Paid</span>
+              ` : `
+                <span style="color: var(--danger);">Rejected</span>
+              `}
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      });
+    }
+
+    // ✅ Load All Users Data
+    function loadUserData() {
+      db.ref("users").on("value", snapshot => {
+        const tableBody = document.querySelector("#userTable tbody");
+        tableBody.innerHTML = "";
+        
+        if (!snapshot.exists()) {
+          tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px; color: var(--gray);">No user data available</td></tr>`;
+          return;
+        }
+        
+        snapshot.forEach(userSnap => {
+          const uid = userSnap.key;
+          const data = userSnap.val();
+          const wallet = data.wallet || {};
+          const investments = data.investments || {};
+          
+          let dailyIncome = 0;
+          Object.values(investments).forEach(inv => {
+            dailyIncome += parseFloat(inv.daily || 0);
+          });
+          
+          const lastPayout = data.lastPayout ? new Date(data.lastPayout).toLocaleDateString() : "Never";
+          
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${uid}</td>
+            <td>${data.name || "User"}</td>
+            <td>₹${data.invested || 0}</td>
+            <td>₹${(wallet.recharge || 0) + (wallet.bonus || 0)}</td>
+            <td>₹${wallet.totalEarnings || 0}</td>
+            <td>₹${dailyIncome.toFixed(2)}</td>
+            <td>${lastPayout}</td>
+            <td>
+              <button class='btn payincome' onclick="creditIncome('${uid}', ${dailyIncome})">
+                <i class="fas fa-coins"></i> Pay Income
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      });
+    }
+
+    // Approve withdraw
+    function approveWithdraw(requestId, amount, userId) {
+      const userRef = db.ref("users/" + userId + "/wallet/recharge");
+      
+      userRef.once("value").then(snap => {
+        const balance = snap.val() || 0;
+        
+        if (balance < amount) {
+          alert("Error: User doesn't have sufficient balance!");
+          return;
+        }
+        
+        // Deduct from user's recharge balance
+        userRef.set(balance - amount);
+        
+        // Update withdrawal request status
+        db.ref("withdraw_requests/" + requestId).update({
+          status: "completed",
+          processedAt: new Date().toISOString()
+        });
+        
+        alert("Withdrawal approved successfully!");
+      });
+    }
+
+    // Reject withdraw
+    function rejectWithdraw(requestId) {
+      // Update withdrawal request status
+      db.ref("withdraw_requests/" + requestId).update({
+        status: "rejected",
+        processedAt: new Date().toISOString()
+      });
+      
+      alert("Withdrawal request has been rejected");
+    }
+
+    // Credit daily income
+    function creditIncome(userId, amount) {
+      const now = Date.now();
+      const userRef = db.ref("users/" + userId);
+      
+      userRef.once("value").then(snapshot => {
+        const userData = snapshot.val() || {};
+        const wallet = userData.wallet || {};
+        const lastPayout = userData.lastPayout || 0;
+        
+        // Check if 24 hours have passed since last payout
+        if (lastPayout && (now - lastPayout) < 24 * 60 * 60 * 1000) {
+          alert("⚠️ This user has already received income in the last 24 hours!");
+          return;
+        }
+        
+        // Update user's wallet and last payout timestamp
+        const newEarnings = (wallet.totalEarnings || 0) + amount;
+        const newRecharge = (wallet.recharge || 0) + amount;
+        
+        const updates = {
+          "wallet/totalEarnings": newEarnings,
+          "wallet/recharge": newRecharge,
+          "lastPayout": now
+        };
+        
+        userRef.child("wallet").update({
+          totalEarnings: newEarnings,
+          recharge: newRecharge
+        });
+        
+        userRef.update({
+          lastPayout: now
+        });
+        
+        // Record transaction
+        db.ref("transactions/" + userId).push({
+          type: "daily_income",
+          amount: amount,
+          date: new Date().toISOString()
+        });
+        
+        alert(`✅ Daily income of ₹${amount.toFixed(2)} credited to user ${userId}`);
+      });
+    }
+    
+    // Simulate stats
+    document.getElementById("totalUsers").textContent = "2,458";
+    document.getElementById("totalPayouts").textContent = "₹1,42,850";
+    document.getElementById("pendingRequests").textContent = "18";
+    document.getElementById("rejectedRequests").textContent = "5";
+  </script>
+</body>
+</html>
