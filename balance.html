@@ -12,40 +12,72 @@
       font-family: Arial, sans-serif;
       background: #f2f2f2;
       padding: 20px;
+      margin: 0;
+      padding-bottom: 100px;
     }
     h2 {
       text-align: center;
       color: #ff6b00;
     }
-    .balance-box {
+    .wallet-box {
       background: white;
       border-radius: 10px;
       padding: 20px;
-      margin: 20px auto;
       max-width: 400px;
+      margin: 20px auto;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    .balance-box div {
+    .wallet-box div {
       display: flex;
       justify-content: space-between;
-      padding: 10px 0;
+      padding: 12px 0;
       border-bottom: 1px solid #eee;
       font-size: 1rem;
     }
-    .balance-box div:last-child {
+    .wallet-box div:last-child {
       border-bottom: none;
       font-weight: bold;
       font-size: 1.2rem;
     }
+    .bottom-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+      border-top: 1px solid #ccc;
+    }
+    .btn {
+      width: 48%;
+      padding: 12px;
+      font-size: 1rem;
+      background: #ff6b00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: #e65100;
+    }
   </style>
 </head>
 <body>
-  <h2>💼 My Wallet</h2>
-  <div class="balance-box">
-    <div><span>Recharge:</span> <span id="recharge">₹0</span></div>
-    <div><span>Bonus:</span> <span id="bonus">₹0</span></div>
-    <div><span>Winning:</span> <span id="winning">₹0</span></div>
-    <div><span>Total:</span> <span id="total">₹0</span></div>
+  <h2>💼 Wallet Overview</h2>
+  <div class="wallet-box">
+    <div><span>Recharge Balance:</span> <span id="recharge">₹0</span></div>
+    <div><span>Total Income:</span> <span id="income">₹0</span></div>
+    <div><span>Total Balance:</span> <span id="total">₹0</span></div>
+  </div>
+
+  <div class="bottom-buttons">
+    <button class="btn" onclick="location.href='recharge.html'">Recharge</button>
+    <button class="btn" onclick="location.href='withdraw.html'">Withdraw</button>
   </div>
 
   <script>
@@ -62,19 +94,17 @@
     auth.onAuthStateChanged(user => {
       if (user) {
         db.ref("users/" + user.uid + "/wallet").once("value").then(snapshot => {
-          const w = snapshot.val() || {};
-          const r = w.recharge || 0;
-          const b = w.bonus || 0;
-          const win = w.winning || 0;
-          const total = r + b + win;
+          const wallet = snapshot.val() || {};
+          const recharge = wallet.recharge || 0;
+          const earnings = wallet.Earnings || 0;
+          const total = recharge + earnings;
 
-          document.getElementById("recharge").textContent = "₹" + r.toFixed(2);
-          document.getElementById("bonus").textContent = "₹" + b.toFixed(2);
-          document.getElementById("winning").textContent = "₹" + win.toFixed(2);
+          document.getElementById("recharge").textContent = "₹" + recharge.toFixed(2);
+          document.getElementById("income").textContent = "₹" + earnings.toFixed(2);
           document.getElementById("total").textContent = "₹" + total.toFixed(2);
         });
       } else {
-        alert("Login required!");
+        alert("Please login to continue");
         location.href = "login.html";
       }
     });
