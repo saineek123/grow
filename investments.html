@@ -405,87 +405,91 @@
       "default": 1.0
     };
 
-    function loadUserInvestments(uid) {
-      const ref = db.ref("purchases/" + uid);
-      ref.once("value").then(snapshot => {
-        investmentList.innerHTML = "";
-        
-        if (!snapshot.exists()) {
-          investmentList.innerHTML = `
-            <div class="no-investments">
-              <i class="fas fa-box-open"></i>
-              <p>No investments found. Start investing today!</p>
-            </div>
-          `;
-          return;
-        }
+   function loadUserInvestments(uid) {
+  const ref = db.ref("purchases/" + uid);
+  const productsRef = db.ref("products");
 
-        snapshot.forEach(child => {
-          const data = child.val();
-          
-          // Calculate daily earnings based on plan type
-          const returnRate = planReturns[data.planId] || planReturns.default;
-          const dailyEarnings = (data.amount * returnRate / 100).toFixed(2);
-          
-          const div = document.createElement("div");
-          div.className = "investment-card";
-          div.innerHTML = `
-            <div class="card-header">
-              <h3><i class="fas fa-chart-line"></i> ${data.planId.replace('plan-', '').toUpperCase()} Plan</h3>
-              <div class="status status-${data.status}">${data.status.toUpperCase()}</div>
-            </div>
-            
-            <div class="card-body">
-              <div class="investment-detail">
-                <div class="detail-label">Amount Invested</div>
-                <div class="detail-value">₹${data.amount}</div>
-              </div>
-              
-              <div class="investment-detail">
-                <div class="detail-label">Start Date</div>
-                <div class="detail-value">${new Date(data.purchasedAt).toLocaleDateString()}</div>
-              </div>
-              
-              <div class="investment-detail">
-                <div class="detail-label">Plan Duration</div>
-                <div class="detail-value">90 Days</div>
-              </div>
-              
-              <div class="daily-earnings">
-                <div class="icon">
-                  <i class="fas fa-coins"></i>
-                </div>
-                <div class="text">
-                  <div class="label">Daily Earnings</div>
-                  <div class="value">₹${dailyEarnings}</div>
-                </div>
-              </div>
-            </div>
-          `;
-          investmentList.appendChild(div);
-        });
-      }).catch(error => {
-        investmentList.innerHTML = `
-          <div class="no-investments">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Error loading investments. Please try again.</p>
-          </div>
-        `;
-        console.error("Error loading investments:", error);
-      });
+  Promise.all([
+    ref.once("value"),
+    productsRef.once("value")
+  ]).then(([snapshot, productsSnap]) => {
+    investmentList.innerHTML = "";
+
+    if (!snapshot.exists()) {
+      investmentList.innerHTML = `
+        <div class="no-investments">
+          <i class="fas fa-box-open"></i>
+          <p>No investments found. Start investing today!</p>
+        </div>
+      `;
+      return;
     }
+
+    const productData = productsSnap.val() || {};
+    
+    snapshot.forEach(child => {
+      const data = child.val();
+      const product = productData[data.planId] || {};
+      const name = product.name || data.planId.replace('plan-', '').toUpperCase();
+      const duration = product.duration || "N/A";
+      const dailyEarnings = data.dailyIncome || "0.00";
+
+      const div = document.createElement("div");
+      div.className = "investment-card";
+      div.innerHTML = `
+        <div class="card-header">
+          <h3><i class="fas fa-chart-line"></i> ${name}</h3>
+          <div class="status status-${data.status}">${data.status.toUpperCase()}</div>
+        </div>
+        
+        <div class="card-body">
+          <div class="investment-detail">
+            <div class="detail-label">Amount Invested</div>
+            <div class="detail-value">₹${data.amount}</div>
+          </div>
+          
+          <div class="investment-detail">
+            <div class="detail-label">Start Date</div>
+            <div class="detail-value">${new Date(data.purchasedAt).toLocaleDateString()}</div>
+          </div>
+          
+          <div class="investment-detail">
+            <div class="detail-label">Plan Duration</div>
+            <div class="detail-value">${duration} Days</div>
+          </div>
+          
+          <div class="daily-earnings">
+            <div class="icon">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div class="text">
+              <div class="label">Daily Earnings</div>
+              <div class="value">₹${dailyEarnings}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      investmentList.appendChild(div);
+    });
+  }).catch(error => {
+    investmentList.innerHTML = `
+      <div class="no-investments">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Error loading investments. Please try again.</p>
+      </div>
+    `;
+    console.error("Error loading investments:", error);
+  });
+}
 
     auth.onAuthStateChanged(user => {
       if (user) {
-        // Simulate loading delay
-        setTimeout(() => {
-          loadUserInvestments(user.uid);
-        }, 1500);
+        loadUserInvestments(user.uid);
       } else {
         investmentList.innerHTML = `
           <div class="no-investments">
-            <i class="fas fa-exclamation-circle"></i>
-            <p style="color: #d00000;">Please login to view your investments</p>
+            <i class="fas fa-user-lock"></i>
+            <p>Please log in to view your investments.</p>
           </div>
         `;
       }
