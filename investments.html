@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Investments</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0 10px 80px;
+      background: #f2f2f2;
+    }
+    h2 {
+      text-align: center;
+      margin: 20px 0;
+      color: #ff6b00;
+    }
+    .investment-card {
+      background: white;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .investment-card h3 {
+      margin: 0 0 10px;
+      color: #333;
+    }
+    .investment-card p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .status-active {
+      color: green;
+      font-weight: bold;
+    }
+    .status-expired {
+      color: red;
+      font-weight: bold;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+    .bottom-nav a {
+      color: #666;
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    .bottom-nav a.active {
+      color: #ff6b00;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>My Investments</h2>
+  <div id="investmentList">
+    <p style="text-align:center; color:#999;">Loading your investments...</p>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html"><div><i class="fas fa-home"></i></div>Home</a>
+    <a href="investments.html" class="active"><div><i class="fas fa-clipboard-list"></i></div>My Investments</a>
+    <a href="recharge.html"><div><i class="fas fa-rupee-sign"></i></div>Recharge</a>
+    <a href="my.html"><div><i class="fas fa-user"></i></div>Profile</a>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+      authDomain: "grow-3e3a1.firebaseapp.com",
+      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+      projectId: "grow-3e3a1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const investmentList = document.getElementById("investmentList");
+
+    function loadUserInvestments(uid) {
+      const ref = db.ref("purchases/" + uid);
+      ref.once("value").then(snapshot => {
+        investmentList.innerHTML = "";
+        if (!snapshot.exists()) {
+          investmentList.innerHTML = `<p style="text-align:center;">No investments found.</p>`;
+          return;
+        }
+
+        snapshot.forEach(child => {
+          const data = child.val();
+          const div = document.createElement("div");
+          div.className = "investment-card";
+          div.innerHTML = `
+            <h3>📦 Plan ID: ${data.planId}</h3>
+            <p>💰 Amount: ₹${data.amount}</p>
+            <p>📅 Date: ${new Date(data.purchasedAt).toLocaleString()}</p>
+            <p>Status: <span class="status-${data.status}">${data.status}</span></p>
+          `;
+          investmentList.appendChild(div);
+        });
+      });
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loadUserInvestments(user.uid);
+      } else {
+        investmentList.innerHTML = "<p style='text-align:center;color:red;'>Please login to view your investments.</p>";
+      }
+    });
+  </script>
+</body>
+</html>
