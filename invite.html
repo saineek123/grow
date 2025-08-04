@@ -3,645 +3,490 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team & Referrals</title>
+  <title>Team & Referrals - Daily Income App</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
+    :root {
+      --primary: #ff6b00;
+      --primary-dark: #e65100;
+      --secondary: #4a148c;
+      --dark: #222;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --success: #28a745;
+      --vip-0: #9e9e9e;
+      --vip-1: #ff9800;
+      --vip-2: #ff5722;
+      --vip-3: #f44336;
+      --vip-4: #e91e63;
+      --vip-5: #9c27b0;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
     body {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      color: #e0e0ff;
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      background-attachment: fixed;
+      color: #333;
+      padding-bottom: 60px;
       min-height: 100vh;
-      padding: 20px;
+      overflow-x: hidden;
     }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
+
     .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      margin-bottom: 30px;
-      border-bottom: 1px solid rgba(0, 230, 255, 0.2);
-    }
-    
-    .header h1 {
-      font-size: 2.2rem;
-      background: linear-gradient(90deg, #00e5ff, #00b8d4);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    
-    .header h1 i {
-      font-size: 1.8rem;
-    }
-    
-    .back-btn {
-      background: linear-gradient(90deg, #00b09b, #96c93d);
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 12px 25px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .back-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-      margin-bottom: 40px;
-    }
-    
-    .summary-card {
-      background: rgba(20, 20, 40, 0.7);
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 230, 255, 0.15);
-      transition: transform 0.3s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    
-    .summary-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(0, 230, 255, 0.3);
-    }
-    
-    .card-icon {
-      width: 70px;
-      height: 70px;
-      background: rgba(0, 230, 255, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 28px;
-      color: #00e5ff;
-    }
-    
-    .card-title {
-      color: #a0a0e0;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-    
-    .card-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #00e5ff, #00b8d4);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .referral-section {
-      background: rgba(20, 20, 40, 0.7);
-      border-radius: 15px;
-      padding: 30px;
-      margin-bottom: 40px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 230, 255, 0.15);
-    }
-    
-    .section-header {
-      margin-bottom: 25px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(0, 230, 255, 0.1);
-    }
-    
-    .section-title {
-      font-size: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      color: #00e5ff;
-      margin-bottom: 10px;
-    }
-    
-    .section-title i {
-      font-size: 1.5rem;
-    }
-    
-    .section-subtitle {
-      color: #a0a0e0;
-      font-size: 1.1rem;
-      max-width: 700px;
-      line-height: 1.6;
-    }
-    
-    .referral-link-container {
-      display: flex;
-      margin: 30px 0;
-      gap: 15px;
-    }
-    
-    .referral-link {
-      flex-grow: 1;
-      background: rgba(30, 30, 60, 0.6);
-      border: 1px solid rgba(0, 230, 255, 0.2);
-      border-radius: 12px;
-      padding: 18px 25px;
-      font-size: 1.1rem;
-      color: #e0e0ff;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .btn {
-      padding: 16px 30px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.3s;
-      font-size: 1.1rem;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(90deg, #00b09b, #96c93d);
-      color: white;
-    }
-    
-    .btn-secondary {
-      background: linear-gradient(90deg, #00e5ff, #00b8d4);
-      color: white;
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .btn:active {
-      transform: translateY(1px);
-    }
-    
-    .share-buttons {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-    
-    .team-section {
-      background: rgba(20, 20, 40, 0.7);
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 230, 255, 0.15);
-    }
-    
-    .team-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(0, 230, 255, 0.1);
-    }
-    
-    .team-title {
-      font-size: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      color: #00e5ff;
-    }
-    
-    .team-title i {
-      font-size: 1.5rem;
-    }
-    
-    .search-container {
-      position: relative;
-      width: 300px;
-    }
-    
-    .search-input {
-      width: 100%;
-      padding: 14px 20px 14px 50px;
-      border-radius: 12px;
-      border: none;
-      background: rgba(30, 30, 60, 0.6);
-      color: #e0e0ff;
-      font-size: 1rem;
-      border: 1px solid rgba(0, 230, 255, 0.2);
-    }
-    
-    .search-icon {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #00e5ff;
-      font-size: 1.2rem;
-    }
-    
-    .team-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    
-    .team-table th {
-      background: rgba(0, 230, 255, 0.1);
-      padding: 18px 15px;
-      text-align: left;
-      color: #00e5ff;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    
-    .team-table td {
-      padding: 16px 15px;
-      border-bottom: 1px solid rgba(0, 230, 255, 0.1);
-    }
-    
-    .team-table tr:last-child td {
-      border-bottom: none;
-    }
-    
-    .team-table tr:hover {
-      background: rgba(0, 230, 255, 0.05);
-    }
-    
-    .status {
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    
-    .status-active {
-      background: rgba(76, 175, 80, 0.2);
-      color: #4caf50;
-    }
-    
-    .status-pending {
-      background: rgba(255, 152, 0, 0.2);
-      color: #ff9800;
-    }
-    
-    .status-inactive {
-      background: rgba(244, 67, 54, 0.2);
-      color: #f44336;
-    }
-    
-    .no-team {
-      text-align: center;
-      padding: 40px 20px;
-      color: #a0a0e0;
-      font-size: 1.2rem;
-    }
-    
-    .no-team i {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: #00e5ff;
-    }
-    
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 30px;
-    }
-    
-    .page-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      border: none;
-      background: rgba(30, 30, 60, 0.6);
-      color: #e0e0ff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s;
-      font-weight: 600;
-    }
-    
-    .page-btn.active {
-      background: linear-gradient(90deg, #00e5ff, #00b8d4);
-      color: white;
-    }
-    
-    .page-btn:hover:not(.active) {
-      background: rgba(0, 230, 255, 0.2);
-    }
-    
-    .reward-info {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 30px;
-      padding-top: 30px;
-      border-top: 1px solid rgba(0, 230, 255, 0.1);
-    }
-    
-    .reward-card {
-      text-align: center;
       padding: 20px;
-      background: rgba(30, 30, 60, 0.6);
-      border-radius: 12px;
-      width: 30%;
-      border: 1px solid rgba(0, 230, 255, 0.1);
+      text-align: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
     }
-    
-    .reward-icon {
-      font-size: 2.5rem;
-      color: #00e5ff;
-      margin-bottom: 15px;
+
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%);
+      background-size: 50px 50px;
     }
-    
-    .reward-title {
-      color: #a0a0e0;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
+
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 15px;
+      animation: fadeIn 0.8s ease-out;
     }
-    
-    .reward-amount {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #00e5ff;
-    }
-    
-    /* Animation */
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    .summary-card, .referral-section, .team-section {
-      animation: fadeIn 0.5s ease-out;
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
     }
-    
-    /* Responsive Design */
-    @media (max-width: 900px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .referral-link-container {
-        flex-direction: column;
-      }
-      
-      .team-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-      }
-      
-      .search-container {
-        width: 100%;
-      }
-      
-      .reward-info {
-        flex-direction: column;
-        gap: 20px;
-      }
-      
-      .reward-card {
-        width: 100%;
-      }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      border-top: 4px solid var(--primary);
     }
-    
-    @media (max-width: 600px) {
-      .header {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-      }
-      
-      .share-buttons {
-        flex-direction: column;
-      }
-      
-      .btn {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .team-table {
-        display: block;
-        overflow-x: auto;
-      }
+
+    .stat-card i {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: var(--primary);
     }
-    
-    /* Notification */
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 25px;
-      border-radius: 8px;
+
+    .stat-card h3 {
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .stat-card p {
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .referral-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    .referral-box h2 {
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .referral-link-container {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+
+    .referral-link {
+      flex-grow: 1;
+      padding: 15px;
+      font-size: 1rem;
+      border: none;
+      background: white;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .copy-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      font-weight: 600;
-      z-index: 1000;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      transform: translateX(120%);
-      transition: transform 0.3s ease-out;
+      padding: 0 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
     }
-    
-    .notification.show {
-      transform: translateX(0);
+
+    .copy-btn:hover {
+      background: linear-gradient(135deg, var(--primary-dark), #c54600);
     }
-    
-    .notification.success {
-      background: linear-gradient(90deg, #00b09b, #96c93d);
+
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 25px 0 15px;
     }
-    
-    .notification.error {
-      background: linear-gradient(90deg, #ff416c, #ff4b2b);
-    }
-    
-    .loader {
-      border: 5px solid rgba(0, 230, 255, 0.2);
-      border-top: 5px solid #00e5ff;
-      border-radius: 50%;
+
+    .share-btn {
       width: 50px;
       height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .share-btn:hover {
+      transform: translateY(-5px);
+    }
+
+    .share-btn.whatsapp {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+    }
+
+    .share-btn.telegram {
+      background: linear-gradient(135deg, #0088cc, #2AABEE);
+    }
+
+    .share-btn.facebook {
+      background: linear-gradient(135deg, #3b5998, #4267B2);
+    }
+
+    .share-btn.more {
+      background: linear-gradient(135deg, #9e9e9e, #757575);
+    }
+
+    .team-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      color: var(--primary-dark);
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .team-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .team-member {
+      display: flex;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .team-member:last-child {
+      border-bottom: none;
+    }
+
+    .member-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .member-details {
+      flex-grow: 1;
+    }
+
+    .member-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .member-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.85rem;
+    }
+
+    .status-active {
+      color: var(--success);
+    }
+
+    .status-pending {
+      color: #ff9800;
+    }
+
+    .member-earnings {
+      font-weight: bold;
+      color: var(--success);
+    }
+
+    .empty-team {
+      text-align: center;
+      padding: 30px 0;
+      color: var(--gray);
+    }
+
+    .empty-team i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+    }
+
+    .bottom-nav a {
+      color: var(--gray);
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.8rem;
+      flex: 1;
+      transition: color 0.3s;
+    }
+
+    .bottom-nav a.active {
+      color: var(--primary-dark);
+      font-weight: bold;
+    }
+
+    .bottom-nav a div {
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+    }
+
+    .connection-status {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      background: #28a745;
+      color: white;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    .loading i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary);
       animation: spin 1s linear infinite;
-      margin: 20px auto;
     }
     
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .toast.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1><i class="fas fa-users"></i> My Team & Referrals</h1>
-      <button class="back-btn" onclick="window.location.href='dashboard.html'">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
-      </button>
+
+  <div class="connection-status">
+    <i class="fas fa-wifi"></i> Online
+  </div>
+
+  <div class="toast" id="toast">Link copied to clipboard!</div>
+
+  <div class="header">
+    <h1><i class="fas fa-users"></i> My Team</h1>
+    <p>Invite friends & earn rewards</p>
+  </div>
+
+  <div class="app-container">
+    <div class="stats-container">
+      <div class="stat-card">
+        <i class="fas fa-user-plus"></i>
+        <h3 id="totalReferrals">0</h3>
+        <p>Total Referrals</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-rupee-sign"></i>
+        <h3 id="referralEarnings">₹0</h3>
+        <p>Referral Earnings</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-user-check"></i>
+        <h3 id="activeReferrals">0</h3>
+        <p>Active Members</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-gift"></i>
+        <h3 id="pendingRewards">₹0</h3>
+        <p>Pending Rewards</p>
+      </div>
     </div>
-    
-    <div class="summary-grid">
-      <div class="summary-card">
-        <div class="card-icon">
-          <i class="fas fa-user-plus"></i>
-        </div>
-        <div class="card-title">Total Referrals</div>
-        <div class="card-value" id="totalReferrals">0</div>
-      </div>
-      
-      <div class="summary-card">
-        <div class="card-icon">
-          <i class="fas fa-rupee-sign"></i>
-        </div>
-        <div class="card-title">Referral Earnings</div>
-        <div class="card-value" id="referralEarnings">₹0</div>
-      </div>
-      
-      <div class="summary-card">
-        <div class="card-icon">
-          <i class="fas fa-trophy"></i>
-        </div>
-        <div class="card-title">Active Team Members</div>
-        <div class="card-value" id="activeMembers">0</div>
-      </div>
-    </div>
-    
-    <div class="referral-section">
-      <div class="section-header">
-        <h2 class="section-title"><i class="fas fa-share-alt"></i> Your Referral Link</h2>
-        <p class="section-subtitle">Share your unique referral link with friends and earn rewards when they sign up and make their first recharge.</p>
-      </div>
+
+    <div class="referral-box">
+      <h2><i class="fas fa-share-alt"></i> Your Referral Link</h2>
+      <p>Share this link with friends to earn rewards when they join</p>
       
       <div class="referral-link-container">
         <input type="text" class="referral-link" id="referralLink" value="Loading..." readonly>
-        <button class="btn btn-primary" onclick="copyReferralLink()">
-          <i class="fas fa-copy"></i> Copy Link
+        <button class="copy-btn" id="copyBtn">
+          <i class="fas fa-copy"></i>
         </button>
       </div>
+      
+      <p style="color: var(--gray); margin-bottom: 15px; font-size: 0.9rem;">
+        Earn ₹100 for each friend who signs up and makes their first investment
+      </p>
       
       <div class="share-buttons">
-        <button class="btn btn-secondary" onclick="shareVia('whatsapp')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </button>
-        <button class="btn btn-secondary" onclick="shareVia('telegram')">
-          <i class="fab fa-telegram"></i> Telegram
-        </button>
-        <button class="btn btn-secondary" onclick="shareVia('facebook')">
-          <i class="fab fa-facebook"></i> Facebook
-        </button>
-        <button class="btn btn-secondary" onclick="shareVia('twitter')">
-          <i class="fab fa-twitter"></i> Twitter
-        </button>
-        <button class="btn btn-secondary" onclick="shareVia('email')">
-          <i class="fas fa-envelope"></i> Email
-        </button>
-      </div>
-      
-      <div class="reward-info">
-        <div class="reward-card">
-          <div class="reward-icon">
-            <i class="fas fa-gift"></i>
-          </div>
-          <div class="reward-title">Signup Bonus</div>
-          <div class="reward-amount">₹50</div>
+        <div class="share-btn whatsapp" id="whatsappShare">
+          <i class="fab fa-whatsapp"></i>
         </div>
-        
-        <div class="reward-card">
-          <div class="reward-icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-          <div class="reward-title">First Recharge</div>
-          <div class="reward-amount">10%</div>
+        <div class="share-btn telegram" id="telegramShare">
+          <i class="fab fa-telegram"></i>
         </div>
-        
-        <div class="reward-card">
-          <div class="reward-icon">
-            <i class="fas fa-percentage"></i>
-          </div>
-          <div class="reward-title">Ongoing Earnings</div>
-          <div class="reward-amount">5%</div>
+        <div class="share-btn facebook" id="facebookShare">
+          <i class="fab fa-facebook-f"></i>
+        </div>
+        <div class="share-btn more" id="moreShare">
+          <i class="fas fa-ellipsis-h"></i>
         </div>
       </div>
     </div>
-    
+
     <div class="team-section">
-      <div class="team-header">
-        <h2 class="team-title"><i class="fas fa-users"></i> Your Team Members</h2>
-        <div class="search-container">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" class="search-input" id="searchInput" placeholder="Search team members...">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-users"></i> Your Team Members</h2>
+        <div id="teamCount">0</div>
+      </div>
+      
+      <div class="team-list" id="teamList">
+        <div class="loading">
+          <i class="fas fa-spinner"></i>
+          <p>Loading team members...</p>
         </div>
-      </div>
-      
-      <div class="table-container">
-        <table class="team-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Join Date</th>
-              <th>Status</th>
-              <th>Recharges</th>
-              <th>Earnings</th>
-            </tr>
-          </thead>
-          <tbody id="teamTableBody">
-            <tr>
-              <td colspan="5" class="no-team">
-                <div class="loader"></div>
-                <p>Loading your team data...</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <div class="pagination" id="pagination">
-        <!-- Pagination will be generated here -->
       </div>
     </div>
   </div>
-  
-  <div id="notification" class="notification"></div>
+
+  <div class="bottom-nav">
+    <a href="index.html">
+      <div><i class="fas fa-home"></i></div>
+      Home
+    </a>
+    <a href="investments.html">
+      <div><i class="fas fa-clipboard-list"></i></div>
+      Income
+    </a>
+    <a href="team.html" class="active">
+      <div><i class="fas fa-users"></i></div>
+      Team
+    </a>
+    <a href="my.html">
+      <div><i class="fas fa-user"></i></div>
+      Profile
+    </a>
+  </div>
 
   <script>
     // Firebase configuration
@@ -649,233 +494,219 @@
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
       databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
+      projectId: "grow-3e3a1"
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
-
-    // Current user data
+    
+    // DOM references
+    const totalReferrals = document.getElementById('totalReferrals');
+    const referralEarnings = document.getElementById('referralEarnings');
+    const activeReferrals = document.getElementById('activeReferrals');
+    const pendingRewards = document.getElementById('pendingRewards');
+    const referralLink = document.getElementById('referralLink');
+    const copyBtn = document.getElementById('copyBtn');
+    const teamList = document.getElementById('teamList');
+    const teamCount = document.getElementById('teamCount');
+    const toast = document.getElementById('toast');
+    
     let currentUser = null;
-    let referralCode = null;
-    let teamMembers = [];
-    let referralEarnings = 0;
+    let referralCode = '';
 
-    // Initialize the page
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUser = user;
-        loadUserData();
-      } else {
-        // Redirect to login if not authenticated
-        window.location.href = "login.html";
-      }
-    });
-
-    // Load user data from Firebase
-    function loadUserData() {
-      db.ref(`users/${currentUser.uid}`).once('value').then(snapshot => {
-        const userData = snapshot.val();
-        if (userData) {
-          // Generate referral code if it doesn't exist
-          referralCode = userData.referralCode || generateReferralCode(currentUser.uid);
-          
-          // Update referral code if it wasn't set
-          if (!userData.referralCode) {
-            db.ref(`users/${currentUser.uid}/referralCode`).set(referralCode);
-          }
-          
-          // Update referral link
-          document.getElementById('referralLink').value = `${window.location.origin}/grow/register.html?ref=${referralCode}`;
-          
-          // Set referral earnings
-          referralEarnings = userData.referralEarnings || 0;
-          document.getElementById('referralEarnings').textContent = `₹${referralEarnings}`;
-          
-          // Load team data
-          loadTeamData();
-        }
-      });
-    }
-
-    // Generate a referral code from user ID
-    function generateReferralCode(uid) {
-      // Simple hash to create a referral code from UID
-      return btoa(uid).substring(0, 8).toUpperCase();
-    }
-
-    // Load team data from Firebase
-    function loadTeamData() {
-      db.ref('users').once('value').then(snapshot => {
-        teamMembers = [];
-        let totalReferrals = 0;
-        let activeMembers = 0;
-        
-        snapshot.forEach(userSnap => {
-          const user = userSnap.val();
-          if (user.referredBy === referralCode) {
-            totalReferrals++;
-            
-            // Calculate status based on activity
-            const status = user.lastRecharge ? 
-              (Date.now() - user.lastRecharge < 30 * 24 * 60 * 60 * 1000 ? 'active' : 'inactive') : 
-              'pending';
-            
-            if (status === 'active') activeMembers++;
-            
-            teamMembers.push({
-              id: userSnap.key,
-              name: user.name || 'User ' + userSnap.key.substring(0, 6),
-              joinDate: formatDate(user.joinDate || userSnap.key),
-              status: status,
-              recharges: user.totalRecharges || 0,
-              earnings: user.referralContribution || 0
-            });
-          }
-        });
-        
-        // Update stats
-        document.getElementById('totalReferrals').textContent = totalReferrals;
-        document.getElementById('activeMembers').textContent = activeMembers;
-        
-        // Render team table
-        renderTeamTable(teamMembers);
-      });
-    }
-
-    // Render team table with pagination
-    function renderTeamTable(members) {
-      const tableBody = document.getElementById('teamTableBody');
-      const pagination = document.getElementById('pagination');
-      
-      if (members.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="5" class="no-team">
-              <i class="fas fa-user-friends"></i>
-              <p>You haven't referred anyone yet. Share your referral link to grow your team!</p>
-            </td>
-          </tr>
-        `;
-        pagination.innerHTML = '';
-        return;
-      }
-      
-      // Clear table
-      tableBody.innerHTML = '';
-      
-      // Add members to table
-      members.forEach(member => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${member.name}</td>
-          <td>${member.joinDate}</td>
-          <td><span class="status status-${member.status}">${member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span></td>
-          <td>₹${member.recharges}</td>
-          <td>₹${member.earnings}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-      
-      // Setup pagination (simplified for demo)
-      pagination.innerHTML = `
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-      `;
-    }
-
-    // Format timestamp to readable date
-    function formatDate(timestamp) {
-      if (!timestamp) return 'N/A';
-      
-      const date = new Date(timestamp);
-      return date.toLocaleDateString('en-IN', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
+    // Show toast message
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
     }
 
     // Copy referral link to clipboard
-    function copyReferralLink() {
-      const linkInput = document.getElementById('referralLink');
-      linkInput.select();
+    function copyToClipboard() {
+      referralLink.select();
+      referralLink.setSelectionRange(0, 99999);
       document.execCommand('copy');
-      
-      showNotification('Referral link copied to clipboard!', 'success');
+      showToast('Link copied to clipboard!');
     }
-    
-    // Share via different platforms
-    function shareVia(platform) {
-      const referralLink = document.getElementById('referralLink').value;
-      let shareUrl = '';
-      
-      switch(platform) {
-        case 'whatsapp':
-          shareUrl = `https://api.whatsapp.com/send?text=Join me on GrowApp and get ₹50 bonus! ${encodeURIComponent(referralLink)}`;
-          break;
-        case 'telegram':
-          shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=Join me on GrowApp!`;
-          break;
-        case 'facebook':
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`;
-          break;
-        case 'twitter':
-          shareUrl = `https://twitter.com/intent/tweet?text=Join me on GrowApp and get ₹50 bonus!&url=${encodeURIComponent(referralLink)}`;
-          break;
-        case 'email':
-          shareUrl = `mailto:?subject=Join me on GrowApp!&body=Hey, join me on GrowApp using my referral link to get ₹50 bonus: ${referralLink}`;
-          break;
-      }
-      
-      window.open(shareUrl, '_blank');
-      showNotification(`Sharing via ${platform.charAt(0).toUpperCase() + platform.slice(1)}`, 'success');
-    }
-    
-    // Show notification
-    function showNotification(message, type) {
-      const notification = document.getElementById('notification');
-      notification.textContent = message;
-      notification.className = `notification ${type} show`;
-      
-      setTimeout(() => {
-        notification.className = `notification ${type}`;
-      }, 3000);
-    }
-    
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase();
-      const filteredMembers = teamMembers.filter(member => 
-        member.name.toLowerCase().includes(searchTerm) || 
-        member.id.toLowerCase().includes(searchTerm)
-      );
-      
-      renderTeamTable(filteredMembers);
-    });
 
-    // Simulate data loading
-    setTimeout(() => {
-      // This would be replaced with real data from Firebase
-      document.getElementById('totalReferrals').textContent = '12';
-      document.getElementById('referralEarnings').textContent = '₹1,850';
-      document.getElementById('activeMembers').textContent = '8';
+    // Share via WhatsApp
+    function shareViaWhatsApp() {
+      const message = `Join me on Daily Income App and start earning daily income! Use my referral code: ${referralCode}\n\n${referralLink.value}`;
+      const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    // Share via Telegram
+    function shareViaTelegram() {
+      const message = `Join me on Daily Income App and start earning daily income! Use my referral code: ${referralCode}\n\n${referralLink.value}`;
+      const url = `https://t.me/share/url?url=${encodeURIComponent(referralLink.value)}&text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    // Share via Facebook
+    function shareViaFacebook() {
+      const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink.value)}&quote=Join me on Daily Income App using my referral code: ${referralCode}`;
+      window.open(url, '_blank');
+    }
+
+    // Native share dialog
+    function shareViaNative() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Join Daily Income App',
+          text: `Join me on Daily Income App and start earning daily income! Use my referral code: ${referralCode}`,
+          url: referralLink.value
+        })
+        .catch(console.error);
+      } else {
+        showToast('Sharing not supported in this browser');
+      }
+    }
+
+    // Load referral data
+    function loadReferralData(uid) {
+      const userRef = db.ref("users/" + uid);
       
-      // Render sample team data
-      renderTeamTable([
-        {id: 'user1', name: 'Rahul Sharma', joinDate: '15 Jan 2023', status: 'active', recharges: 2500, earnings: 250},
-        {id: 'user2', name: 'Priya Patel', joinDate: '22 Feb 2023', status: 'active', recharges: 5200, earnings: 520},
-        {id: 'user3', name: 'Vikram Singh', joinDate: '03 Mar 2023', status: 'pending', recharges: 0, earnings: 0},
-        {id: 'user4', name: 'Ananya Gupta', joinDate: '18 Mar 2023', status: 'active', recharges: 1800, earnings: 180},
-        {id: 'user5', name: 'Arjun Kumar', joinDate: '05 Apr 2023', status: 'inactive', recharges: 500, earnings: 50},
-        {id: 'user6', name: 'Neha Reddy', joinDate: '12 May 2023', status: 'active', recharges: 7500, earnings: 750},
-        {id: 'user7', name: 'Sanjay Verma', joinDate: '29 May 2023', status: 'active', recharges: 3200, earnings: 320}
-      ]);
-    }, 1500);
+      // Get user referral code
+      userRef.once("value").then(snapshot => {
+        const userData = snapshot.val() || {};
+        referralCode = userData.referralCode || 'DEFAULT123';
+        referralLink.value = `https://dailyincomeapp.com/signup?ref=${referralCode}`;
+        
+        // Set referral stats
+        totalReferrals.textContent = userData.referralCount || 0;
+        referralEarnings.textContent = `₹${(userData.referralEarnings || 0).toFixed(2)}`;
+        activeReferrals.textContent = userData.activeReferrals || 0;
+        pendingRewards.textContent = `₹${(userData.pendingRewards || 0).toFixed(2)}`;
+        
+        // Load team members
+        loadTeamMembers(uid);
+      });
+    }
+    
+    // Load team members
+    function loadTeamMembers(uid) {
+      const referralsRef = db.ref("referrals/" + uid);
+      
+      referralsRef.on("value", snapshot => {
+        teamList.innerHTML = "";
+        
+        if (!snapshot.exists()) {
+          teamList.innerHTML = `
+            <div class="empty-team">
+              <i class="fas fa-user-friends"></i>
+              <p>No team members yet</p>
+              <p>Share your referral link to build your team</p>
+            </div>
+          `;
+          teamCount.textContent = "0";
+          return;
+        }
+        
+        let count = 0;
+        snapshot.forEach(child => {
+          const member = child.val();
+          count++;
+          
+          const memberEl = document.createElement('div');
+          memberEl.className = 'team-member';
+          
+          // Get first letter for avatar
+          const firstLetter = member.name ? member.name.charAt(0).toUpperCase() : 'U';
+          
+          // Format join date
+          const joinDate = new Date(member.joinedAt);
+          const formattedDate = joinDate.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          });
+          
+          memberEl.innerHTML = `
+            <div class="member-avatar">${firstLetter}</div>
+            <div class="member-details">
+              <div class="member-name">${member.name || 'User'}</div>
+              <div class="member-status">
+                <i class="fas ${member.status === 'active' ? 'fa-check-circle status-active' : 'fa-clock status-pending'}"></i>
+                ${member.status === 'active' ? 'Active' : 'Pending'} - Joined ${formattedDate}
+              </div>
+            </div>
+            <div class="member-earnings">₹${(member.earnings || 0).toFixed(2)}</div>
+          `;
+          
+          teamList.appendChild(memberEl);
+        });
+        
+        teamCount.textContent = count;
+      });
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up event listeners
+      copyBtn.addEventListener('click', copyToClipboard);
+      document.getElementById('whatsappShare').addEventListener('click', shareViaWhatsApp);
+      document.getElementById('telegramShare').addEventListener('click', shareViaTelegram);
+      document.getElementById('facebookShare').addEventListener('click', shareViaFacebook);
+      document.getElementById('moreShare').addEventListener('click', shareViaNative);
+      
+      // Initialize Firebase auth
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          loadReferralData(user.uid);
+        } else {
+          // Demo data
+          referralLink.value = "https://dailyincomeapp.com/signup?ref=DEMO123";
+          totalReferrals.textContent = "12";
+          referralEarnings.textContent = "₹850";
+          activeReferrals.textContent = "8";
+          pendingRewards.textContent = "₹200";
+          teamCount.textContent = "12";
+          
+          // Demo team members
+          teamList.innerHTML = "";
+          const demoMembers = [
+            { name: "Rahul Sharma", status: "active", joinedAt: "2023-10-15", earnings: 150 },
+            { name: "Priya Patel", status: "active", joinedAt: "2023-10-20", earnings: 120 },
+            { name: "Amit Kumar", status: "active", joinedAt: "2023-10-22", earnings: 100 },
+            { name: "Neha Gupta", status: "pending", joinedAt: "2023-10-25", earnings: 0 },
+            { name: "Vikram Singh", status: "active", joinedAt: "2023-10-28", earnings: 80 }
+          ];
+          
+          demoMembers.forEach(member => {
+            const memberEl = document.createElement('div');
+            memberEl.className = 'team-member';
+            
+            const firstLetter = member.name.charAt(0);
+            const joinDate = new Date(member.joinedAt);
+            const formattedDate = joinDate.toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric'
+            });
+            
+            memberEl.innerHTML = `
+              <div class="member-avatar">${firstLetter}</div>
+              <div class="member-details">
+                <div class="member-name">${member.name}</div>
+                <div class="member-status">
+                  <i class="fas ${member.status === 'active' ? 'fa-check-circle status-active' : 'fa-clock status-pending'}"></i>
+                  ${member.status === 'active' ? 'Active' : 'Pending'} - Joined ${formattedDate}
+                </div>
+              </div>
+              <div class="member-earnings">₹${member.earnings.toFixed(2)}</div>
+            `;
+            
+            teamList.appendChild(memberEl);
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
