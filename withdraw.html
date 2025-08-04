@@ -3,501 +3,499 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secure Withdrawal System</title>
+  <title>Withdraw Funds - Daily Income App</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
+    :root {
+      --primary: #ff6b00;
+      --primary-dark: #e65100;
+      --secondary: #4a148c;
+      --dark: #222;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --success: #28a745;
+      --vip-0: #9e9e9e;
+      --vip-1: #ff9800;
+      --vip-2: #ff5722;
+      --vip-3: #f44336;
+      --vip-4: #e91e63;
+      --vip-5: #9c27b0;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
     body {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      background-attachment: fixed;
+      color: #333;
+      padding-bottom: 60px;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      overflow-x: hidden;
     }
-    
-    .container {
-      width: 100%;
-      max-width: 900px;
-      background: rgba(255, 255, 255, 0.97);
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+
+    .header {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
       overflow: hidden;
     }
-    
-    .header {
-      background: linear-gradient(90deg, #1a2a6c, #b21f1f);
-      color: white;
-      padding: 25px 40px;
-      text-align: center;
+
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%);
+      background-size: 50px 50px;
     }
-    
-    .header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-    
-    .header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      max-width: 600px;
+
+    .app-container {
+      max-width: 500px;
       margin: 0 auto;
+      padding: 15px;
+      animation: fadeIn 0.8s ease-out;
     }
-    
-    .content {
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .wallet-box {
       display: flex;
-      padding: 30px;
-      gap: 30px;
-    }
-    
-    .withdraw-section {
-      flex: 1;
-      min-width: 300px;
-    }
-    
-    .balance-section {
-      flex: 1;
-      min-width: 300px;
-      background: #f8f9fa;
+      justify-content: space-around;
+      padding: 20px 10px;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      margin: 20px 0;
+      position: relative;
+      overflow: hidden;
     }
-    
-    .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      color: #1a2a6c;
+
+    .wallet-box::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    }
+
+    .wallet-box div {
+      text-align: center;
+      flex: 1;
+      position: relative;
+      padding: 0 5px;
+    }
+
+    .wallet-box div:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      height: 40px;
+      width: 1px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .wallet-box div span:first-child {
+      display: block;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .wallet-box div span:last-child {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid #e0e0e0;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+    }
+
+    .bottom-nav a {
+      color: var(--gray);
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.8rem;
+      flex: 1;
+      transition: color 0.3s;
+    }
+
+    .bottom-nav a.active {
+      color: var(--primary-dark);
+      font-weight: bold;
+    }
+
+    .bottom-nav a div {
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+    }
+
+    .withdraw-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
     
-    .section-title i {
-      font-size: 1.5rem;
-    }
-    
-    .input-group {
+    .withdraw-header {
+      text-align: center;
       margin-bottom: 20px;
     }
     
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #444;
+    .withdraw-header h2 {
+      color: var(--primary-dark);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
     }
     
-    input, select {
-      width: 100%;
-      padding: 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 16px;
-      transition: all 0.3s;
+    .withdraw-header p {
+      color: var(--gray);
     }
     
-    input:focus, select:focus {
-      border-color: #1a2a6c;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
-    }
-    
-    .method-selector {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-    
-    .method-btn {
-      flex: 1;
-      padding: 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      background: white;
-      cursor: pointer;
+    .balance-display {
       text-align: center;
+      margin-bottom: 20px;
+      background: rgba(40, 167, 69, 0.1);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+    
+    .balance-display span {
+      font-size: 0.9rem;
+      color: var(--gray);
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .balance-display strong {
+      font-size: 2rem;
+      color: var(--success);
+      font-weight: bold;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.2);
+    }
+    
+    .withdraw-btn {
+      background: linear-gradient(135deg, var(--success), #1e7e34);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    
+    .withdraw-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+    }
+    
+    .withdraw-btn:disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .min-amount {
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+    
+    .connection-status {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
       font-weight: 600;
-      transition: all 0.2s;
+      z-index: 1000;
       display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 8px;
-    }
-    
-    .method-btn i {
-      font-size: 1.8rem;
-      color: #1a2a6c;
-    }
-    
-    .method-btn:hover {
-      border-color: #1a2a6c;
-    }
-    
-    .method-btn.active {
-      border-color: #1a2a6c;
-      background: #1a2a6c;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      background: #28a745;
       color: white;
     }
     
-    .method-btn.active i {
-      color: white;
-    }
-    
-    .bank-details, .upi-details {
-      display: none;
-    }
-    
-    .active-method {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .btn {
-      background: linear-gradient(90deg, #1a2a6c, #b21f1f);
-      color: white;
-      border: none;
-      padding: 16px 30px;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .btn:active {
-      transform: translateY(-1px);
-    }
-    
-    #msg {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
+    .loading {
       text-align: center;
-      font-weight: 600;
-      display: none;
-    }
-    
-    .success {
-      background-color: #d4edda;
-      color: #155724;
-      display: block;
-    }
-    
-    .error {
-      background-color: #f8d7da;
-      color: #721c24;
-      display: block;
-    }
-    
-    .balance-card {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      margin-bottom: 30px;
-      text-align: center;
-    }
-    
-    .balance-amount {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1a2a6c;
-      margin: 15px 0;
-    }
-    
-    .balance-label {
-      color: #666;
-      font-size: 1.1rem;
-    }
-    
-    .info-box {
-      background: white;
-      border-radius: 15px;
       padding: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      margin-top: 25px;
-    }
-    
-    .info-title {
-      font-size: 1.3rem;
-      color: #1a2a6c;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .info-list {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .info-list li {
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .info-list li:last-child {
-      border-bottom: none;
-    }
-    
-    .info-list i {
-      color: #1a2a6c;
+      color: white;
       font-size: 1.2rem;
     }
     
-    .footer {
-      text-align: center;
-      padding: 20px;
-      background: #f1f3f5;
-      color: #666;
-      font-size: 0.9rem;
-      border-top: 1px solid #e9ecef;
+    .loading i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+      animation: spin 1s linear infinite;
     }
     
-    .security-badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-      padding: 10px;
-      background: #e8f4f8;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .message {
+      padding: 15px;
       border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 500;
     }
     
-    .security-badge i {
-      color: #1a2a6c;
-      font-size: 1.5rem;
+    .message.success {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(40, 167, 69, 0.3);
     }
     
-    .auth-section {
-      padding: 20px;
-      background: #f8f9fa;
+    .message.error {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+    
+    .history-container {
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 15px;
-      margin-bottom: 25px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
     
-    .auth-toggle {
+    .history-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 20px;
+      align-items: center;
+      margin-bottom: 15px;
     }
     
-    .auth-btn {
-      flex: 1;
-      padding: 12px;
-      background: #e9ecef;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
+    .history-title {
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      font-weight: bold;
     }
     
-    .auth-btn.active {
-      background: #1a2a6c;
-      color: white;
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
     }
     
-    .auth-form {
-      display: none;
+    .history-item:last-child {
+      border-bottom: none;
     }
     
-    .auth-form.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
+    .history-amount {
+      font-weight: bold;
+      color: var(--success);
     }
     
-    @media (max-width: 768px) {
-      .content {
-        flex-direction: column;
-      }
-      
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .section-title {
-        font-size: 1.5rem;
-      }
+    .history-date {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+    
+    .history-status {
+      font-size: 0.85rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ff9800;
+    }
+    
+    .status-completed {
+      background: rgba(40, 167, 69, 0.2);
+      color: var(--success);
+    }
+    
+    .status-failed {
+      background: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+    }
+    
+    .no-history {
+      text-align: center;
+      padding: 20px;
+      color: var(--gray);
+      font-style: italic;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1><i class="fas fa-money-bill-wave"></i> Secure Withdrawal</h1>
-      <p>Withdraw your funds quickly and securely using your preferred method</p>
+
+  <div class="connection-status">
+    <i class="fas fa-wifi"></i> Online
+  </div>
+
+  <div class="header">
+    <h1><i class="fas fa-money-bill-wave"></i> Withdraw Funds</h1>
+    <p>Withdraw your earnings to bank account</p>
+  </div>
+
+  <div class="app-container">
+    <div class="wallet-box">
+      <div>
+        <span id="rechargeAmount">₹0</span>
+        <span>Recharge</span>
+      </div>
+      <div>
+        <span id="earningsAmount">₹0</span>
+        <span>Total Income</span>
+      </div>
+      <div>
+        <span id="totalBalance">₹0</span>
+        <span>Total Balance</span>
+      </div>
     </div>
     
-    <div class="content">
-      <div class="withdraw-section">
-        <div class="auth-section">
-          <div class="auth-toggle">
-            <button class="auth-btn active" id="login-btn">Login</button>
-            <button class="auth-btn" id="register-btn">Register</button>
-          </div>
-          
-          <div class="auth-form active" id="login-form">
-            <div class="input-group">
-              <label for="login-email">Email</label>
-              <input type="email" id="login-email" placeholder="Enter your email">
-            </div>
-            <div class="input-group">
-              <label for="login-password">Password</label>
-              <input type="password" id="login-password" placeholder="Enter your password">
-            </div>
-            <button class="btn" onclick="loginUser()">
-              <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-            <div id="login-msg"></div>
-          </div>
-          
-          <div class="auth-form" id="register-form">
-            <div class="input-group">
-              <label for="register-name">Full Name</label>
-              <input type="text" id="register-name" placeholder="Enter your full name">
-            </div>
-            <div class="input-group">
-              <label for="register-email">Email</label>
-              <input type="email" id="register-email" placeholder="Enter your email">
-            </div>
-            <div class="input-group">
-              <label for="register-password">Password (min 6 characters)</label>
-              <input type="password" id="register-password" placeholder="Create a password">
-            </div>
-            <button class="btn" onclick="registerUser()">
-              <i class="fas fa-user-plus"></i> Register
-            </button>
-            <div id="register-msg"></div>
-          </div>
-        </div>
-        
-        <h2 class="section-title"><i class="fas fa-wallet"></i> Withdraw Funds</h2>
-        
-        <div class="method-selector">
-          <div class="method-btn active" data-method="upi">
-            <i class="fas fa-mobile-alt"></i>
-            <span>UPI Transfer</span>
-          </div>
-          <div class="method-btn" data-method="bank">
-            <i class="fas fa-university"></i>
-            <span>Bank Transfer</span>
-          </div>
-        </div>
-        
-        <div class="input-group">
-          <label for="amount">Withdrawal Amount (₹)</label>
-          <input type="number" id="amount" placeholder="Enter amount">
-        </div>
-        
-        <div id="upi-details" class="upi-details active-method">
-          <div class="input-group">
-            <label for="upi-id">UPI ID</label>
-            <input type="text" id="upi-id" placeholder="yourname@upi">
-          </div>
-        </div>
-        
-        <div id="bank-details" class="bank-details">
-          <div class="input-group">
-            <label for="account-name">Account Holder Name</label>
-            <input type="text" id="account-name" placeholder="As per bank records">
-          </div>
-          
-          <div class="input-group">
-            <label for="account-number">Account Number</label>
-            <input type="text" id="account-number" placeholder="Enter account number">
-          </div>
-          
-          <div class="input-group">
-            <label for="ifsc-code">IFSC Code</label>
-            <input type="text" id="ifsc-code" placeholder="Bank's IFSC code">
-          </div>
-          
-          <div class="input-group">
-            <label for="bank-name">Bank Name</label>
-            <input type="text" id="bank-name" placeholder="Bank name">
-          </div>
-        </div>
-        
-        <button class="btn" onclick="submitWithdraw()">
-          <i class="fas fa-paper-plane"></i> Request Withdrawal
-        </button>
-        
-        <div id="msg"></div>
-        
-        <div class="security-badge">
-          <i class="fas fa-shield-alt"></i>
-          <span>Your financial details are securely encrypted</span>
-        </div>
+    <div class="withdraw-container">
+      <div class="withdraw-header">
+        <h2>Withdraw Earnings</h2>
+        <p>Transfer funds to your bank account</p>
       </div>
       
-      <div class="balance-section">
-        <div class="balance-card">
-          <div class="balance-label">Available Balance</div>
-          <div class="balance-amount" id="balance-display">₹ 0.00</div>
-          <div class="balance-label">Withdrawable: <span id="withdrawable-display">₹ 0.00</span></div>
-        </div>
-        
-        <div class="info-box">
-          <h3 class="info-title"><i class="fas fa-info-circle"></i> Withdrawal Information</h3>
-          <ul class="info-list">
-            <li><i class="fas fa-check-circle"></i> Minimum withdrawal: ₹ 100</li>
-            <li><i class="fas fa-check-circle"></i> Processing fee: 2% (max ₹ 25)</li>
-            <li><i class="fas fa-check-circle"></i> UPI transfers completed in 2 hours</li>
-            <li><i class="fas fa-check-circle"></i> Bank transfers take 24-48 hours</li>
-            <li><i class="fas fa-check-circle"></i> Daily limit: ₹ 50,000 per day</li>
-          </ul>
-        </div>
-        
-        <div class="info-box">
-          <h3 class="info-title"><i class="fas fa-history"></i> Recent Transactions</h3>
-          <ul class="info-list" id="recent-transactions">
-            <li><i class="fas fa-rupee-sign"></i> No recent transactions</li>
-          </ul>
+      <div class="balance-display">
+        <span>Available for withdrawal</span>
+        <strong id="withdrawableAmount">₹0</strong>
+      </div>
+      
+      <div id="withdrawMessage"></div>
+      
+      <div class="form-group">
+        <label for="accountName">Account Holder Name</label>
+        <input type="text" id="accountName" placeholder="Enter account holder name">
+      </div>
+      
+      <div class="form-group">
+        <label for="accountNumber">Account Number</label>
+        <input type="text" id="accountNumber" placeholder="Enter account number">
+      </div>
+      
+      <div class="form-group">
+        <label for="ifscCode">IFSC Code</label>
+        <input type="text" id="ifscCode" placeholder="Enter IFSC code">
+      </div>
+      
+      <div class="form-group">
+        <label for="withdrawAmount">Amount (₹)</label>
+        <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw">
+      </div>
+      
+      <div class="min-amount">Minimum withdrawal amount: ₹100</div>
+      
+      <button class="withdraw-btn" id="withdrawBtn">
+        <i class="fas fa-paper-plane"></i> Request Withdrawal
+      </button>
+    </div>
+    
+    <div class="history-container">
+      <div class="history-header">
+        <div class="history-title">Withdrawal History</div>
+        <div><i class="fas fa-history"></i></div>
+      </div>
+      
+      <div id="withdrawalHistory">
+        <div class="loading">
+          <i class="fas fa-spinner"></i>
+          <p>Loading withdrawal history...</p>
         </div>
       </div>
     </div>
-    
-    <div class="footer">
-      <p>© 2023 Secure Withdrawals. All transactions are secured with 256-bit encryption.</p>
-    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html">
+      <div><i class="fas fa-home"></i></div>
+      Home
+    </a>
+    <a href="investments.html">
+      <div><i class="fas fa-clipboard-list"></i></div>
+      Income
+    </a>
+    <a href="invite.html">
+      <div><i class="fas fa-users"></i></div>
+       Team
+    </a>
+    <a href="my.html" class="active">
+      <div><i class="fas fa-user"></i></div>
+      Profile
+    </a>
   </div>
 
   <script>
@@ -506,294 +504,216 @@
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
       databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.appspot.com",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
-      measurementId: "G-Q7DPY3BF6C"
+      projectId: "grow-3e3a1"
     };
-    
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.database();
+    const auth = firebase.auth();
     
-    // Authentication state listener
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in
-        document.querySelector('.auth-section').style.display = 'none';
-        document.querySelector('.withdraw-section > .section-title').style.display = 'flex';
-        document.querySelector('.withdraw-section > .method-selector').style.display = 'flex';
-        document.querySelector('.withdraw-section > .input-group').style.display = 'block';
-        document.querySelector('.withdraw-section > .bank-details').style.display = 'none';
-        document.querySelector('.withdraw-section > .upi-details').style.display = 'block';
-        document.querySelector('.withdraw-section > .btn').style.display = 'flex';
-        document.querySelector('.withdraw-section > #msg').style.display = 'none';
-        document.querySelector('.withdraw-section > .security-badge').style.display = 'flex';
-        
-        // Load user data
-        loadUserData(user.uid);
-      } else {
-        // User is signed out
-        document.querySelector('.auth-section').style.display = 'block';
-        document.querySelector('.withdraw-section > .section-title').style.display = 'none';
-        document.querySelector('.withdraw-section > .method-selector').style.display = 'none';
-        document.querySelector('.withdraw-section > .input-group').style.display = 'none';
-        document.querySelector('.withdraw-section > .bank-details').style.display = 'none';
-        document.querySelector('.withdraw-section > .upi-details').style.display = 'none';
-        document.querySelector('.withdraw-section > .btn').style.display = 'none';
-        document.querySelector('.withdraw-section > .security-badge').style.display = 'none';
-        
-        // Reset balance display
-        document.getElementById('balance-display').textContent = '₹ 0.00';
-        document.getElementById('withdrawable-display').textContent = '₹ 0.00';
-      }
-    });
+    // DOM references
+    const rechargeAmount = document.getElementById('rechargeAmount');
+    const earningsAmount = document.getElementById('earningsAmount');
+    const totalBalance = document.getElementById('totalBalance');
+    const withdrawableAmount = document.getElementById('withdrawableAmount');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const withdrawMessage = document.getElementById('withdrawMessage');
+    const accountName = document.getElementById('accountName');
+    const accountNumber = document.getElementById('accountNumber');
+    const ifscCode = document.getElementById('ifscCode');
+    const withdrawAmount = document.getElementById('withdrawAmount');
+    const withdrawalHistory = document.getElementById('withdrawalHistory');
     
-    // Auth toggle buttons
-    document.getElementById('login-btn').addEventListener('click', () => {
-      document.getElementById('login-form').classList.add('active');
-      document.getElementById('register-form').classList.remove('active');
-      document.getElementById('login-btn').classList.add('active');
-      document.getElementById('register-btn').classList.remove('active');
-    });
-    
-    document.getElementById('register-btn').addEventListener('click', () => {
-      document.getElementById('register-form').classList.add('active');
-      document.getElementById('login-form').classList.remove('active');
-      document.getElementById('register-btn').classList.add('active');
-      document.getElementById('login-btn').classList.remove('active');
-    });
-    
-    // Method selector
-    const methodButtons = document.querySelectorAll('.method-btn');
-    const upiSection = document.getElementById('upi-details');
-    const bankSection = document.getElementById('bank-details');
-    
-    methodButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        methodButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        
-        const method = button.getAttribute('data-method');
-        if (method === 'upi') {
-          upiSection.classList.add('active-method');
-          bankSection.classList.remove('active-method');
-        } else {
-          bankSection.classList.add('active-method');
-          upiSection.classList.remove('active-method');
+    let currentUser = null;
+    let userWallet = { recharge: 0, Earnings: 0 };
+
+    // Load user wallet data from Firebase
+    function loadWalletData(uid) {
+      const walletRef = db.ref("users/" + uid + "/wallet");
+      walletRef.on("value", snapshot => {
+        if (snapshot.exists()) {
+          userWallet = snapshot.val();
+          rechargeAmount.textContent = `₹${(userWallet.recharge || 0).toFixed(2)}`;
+          earningsAmount.textContent = `₹${(userWallet.Earnings || 0).toFixed(2)}`;
+          const total = (userWallet.recharge || 0) + (userWallet.Earnings || 0);
+          totalBalance.textContent = `₹${total.toFixed(2)}`;
+          withdrawableAmount.textContent = `₹${(userWallet.Earnings || 0).toFixed(2)}`;
         }
       });
-    });
+    }
     
-    // Register new user
-    function registerUser() {
-      const name = document.getElementById('register-name').value.trim();
-      const email = document.getElementById('register-email').value.trim();
-      const password = document.getElementById('register-password').value.trim();
-      const msgBox = document.getElementById('register-msg');
-      
-      if (!name || !email || !password) {
-        msgBox.textContent = 'Please fill all fields';
-        msgBox.className = 'error';
-        return;
-      }
-      
-      if (password.length < 6) {
-        msgBox.textContent = 'Password must be at least 6 characters';
-        msgBox.className = 'error';
-        return;
-      }
-      
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // User registered successfully
-          const user = userCredential.user;
+    // Load withdrawal history
+    function loadWithdrawalHistory(uid) {
+      const historyRef = db.ref("withdrawals/" + uid);
+      historyRef.on("value", snapshot => {
+        withdrawalHistory.innerHTML = "";
+        
+        if (!snapshot.exists()) {
+          withdrawalHistory.innerHTML = `
+            <div class="no-history">
+              <i class="fas fa-file-invoice-dollar"></i>
+              <p>No withdrawal history found</p>
+            </div>
+          `;
+          return;
+        }
+        
+        // Sort by timestamp descending
+        const historyItems = [];
+        snapshot.forEach(child => {
+          historyItems.push(child.val());
+        });
+        
+        historyItems.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        // Display last 5 transactions
+        const displayItems = historyItems.slice(0, 5);
+        
+        displayItems.forEach(item => {
+          const historyItem = document.createElement('div');
+          historyItem.className = 'history-item';
           
-          // Create user data in database
-          db.ref('users/' + user.uid).set({
-            name: name,
-            email: email,
-            balance: 10000, // Initial balance for new users
-            createdAt: new Date().toISOString()
+          const date = new Date(item.timestamp);
+          const formattedDate = date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
           });
           
-          msgBox.textContent = 'Registration successful!';
-          msgBox.className = 'success';
+          let statusClass = 'status-pending';
+          if (item.status === 'completed') statusClass = 'status-completed';
+          if (item.status === 'failed') statusClass = 'status-failed';
           
-          // Clear form
-          document.getElementById('register-name').value = '';
-          document.getElementById('register-email').value = '';
-          document.getElementById('register-password').value = '';
-        })
-        .catch((error) => {
-          msgBox.textContent = error.message;
-          msgBox.className = 'error';
+          historyItem.innerHTML = `
+            <div>
+              <div class="history-amount">₹${item.amount.toFixed(2)}</div>
+              <div class="history-date">${formattedDate}</div>
+            </div>
+            <div class="history-status ${statusClass}">${item.status}</div>
+          `;
+          
+          withdrawalHistory.appendChild(historyItem);
         });
+        
+        if (historyItems.length > 5) {
+          const viewMore = document.createElement('div');
+          viewMore.className = 'history-item';
+          viewMore.style.justifyContent = 'center';
+          viewMore.innerHTML = '<a href="#" style="color: var(--primary); font-weight: 500;">View more transactions</a>';
+          withdrawalHistory.appendChild(viewMore);
+        }
+      });
     }
     
-    // Login user
-    function loginUser() {
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value.trim();
-      const msgBox = document.getElementById('login-msg');
+    // Validate bank details
+    function validateBankDetails() {
+      if (!accountName.value.trim()) {
+        showMessage("Please enter account holder name", "error");
+        return false;
+      }
       
-      if (!email || !password) {
-        msgBox.textContent = 'Please fill all fields';
-        msgBox.className = 'error';
+      if (!accountNumber.value.trim() || accountNumber.value.length < 9 || accountNumber.value.length > 18) {
+        showMessage("Please enter a valid account number (9-18 digits)", "error");
+        return false;
+      }
+      
+      if (!ifscCode.value.trim() || ifscCode.value.length !== 11) {
+        showMessage("IFSC code must be 11 characters", "error");
+        return false;
+      }
+      
+      const amount = parseFloat(withdrawAmount.value);
+      if (isNaN(amount)) {
+        showMessage("Please enter a valid amount", "error");
+        return false;
+      }
+      
+      if (amount < 100) {
+        showMessage("Minimum withdrawal amount is ₹100", "error");
+        return false;
+      }
+      
+      if (amount > (userWallet.Earnings || 0)) {
+        showMessage("Insufficient earnings balance", "error");
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // Show message
+    function showMessage(text, type) {
+      withdrawMessage.innerHTML = `<div class="message ${type}">${text}</div>`;
+      setTimeout(() => {
+        withdrawMessage.innerHTML = '';
+      }, 5000);
+    }
+    
+    // Process withdrawal
+    function processWithdrawal() {
+      if (!currentUser) {
+        showMessage("Please login first", "error");
         return;
       }
       
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          msgBox.textContent = 'Login successful!';
-          msgBox.className = 'success';
-          
-          // Clear form
-          document.getElementById('login-email').value = '';
-          document.getElementById('login-password').value = '';
-        })
-        .catch((error) => {
-          msgBox.textContent = error.message;
-          msgBox.className = 'error';
-        });
+      if (!validateBankDetails()) {
+        return;
+      }
+      
+      const uid = currentUser.uid;
+      const amount = parseFloat(withdrawAmount.value);
+      const bankDetails = {
+        accountName: accountName.value.trim(),
+        accountNumber: accountNumber.value.trim(),
+        ifscCode: ifscCode.value.trim(),
+        amount: amount,
+        status: "pending",
+        timestamp: new Date().toISOString()
+      };
+      
+      // Deduct from earnings
+      const newEarnings = (userWallet.Earnings || 0) - amount;
+      
+      // Update wallet
+      db.ref("users/" + uid + "/wallet").update({
+        Earnings: newEarnings
+      }).then(() => {
+        // Record withdrawal request
+        const withdrawalRef = db.ref("withdrawals/" + uid).push();
+        withdrawalRef.set(bankDetails);
+        
+        // Show success message
+        showMessage("Withdrawal request submitted successfully! It will be processed within 24 hours.", "success");
+        
+        // Reset form
+        accountName.value = "";
+        accountNumber.value = "";
+        ifscCode.value = "";
+        withdrawAmount.value = "";
+      }).catch(error => {
+        showMessage("Error: " + error.message, "error");
+      });
     }
     
-   // Load user data from Firebase
-function loadUserData(userId) {
-  // Use new wallet structure
-  db.ref('users/' + userId + '/wallet').on('value', (snapshot) => {
-    const wallet = snapshot.val() || {};
-    const recharge = wallet.recharge || 0;
-    const bonus = wallet.bonus || 0;
-    const earnings = wallet.Earnings || 0;
-
-    // Only earnings are withdrawable
-    document.getElementById('balance-display').textContent = `₹ ${(recharge + bonus + earnings).toFixed(2)}`;
-    document.getElementById('withdrawable-display').textContent = `₹ ${earnings.toFixed(2)}`;
-  });
-
-  // Load recent withdrawal transactions
-  db.ref('withdrawals').orderByChild('userId').equalTo(userId).limitToLast(3).on('value', (snapshot) => {
-    const transactions = snapshot.val();
-    const transactionsList = document.getElementById('recent-transactions');
-    transactionsList.innerHTML = '';
-
-    if (transactions) {
-      Object.values(transactions).reverse().forEach(transaction => {
-        const li = document.createElement('li');
-        li.innerHTML = `<i class="fas fa-rupee-sign"></i> ₹ ${transaction.amount} - ${transaction.method} - <span class="${transaction.status.toLowerCase()}">${transaction.status}</span>`;
-        transactionsList.appendChild(li);
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Firebase auth
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          loadWalletData(user.uid);
+          loadWithdrawalHistory(user.uid);
+        } else {
+          // Redirect to login or show message
+          showMessage("Please login to withdraw funds", "error");
+          withdrawBtn.disabled = true;
+        }
       });
-    } else {
-      transactionsList.innerHTML = '<li><i class="fas fa-rupee-sign"></i> No recent transactions</li>';
-    }
-  });
-}
-function submitWithdraw() {
-  const amount = parseInt(document.getElementById('amount').value.trim());
-  const msgBox = document.getElementById('msg');
-  msgBox.className = '';
-  msgBox.textContent = '';
-
-  if (!amount || amount < 100) {
-    msgBox.textContent = '❌ Minimum withdrawal amount is ₹100.';
-    msgBox.classList.add('error');
-    return;
-  }
-
-  const user = auth.currentUser;
-  if (!user) {
-    msgBox.textContent = '❌ Please log in to withdraw.';
-    msgBox.classList.add('error');
-    return;
-  }
-
-  const method = document.querySelector('.method-btn.active').getAttribute('data-method');
-  const withdrawData = {
-    userId: user.uid,
-    amount: amount,
-    method: method,
-    timestamp: new Date().toISOString(),
-    status: "Pending"
-  };
-
-  if (method === "upi") {
-    const upiId = document.getElementById('upi-id').value.trim();
-    if (!upiId || !upiId.includes('@')) {
-      msgBox.textContent = '❌ Please enter a valid UPI ID.';
-      msgBox.classList.add('error');
-      return;
-    }
-    withdrawData.upiId = upiId;
-  } else {
-    const accountName = document.getElementById('account-name').value.trim();
-    const accountNumber = document.getElementById('account-number').value.trim();
-    const ifsc = document.getElementById('ifsc-code').value.trim();
-    const bankName = document.getElementById('bank-name').value.trim();
-
-    if (!accountName || !accountNumber || !ifsc || !bankName) {
-      msgBox.textContent = '❌ Please fill all bank details.';
-      msgBox.classList.add('error');
-      return;
-    }
-
-    withdrawData.accountName = accountName;
-    withdrawData.accountNumber = accountNumber;
-    withdrawData.ifsc = ifsc;
-    withdrawData.bankName = bankName;
-  }
-
-  // Only deduct from Earnings
-  db.ref('users/' + user.uid + '/wallet').once('value').then(snapshot => {
-    const wallet = snapshot.val() || {};
-    const currentEarnings = wallet.Earnings || 0;
-
-    if (amount > currentEarnings) {
-      msgBox.textContent = '❌ You can only withdraw your Total Earnings balance.';
-      msgBox.classList.add('error');
-      return;
-    }
-
-    const newEarnings = currentEarnings - amount;
-
-    // Update wallet
-    db.ref('users/' + user.uid + '/wallet').update({ Earnings: newEarnings });
-
-    // Add withdrawal request
-    const withdrawRef = db.ref('withdrawals').push();
-    withdrawRef.set(withdrawData);
-
-    msgBox.textContent = '✅ Withdrawal request submitted successfully!';
-    msgBox.classList.add('success');
-
-    document.getElementById('amount').value = '';
-    if (method === "upi") {
-      document.getElementById('upi-id').value = '';
-    } else {
-      document.getElementById('account-name').value = '';
-      document.getElementById('account-number').value = '';
-      document.getElementById('ifsc-code').value = '';
-      document.getElementById('bank-name').value = '';
-    }
-
-    // Update UI
-    document.getElementById('withdrawable-display').textContent = `₹ ${newEarnings.toFixed(2)}`;
-    const total = (wallet.recharge || 0) + (wallet.bonus || 0) + newEarnings;
-    document.getElementById('balance-display').textContent = `₹ ${total.toFixed(2)}`;
-
-    // Show in recent transactions
-    const transactionsList = document.getElementById('recent-transactions');
-    const li = document.createElement('li');
-    li.innerHTML = `<i class="fas fa-rupee-sign"></i> ₹ ${amount} - ${method} - <span class="pending">Pending</span>`;
-    transactionsList.insertBefore(li, transactionsList.firstChild);
-    if (transactionsList.children.length > 3) {
-      transactionsList.removeChild(transactionsList.lastChild);
-    }
-  });
-}
-
+      
+      // Set up withdrawal button
+      withdrawBtn.addEventListener('click', processWithdrawal);
+    });
   </script>
 </body>
 </html>
