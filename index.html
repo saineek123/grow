@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Premium Income App</title>
+  <title>Daily Income App</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -696,6 +696,99 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
+    .payout-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .payout-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .payout-title {
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      font-weight: bold;
+    }
+    
+    .payout-amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--success);
+    }
+    
+    .payout-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .payout-item {
+      background: rgba(40, 167, 69, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .payout-item span {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 5px;
+    }
+    
+    .payout-item strong {
+      display: block;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+    
+    .claim-btn {
+      background: linear-gradient(135deg, var(--success), #1e7e34);
+      color: white;
+      padding: 12px;
+      text-align: center;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+      transition: all 0.3s;
+    }
+    
+    .claim-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+    }
+    
+    .claim-btn:disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .daily-income-highlight {
+      text-align: center;
+      background: linear-gradient(135deg, #ff9800, #ff6b00);
+      color: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin: 20px 0;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 
@@ -706,8 +799,8 @@
   </div>
 
   <div class="header">
-    <h1><i class="fas fa-wallet"></i> Premium Income App</h1>
-    <p>Earn money with VIP investment plans</p>
+    <h1><i class="fas fa-wallet"></i> Daily Income App</h1>
+    <p>Earn daily income with premium plans</p>
   </div>
 
   <div class="app-container">
@@ -726,13 +819,17 @@
         <span>Total Balance</span>
       </div>
     </div>
+    
+    <div class="daily-income-highlight">
+      <i class="fas fa-calendar-check"></i> Daily Income: <span id="dailyIncomeAmount">₹0</span>
+    </div>
 
     <div class="vip-container">
       <div class="vip-banner vip-1" id="vipBanner">
         <h3>VIP <span id="vipLevel">0</span> Activated</h3>
         <div class="vip-level">
           <i class="fas fa-crown"></i>
-          <p>Get More Benefits & Higher Returns</p>
+          <p>Get More Benefits & Higher Daily Income</p>
         </div>
       </div>
       <div class="vip-progress">
@@ -772,12 +869,34 @@
       <button class="active">Daily Income</button>
       <button>Benefits Program</button>
     </div>
+    
+    <div class="payout-container">
+      <div class="payout-header">
+        <div class="payout-title"><i class="fas fa-calendar-day"></i> Daily Income</div>
+        <div class="payout-amount" id="dailyPayout">₹0</div>
+      </div>
+      
+      <div class="payout-details">
+        <div class="payout-item">
+          <span>Available</span>
+          <strong id="availableIncome">₹0</strong>
+        </div>
+        <div class="payout-item">
+          <span>Next Payout</span>
+          <strong id="nextPayoutTime">00:00:00</strong>
+        </div>
+      </div>
+      
+      <button class="claim-btn" id="claimBtn" disabled>
+        <i class="fas fa-hand-holding-usd"></i> Claim Daily Income
+      </button>
+    </div>
 
     <div class="plans-container">
-      <h2 class="section-title"><i class="fas fa-chart-line"></i> Investment Plans</h2>
+      <h2 class="section-title"><i class="fas fa-chart-line"></i> Daily Income Plans</h2>
       <div id="loadingPlans" class="loading">
         <i class="fas fa-spinner"></i>
-        <p>Loading investment plans...</p>
+        <p>Loading income plans...</p>
       </div>
       <div id="planList"></div>
     </div>
@@ -790,8 +909,8 @@
       <h3><i class="fas fa-crown"></i> VIP Benefits</h3>
       <div class="benefit-list">
         <div class="benefit-item">
-          <i class="fas fa-percentage"></i>
-          <span>Higher Returns</span>
+          <i class="fas fa-money-bill-wave"></i>
+          <span>Higher Daily Income</span>
         </div>
         <div class="benefit-item">
           <i class="fas fa-gift"></i>
@@ -816,7 +935,7 @@
     </a>
     <a href="investments.html">
       <div><i class="fas fa-clipboard-list"></i></div>
-      Investments
+      Income
     </a>
     <a href="invite.html">
       <div><i class="fas fa-users"></i></div>
@@ -835,8 +954,8 @@
         <i class="fas fa-trophy"></i>
       </div>
       <h2>Congratulations!</h2>
-      <p>You've successfully invested in a premium plan!</p>
-      <p>Your journey to financial growth begins now.</p>
+      <p>You've successfully claimed your daily income!</p>
+      <p>Your earnings have been added to your wallet.</p>
       
       <div class="countdown-timer" id="countdownTimer">
         Closing in 3 seconds...
@@ -866,6 +985,11 @@
     const rechargeAmount = document.getElementById('rechargeAmount');
     const totalIncome = document.getElementById('earningsAmount');
     const totalBalance = document.getElementById('totalBalance');
+    const dailyIncomeAmount = document.getElementById('dailyIncomeAmount');
+    const dailyPayout = document.getElementById('dailyPayout');
+    const availableIncome = document.getElementById('availableIncome');
+    const nextPayoutTime = document.getElementById('nextPayoutTime');
+    const claimBtn = document.getElementById('claimBtn');
     const celebrationModal = document.getElementById('celebrationModal');
     const closeCelebrationBtn = document.getElementById('closeCelebration');
     const countdownTimer = document.getElementById('countdownTimer');
@@ -879,6 +1003,8 @@
     
     let currentUser = null;
     let countdownInterval;
+    let dailyIncome = 0;
+    let payoutTimer;
 
     // Close celebration modal
     function closeCelebration() {
@@ -979,6 +1105,104 @@
         totalBalance.textContent = `₹${total.toFixed(2)}`;
       });
     }
+    
+    // Initialize daily income payout system
+    function initDailyPayout(uid) {
+      // Get user's daily income from their investments
+      const investmentsRef = db.ref("purchases/" + uid);
+      investmentsRef.on("value", snapshot => {
+        dailyIncome = 0;
+        
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            const investment = child.val();
+            if (investment.status === "active") {
+              // Daily income is stored in dailyIncome field
+              dailyIncome += investment.dailyIncome || 0;
+            }
+          });
+        }
+        
+        dailyIncomeAmount.textContent = `₹${dailyIncome.toFixed(2)}`;
+        dailyPayout.textContent = `₹${dailyIncome.toFixed(2)}`;
+        availableIncome.textContent = `₹${dailyIncome.toFixed(2)}`;
+        
+        // Enable claim button if there's income to claim
+        claimBtn.disabled = dailyIncome <= 0;
+      });
+      
+      // Start payout timer
+      startPayoutTimer();
+    }
+    
+    // Start the payout countdown timer
+    function startPayoutTimer() {
+      if (payoutTimer) clearInterval(payoutTimer);
+      
+      // Set next payout time to 24 hours from now
+      const now = new Date();
+      const nextPayout = new Date(now);
+      nextPayout.setDate(nextPayout.getDate() + 1);
+      nextPayout.setHours(0, 0, 0, 0); // Set to midnight
+      
+      updatePayoutTimer(nextPayout);
+      
+      // Update timer every second
+      payoutTimer = setInterval(() => {
+        updatePayoutTimer(nextPayout);
+      }, 1000);
+    }
+    
+    // Update the payout timer display
+    function updatePayoutTimer(targetTime) {
+      const now = new Date();
+      const diff = targetTime - now;
+      
+      if (diff <= 0) {
+        // Time to claim income!
+        nextPayoutTime.textContent = "Ready!";
+        claimBtn.disabled = false;
+        return;
+      }
+      
+      // Calculate hours, minutes, seconds
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Claim daily income
+    function claimDailyIncome() {
+      if (!currentUser || dailyIncome <= 0) return;
+      
+      const uid = currentUser.uid;
+      const walletRef = db.ref("users/" + uid + "/wallet");
+      
+      walletRef.once("value").then(snapshot => {
+        const wallet = snapshot.val() || { recharge: 0, Earnings: 0 };
+        const newEarnings = (wallet.Earnings || 0) + dailyIncome;
+        
+        // Update wallet
+        db.ref("users/" + uid + "/wallet").set({
+          ...wallet,
+          Earnings: newEarnings
+        });
+        
+        // Show celebration
+        showCelebration();
+        
+        // Reset claim button until next payout
+        claimBtn.disabled = true;
+        startPayoutTimer();
+      }).catch(error => {
+        alert("Error claiming income: " + error.message);
+      });
+    }
+    
+    // Add event listener to claim button
+    claimBtn.addEventListener('click', claimDailyIncome);
 
     // Load investment products from Firebase
     function loadProducts() {
@@ -992,7 +1216,7 @@
           productList.innerHTML = `
             <div class="loading">
               <i class="fas fa-exclamation-triangle"></i>
-              <p>No investment plans available at the moment</p>
+              <p>No income plans available at the moment</p>
             </div>
           `;
           return;
@@ -1012,10 +1236,9 @@
               <div><span>₹${product.minInvestment}</span>Min Investment</div>
               <div><span>₹${product.dailyIncome}</span>Daily Income</div>
               <div><span>${product.duration} days</span>Duration</div>
-              <div><span>${product.roi}%</span>ROI</div>
             </div>
-            <button class="buy-btn" data-id="${key}" data-cost="${product.minInvestment}">
-              <i class="fas fa-shopping-cart"></i> Buy Now - ₹${product.minInvestment}
+            <button class="buy-btn" data-id="${key}" data-cost="${product.minInvestment}" data-income="${product.dailyIncome}">
+              <i class="fas fa-shopping-cart"></i> Invest Now - ₹${product.minInvestment}
             </button>
           `;
           productList.appendChild(card);
@@ -1025,7 +1248,8 @@
           button.addEventListener('click', function() {
             const planId = this.getAttribute('data-id');
             const cost = parseFloat(this.getAttribute('data-cost'));
-            buyProduct(planId, cost);
+            const dailyIncome = parseFloat(this.getAttribute('data-income'));
+            buyProduct(planId, cost, dailyIncome);
           });
         });
       }, error => {
@@ -1033,14 +1257,14 @@
         productList.innerHTML = `
           <div class="loading">
             <i class="fas fa-exclamation-triangle"></i>
-            <p>Failed to load investment plans: ${error.message}</p>
+            <p>Failed to load income plans: ${error.message}</p>
           </div>
         `;
       });
     }
 
     // Buy product function
-    function buyProduct(planId, cost) {
+    function buyProduct(planId, cost, dailyIncome) {
       if (!currentUser) {
         alert("Please login first");
         return;
@@ -1071,10 +1295,11 @@
         // Update wallet
         db.ref("users/" + uid + "/wallet").set(updated);
         
-        // Record purchase
+        // Record purchase with daily income
         db.ref("purchases/" + uid + "/" + planId).set({
           planId: planId,
           amount: cost,
+          dailyIncome: dailyIncome,
           purchasedAt: new Date().toISOString(),
           status: "active"
         });
@@ -1100,6 +1325,7 @@
           currentUser = user;
           loadWalletData(user.uid);
           loadProducts();
+          initDailyPayout(user.uid);
           
           // For demo - set VIP level based on recharge amount
           db.ref("users/" + user.uid + "/wallet").once("value").then(snapshot => {
@@ -1136,6 +1362,9 @@
           rechargeAmount.textContent = "₹5000";
           totalIncome.textContent = "₹1250";
           totalBalance.textContent = "₹6250";
+          dailyIncomeAmount.textContent = "₹250";
+          dailyPayout.textContent = "₹250";
+          availableIncome.textContent = "₹250";
           vipLevel.textContent = "1";
           currentVip.textContent = "1";
           nextVip.textContent = "2";
@@ -1143,6 +1372,7 @@
           rechargeNeeded.textContent = "3500";
           document.getElementById('vipBanner').className = "vip-banner vip-1";
           loadProducts();
+          startPayoutTimer();
         }
       });
     });
