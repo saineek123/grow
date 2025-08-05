@@ -2,699 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transaction History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
-    * {
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
-    body {
-      background: linear-gradient(135deg, #1a2a6c, #2a5298);
-      min-height: 100vh;
-      padding: 20px;
-      color: #333;
-    }
-    
     .container {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    
-    /* Header Styles */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      margin-bottom: 30px;
-      animation: fadeInDown 0.8s ease;
-    }
-    
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    
-    .logo i {
-      font-size: 32px;
-      color: #fff;
-      background: linear-gradient(135deg, #ffd700, #ffa500);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .logo h1 {
-      font-size: 28px;
-      color: #fff;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-    
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    
-    .user-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 20px;
-    }
-    
-    .wallet-card {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      color: white;
-      position: relative;
-      overflow: hidden;
-      animation: fadeIn 0.8s ease;
-    }
-    
-    .wallet-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, #ffd700, #ffa500);
-    }
-    
-    .wallet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .wallet-header h2 {
-      font-size: 22px;
-      font-weight: 600;
-    }
-    
-    .balance {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 25px;
-      text-align: center;
-    }
-    
-    .stats {
-      display: flex;
-      justify-content: space-between;
-    }
-    
-    .stat-item {
-      text-align: center;
-      flex: 1;
-    }
-    
-    .stat-label {
-      font-size: 14px;
-      opacity: 0.9;
-      margin-bottom: 5px;
-    }
-    
-    .stat-value {
-      font-size: 20px;
-      font-weight: 700;
-    }
-    
-    /* Tabs */
-    .tabs {
-      display: flex;
+      max-width: 500px;
+      margin: 20px auto;
       background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.8s ease;
-    }
-    
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-    }
-    
-    .tab.active {
-      color: #6a11cb;
-    }
-    
-    .tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: #6a11cb;
-    }
-    
-    .tab:hover {
-      background: #f9f9f9;
-    }
-    
-    /* History Section */
-    .history-section {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      animation: fadeInUp 0.8s ease;
-    }
-    
-    .section-header {
       padding: 20px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
     }
-    
-    .section-header h2 {
-      font-size: 20px;
+    h2 {
+      margin-bottom: 20px;
+      color: #ff6b00;
+      text-align: center;
+    }
+    .history-section {
+      margin-bottom: 30px;
+    }
+    .history-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .history-item {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
+    .amount {
+      font-weight: bold;
+      font-size: 1.1rem;
       color: #333;
     }
-    
-    .filter {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    
-    .filter select {
-      padding: 8px 15px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      background: white;
-      font-size: 14px;
-    }
-    
-    .transactions {
-      padding: 10px;
-      min-height: 400px;
-    }
-    
-    .transaction-item {
-      display: flex;
-      padding: 18px;
-      border-bottom: 1px solid #f5f5f5;
-      transition: all 0.3s;
-      animation: fadeIn 0.6s ease-out;
-      animation-fill-mode: both;
-    }
-    
-    .transaction-item:hover {
-      background: #f9f9ff;
-      transform: translateY(-2px);
-    }
-    
-    .transaction-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 15px;
-      font-size: 20px;
-    }
-    
-    .recharge .transaction-icon {
-      background: rgba(106, 17, 203, 0.1);
-      color: #6a11cb;
-    }
-    
-    .withdrawal .transaction-icon {
-      background: rgba(37, 117, 252, 0.1);
-      color: #2575fc;
-    }
-    
-    .transaction-details {
-      flex: 1;
-    }
-    
-    .transaction-title {
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    
-    .transaction-date {
+    .date {
+      font-size: 0.9rem;
       color: #777;
-      font-size: 14px;
     }
-    
-    .transaction-amount {
-      font-weight: 700;
-      font-size: 18px;
-    }
-    
-    .recharge .transaction-amount {
-      color: #2ecc71;
-    }
-    
-    .withdrawal .transaction-amount {
-      color: #e74c3c;
-    }
-    
-    .transaction-status {
-      font-size: 13px;
-      padding: 4px 10px;
-      border-radius: 20px;
+    .status {
+      font-size: 0.85rem;
       margin-top: 5px;
-      display: inline-block;
+      font-weight: 500;
     }
-    
-    .status-completed {
-      background: rgba(46, 204, 113, 0.1);
-      color: #27ae60;
-    }
-    
-    .status-pending {
-      background: rgba(241, 196, 15, 0.1);
-      color: #f39c12;
-    }
-    
-    .status-failed {
-      background: rgba(231, 76, 60, 0.1);
-      color: #c0392b;
-    }
-    
-    .empty-state {
+    .pending { color: #ff9800; }
+    .completed { color: #28a745; }
+    .failed { color: #dc3545; }
+    .no-history {
       text-align: center;
-      padding: 40px 20px;
-      color: #777;
-    }
-    
-    .empty-state i {
-      font-size: 60px;
-      margin-bottom: 20px;
-      color: #ddd;
-    }
-    
-    .empty-state h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      color: #555;
-    }
-    
-    .loading {
-      text-align: center;
-      padding: 40px 20px;
-    }
-    
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(106, 17, 203, 0.2);
-      border-radius: 50%;
-      border-top: 4px solid #6a11cb;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
-    }
-    
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-      }
-      
-      .stats {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .transaction-item {
-        flex-direction: column;
-      }
-      
-      .transaction-icon {
-        margin-right: 0;
-        margin-bottom: 15px;
-      }
-      
-      .section-header {
-        flex-direction: column;
-        gap: 15px;
-      }
+      color: #999;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="logo">
-        <i class="fas fa-coins"></i>
-        <h1>Transaction History</h1>
-      </div>
-      
-      <div class="user-info">
-        <div class="user-avatar" id="userAvatar">A</div>
-        <div>
-          <div id="userName" style="color: white; font-weight: 600;">Loading...</div>
-          <div id="userEmail" style="color: #ddd; font-size: 14px;">Loading...</div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="wallet-card">
-      <div class="wallet-header">
-        <h2><i class="fas fa-wallet"></i> My Wallet</h2>
-        <div>
-          <button id="refreshBtn" style="background: rgba(255,255,255,0.2); border: none; padding: 8px 20px; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">
-            <i class="fas fa-sync-alt"></i> Refresh
-          </button>
-        </div>
-      </div>
-      
-      <div class="balance" id="walletBalance">₹ 0.00</div>
-      
-      <div class="stats">
-        <div class="stat-item">
-          <div class="stat-label">Total Recharge</div>
-          <div class="stat-value" id="totalRecharge">₹ 0</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">Total Withdrawal</div>
-          <div class="stat-value" id="totalWithdrawal">₹ 0</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">Bonus</div>
-          <div class="stat-value" id="totalBonus">₹ 0</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">Winning</div>
-          <div class="stat-value" id="totalWinning">₹ 0</div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="tabs">
-      <div class="tab active" data-type="all">All Transactions</div>
-      <div class="tab" data-type="recharge">Recharges</div>
-      <div class="tab" data-type="withdrawal">Withdrawals</div>
-    </div>
-    
-    <div class="history-section">
-      <div class="section-header">
-        <h2>Transaction History</h2>
-        <div class="filter">
-          <select id="timeFilter">
-            <option value="7">Last 7 days</option>
-            <option value="30" selected>Last 30 days</option>
-            <option value="90">Last 90 days</option>
-            <option value="all">All Time</option>
-          </select>
-          <select id="statusFilter">
-            <option value="all">All Status</option>
-            <option value="completed">Completed</option>
-            <option value="pending">Pending</option>
-            <option value="failed">Failed</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="transactions" id="transactionsContainer">
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Loading transactions...</p>
-        </div>
-      </div>
-    </div>
+
+<div class="container">
+  <h2><i class="fas fa-clock"></i> Transaction History</h2>
+
+  <div class="history-section">
+    <div class="history-title">Recharge History</div>
+    <div id="rechargeHistory"><div class="no-history">Loading...</div></div>
   </div>
 
-  <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.appspot.com",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
-      measurementId: "G-Q7DPY3BF6C"
-    };
+  <div class="history-section">
+    <div class="history-title">Withdraw History</div>
+    <div id="withdrawHistory"><div class="no-history">Loading...</div></div>
+  </div>
+</div>
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+    authDomain: "grow-3e3a1.firebaseapp.com",
+    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+    projectId: "grow-3e3a1"
+  };
 
-    // DOM elements
-    const userNameEl = document.getElementById('userName');
-    const userEmailEl = document.getElementById('userEmail');
-    const userAvatarEl = document.getElementById('userAvatar');
-    const walletBalanceEl = document.getElementById('walletBalance');
-    const totalRechargeEl = document.getElementById('totalRecharge');
-    const totalWithdrawalEl = document.getElementById('totalWithdrawal');
-    const totalBonusEl = document.getElementById('totalBonus');
-    const totalWinningEl = document.getElementById('totalWinning');
-    const transactionsContainer = document.getElementById('transactionsContainer');
-    const tabs = document.querySelectorAll('.tab');
-    const timeFilter = document.getElementById('timeFilter');
-    const statusFilter = document.getElementById('statusFilter');
-    const refreshBtn = document.getElementById('refreshBtn');
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
 
-    // Global variables
-    let currentUser = null;
-    let transactions = [];
-    let filteredTransactions = [];
-    let filterType = 'all';
-    let filterTime = '30';
-    let filterStatus = 'all';
+  const rechargeDiv = document.getElementById('rechargeHistory');
+  const withdrawDiv = document.getElementById('withdrawHistory');
 
-    // Initialize the page
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUser = user;
-        displayUserInfo(user);
-        loadWalletData(user.uid);
-        loadTransactions(user.uid);
-      } else {
-        // Redirect to login if not authenticated
-        window.location.href = 'login.html';
-      }
-    });
-
-    // Display user info
-    function displayUserInfo(user) {
-      const displayName = user.displayName || 'User';
-      const email = user.email || '';
-      const firstLetter = displayName.charAt(0).toUpperCase();
-      
-      userNameEl.textContent = displayName;
-      userEmailEl.textContent = email;
-      userAvatarEl.textContent = firstLetter;
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      loadRechargeHistory(user.uid);
+      loadWithdrawHistory(user.uid);
+    } else {
+      rechargeDiv.innerHTML = '<div class="no-history">Please login to see recharge history.</div>';
+      withdrawDiv.innerHTML = '<div class="no-history">Please login to see withdrawal history.</div>';
     }
+  });
 
-    // Load wallet data
-    function loadWalletData(userId) {
-      db.ref('users/' + userId).once('value').then(snapshot => {
-        const userData = snapshot.val();
-        if (userData && userData.wallet) {
-          const wallet = userData.wallet;
-          walletBalanceEl.textContent = `₹ ${wallet.total.toFixed(2)}`;
-          totalRechargeEl.textContent = `₹ ${wallet.recharge}`;
-          totalWithdrawalEl.textContent = `₹ ${wallet.withdrawal}`;
-          totalBonusEl.textContent = `₹ ${wallet.bonus}`;
-          totalWinningEl.textContent = `₹ ${wallet.winning}`;
+  function loadRechargeHistory(uid) {
+    db.ref("rechargeRequests")
+      .orderByChild("userId")
+      .equalTo(uid)
+      .once("value", snapshot => {
+        rechargeDiv.innerHTML = "";
+        if (!snapshot.exists()) {
+          rechargeDiv.innerHTML = '<div class="no-history">No recharge history found.</div>';
+          return;
         }
-      });
-    }
 
-    // Load transactions from Firebase
-    function loadTransactions(userId) {
-      transactionsContainer.innerHTML = `
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Loading transactions...</p>
-        </div>
-      `;
-      
-      db.ref('transactions/' + userId).once('value').then(snapshot => {
-        transactions = [];
-        snapshot.forEach(childSnapshot => {
-          const transaction = childSnapshot.val();
-          transaction.id = childSnapshot.key;
-          transactions.push(transaction);
+        const items = [];
+        snapshot.forEach(child => items.push(child.val()));
+        items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = "history-item";
+          const date = new Date(item.timestamp).toLocaleDateString();
+          div.innerHTML = `
+            <div class="amount">₹${item.amount.toFixed(2)}</div>
+            <div class="date">${date}</div>
+            <div class="status ${item.status}">${item.status}</div>
+          `;
+          rechargeDiv.appendChild(div);
         });
-        
-        // Sort transactions by date (newest first)
-        transactions.sort((a, b) => b.timestamp - a.timestamp);
-        
-        applyFilters();
-      }).catch(error => {
-        console.error("Error loading transactions:", error);
-        transactionsContainer.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Error Loading Transactions</h3>
-            <p>Please try again later</p>
-          </div>
-        `;
       });
-    }
+  }
 
-    // Apply filters to transactions
-    function applyFilters() {
-      filteredTransactions = [...transactions];
-      
-      // Apply type filter
-      if (filterType !== 'all') {
-        filteredTransactions = filteredTransactions.filter(
-          t => t.type === filterType
-        );
-      }
-      
-      // Apply time filter
-      if (filterTime !== 'all') {
-        const days = parseInt(filterTime);
-        const cutoffDate = new Date();
-        cutoffDate.setDate(cutoffDate.getDate() - days);
-        
-        filteredTransactions = filteredTransactions.filter(
-          t => t.timestamp >= cutoffDate.getTime()
-        );
-      }
-      
-      // Apply status filter
-      if (filterStatus !== 'all') {
-        filteredTransactions = filteredTransactions.filter(
-          t => t.status === filterStatus
-        );
-      }
-      
-      displayTransactions();
-    }
-
-    // Display transactions
-    function displayTransactions() {
-      if (filteredTransactions.length === 0) {
-        transactionsContainer.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-file-invoice"></i>
-            <h3>No Transactions Found</h3>
-            <p>You don't have any transactions matching your filters</p>
-          </div>
-        `;
+  function loadWithdrawHistory(uid) {
+    db.ref("withdrawals/" + uid).once("value", snapshot => {
+      withdrawDiv.innerHTML = "";
+      if (!snapshot.exists()) {
+        withdrawDiv.innerHTML = '<div class="no-history">No withdrawal history found.</div>';
         return;
       }
-      
-      let transactionsHTML = '';
-      
-      filteredTransactions.forEach(transaction => {
-        const date = new Date(transaction.timestamp);
-        const formattedDate = date.toLocaleDateString('en-IN', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-        
-        let icon = 'fas fa-arrow-circle-down';
-        let typeClass = 'recharge';
-        let amountSign = '+';
-        
-        if (transaction.type === 'withdrawal') {
-          icon = 'fas fa-arrow-circle-up';
-          typeClass = 'withdrawal';
-          amountSign = '-';
-        }
-        
-        transactionsHTML += `
-          <div class="transaction-item ${typeClass}">
-            <div class="transaction-icon">
-              <i class="${icon}"></i>
-            </div>
-            <div class="transaction-details">
-              <div class="transaction-title">${transaction.description}</div>
-              <div class="transaction-date">${formattedDate}</div>
-              <div class="transaction-status status-${transaction.status}">${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}</div>
-            </div>
-            <div class="transaction-amount">${amountSign} ₹${transaction.amount.toFixed(2)}</div>
-          </div>
-        `;
-      });
-      
-      transactionsContainer.innerHTML = transactionsHTML;
-    }
 
-    // Event Listeners
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        filterType = tab.dataset.type;
-        applyFilters();
+      const items = [];
+      snapshot.forEach(child => items.push(child.val()));
+      items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "history-item";
+        const date = new Date(item.timestamp).toLocaleDateString();
+        div.innerHTML = `
+          <div class="amount">₹${item.amount.toFixed(2)}</div>
+          <div class="date">${date}</div>
+          <div class="status ${item.status}">${item.status}</div>
+        `;
+        withdrawDiv.appendChild(div);
       });
     });
-    
-    timeFilter.addEventListener('change', () => {
-      filterTime = timeFilter.value;
-      applyFilters();
-    });
-    
-    statusFilter.addEventListener('change', () => {
-      filterStatus = statusFilter.value;
-      applyFilters();
-    });
-    
-    refreshBtn.addEventListener('click', () => {
-      if (currentUser) {
-        loadWalletData(currentUser.uid);
-        loadTransactions(currentUser.uid);
-      }
-    });
-  </script>
+  }
+</script>
 </body>
 </html>
