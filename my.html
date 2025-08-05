@@ -1,154 +1,862 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My Profile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - Daily Income App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
-    body {
+    :root {
+      --primary: #ff6b00;
+      --primary-dark: #e65100;
+      --secondary: #4a148c;
+      --dark: #222;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --success: #28a745;
+      --vip-0: #9e9e9e;
+      --vip-1: #ff9800;
+      --vip-2: #ff5722;
+      --vip-3: #f44336;
+      --vip-4: #e91e63;
+      --vip-5: #9c27b0;
+    }
+
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f8f8f8;
-      padding-bottom: 80px;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      background-attachment: fixed;
+      color: #333;
+      padding-bottom: 60px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
     .header {
-      background: linear-gradient(90deg, #ff6b00, #e65100);
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
       color: white;
+      padding: 20px;
       text-align: center;
-      padding: 20px;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
     }
-    .profile-box {
-      background: white;
-      margin: 10px;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%);
+      background-size: 50px 50px;
     }
-    .profile-box p {
-      margin: 8px 0;
-      font-size: 1rem;
-    }
-    .label {
-      font-weight: bold;
-      color: #555;
-    }
-    .options {
-      margin: 10px;
-    }
-    .option {
-      background: white;
-      margin-bottom: 10px;
+
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
       padding: 15px;
-      border-radius: 8px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .profile-header {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      margin: 0 auto 15px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+      justify-content: center;
+      color: white;
+      font-size: 2.5rem;
+      font-weight: bold;
+      border: 3px solid white;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      color: white;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .profile-id {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      border-top: 4px solid var(--primary);
+    }
+
+    .stat-card i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .stat-card h3 {
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .stat-card p {
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .vip-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      color: #7d6608;
+      padding: 5px 15px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-radius: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .action-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .action-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 107, 0, 0.05);
+      transition: all 0.3s;
       cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.05);
     }
-    .option:hover {
-      background: #f2f2f2;
+
+    .action-item:hover {
+      background: rgba(255, 107, 0, 0.1);
+      transform: translateX(5px);
     }
+
+    .action-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: white;
+      margin-right: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    }
+
+    .action-details {
+      flex-grow: 1;
+    }
+
+    .action-name {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .action-desc {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .action-arrow {
+      color: var(--gray);
+      font-size: 1.2rem;
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, #dc3545, #bd2130);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      border-radius: 12px;
+      border: none;
+      width: 100%;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+      transition: all 0.3s;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+    }
+
     .bottom-nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background: white;
-      border-top: 1px solid #ccc;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: space-around;
       padding: 12px 0;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      z-index: 100;
     }
+
     .bottom-nav a {
-      color: #666;
+      color: var(--gray);
       text-decoration: none;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      flex: 1;
+      transition: color 0.3s;
     }
+
     .bottom-nav a.active {
-      color: #ff6b00;
+      color: var(--primary-dark);
       font-weight: bold;
+    }
+
+    .bottom-nav a div {
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+    }
+
+    .connection-status {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      background: #28a745;
+      color: white;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    .loading i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 15px;
+      overflow: hidden;
+      animation: scaleIn 0.3s ease;
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .modal-body {
+      padding: 20px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.2);
+    }
+    
+    .submit-btn {
+      background: linear-gradient(135deg, var(--success), #1e7e34);
+      color: white;
+      padding: 12px;
+      text-align: center;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
+  <div class="connection-status">
+    <i class="fas fa-wifi"></i> Online
+  </div>
+
   <div class="header">
-    <h2>👤 My Profile</h2>
+    <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+    <p>Manage your account and settings</p>
   </div>
 
-  <div class="profile-box">
-    <p><span class="label">📱 Mobile:</span> <span id="mobile">Loading...</span></p>
-    <p><span class="label">🆔 User ID:</span> <span id="userId">Loading...</span></p>
-    <p><span class="label">👑 VIP Level:</span> <span id="vipLevel">0</span></p>
-  </div>
+  <div class="app-container">
+    <div class="profile-header">
+      <div class="profile-avatar" id="userAvatar">U</div>
+      <h2 class="profile-name" id="userName">User Name</h2>
+      <div class="profile-id">User ID: <span id="userId">Loading...</span></div>
+    </div>
 
-  <div class="options">
-    <div class="option" onclick="location.href='recharge.html'">💰 Recharge</div>
-    <div class="option" onclick="location.href='withdraw.html'">🏧 Withdraw</div>
-    <div class="option" onclick="location.href='investments.html'">📦 My Investments</div>
-    <div class="option" onclick="location.href='team.html'">👥 My Team</div>
-    <div class="option" onclick="location.href='bank.html'">🏦 Add Bank Card</div>
-    <div class="option" onclick="location.href='balance.html'">💼 Wallet Balance</div>
-    <div class="option" onclick="location.href='online.html'">❓ Help Center</div>
-    <div class="option" onclick="window.open('https://t.me/Manxamit', '_blank')">📨 Telegram Support</div>
-    <div class="option" onclick="logout()">🚪 Logout</div>
+    <div class="stats-container">
+      <div class="stat-card">
+        <i class="fas fa-wallet"></i>
+        <h3 id="walletBalance">₹0</h3>
+        <p>Wallet Balance</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-crown"></i>
+        <h3 id="vipLevel">VIP 0</h3>
+        <p>VIP Level</p>
+        <div class="vip-badge">Active</div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-rupee-sign"></i>
+        <h3 id="rechargeAmount">₹0</h3>
+        <p>Total Recharge</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-chart-line"></i>
+        <h3 id="investmentAmount">₹0</h3>
+        <p>My Investments</p>
+      </div>
+    </div>
+
+    <div class="action-section">
+      <h2 class="section-title"><i class="fas fa-cog"></i> Account Settings</h2>
+      <div class="action-list">
+        <div class="action-item" id="mobileBtn">
+          <div class="action-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="action-details">
+            <div class="action-name">Mobile Number</div>
+            <div class="action-desc" id="mobileNumber">+91 ••••• •••••</div>
+          </div>
+          <div class="action-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+        
+        <div class="action-item" id="bankBtn">
+          <div class="action-icon">
+            <i class="fas fa-university"></i>
+          </div>
+          <div class="action-details">
+            <div class="action-name">Bank Account</div>
+            <div class="action-desc" id="bankStatus">Not added</div>
+          </div>
+          <div class="action-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+        
+        <div class="action-item" id="rechargeBtn">
+          <div class="action-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <div class="action-details">
+            <div class="action-name">Recharge Wallet</div>
+            <div class="action-desc">Add funds to your account</div>
+          </div>
+          <div class="action-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+        
+        <div class="action-item" id="investBtn">
+          <div class="action-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="action-details">
+            <div class="action-name">My Investments</div>
+            <div class="action-desc">View your active plans</div>
+          </div>
+          <div class="action-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-section">
+      <h2 class="section-title"><i class="fas fa-headset"></i> Support</h2>
+      <div class="action-list">
+        <a href="https://t.me/dailyincomeapp" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="action-item">
+            <div class="action-icon" style="background: linear-gradient(135deg, #0088cc, #2AABEE);">
+              <i class="fab fa-telegram"></i>
+            </div>
+            <div class="action-details">
+              <div class="action-name">Telegram Support</div>
+              <div class="action-desc">24/7 assistance via Telegram</div>
+            </div>
+            <div class="action-arrow">
+              <i class="fas fa-external-link-alt"></i>
+            </div>
+          </div>
+        </a>
+        
+        <div class="action-item" id="helpBtn">
+          <div class="action-icon" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="action-details">
+            <div class="action-name">Help Center</div>
+            <div class="action-desc">FAQs and guides</div>
+          </div>
+          <div class="action-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+        
+        <div class="action-item" id="feedbackBtn">
+          <div class="action-icon" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+            <i class="fas fa-comment-dots"></i>
+          </div>
+          <div class="action-details">
+            <div class="action-name">Send Feedback</div>
+            <div class="action-desc">Share your experience</div>
+          </div>
+          <div class="action-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
   </div>
 
   <div class="bottom-nav">
-    <a href="index.html"><div>🏠</div>Home</a>
-    <a href="investments.html"><div>💸</div>Invest</a>
-    <a href="my.html" class="active"><div>👤</div>Profile</a>
+    <a href="index.html">
+      <div><i class="fas fa-home"></i></div>
+      Home
+    </a>
+    <a href="investments.html">
+      <div><i class="fas fa-clipboard-list"></i></div>
+      Income
+    </a>
+    <a href="team.html">
+      <div><i class="fas fa-users"></i></div>
+      Team
+    </a>
+    <a href="my.html" class="active">
+      <div><i class="fas fa-user"></i></div>
+      Profile
+    </a>
+  </div>
+
+  <!-- Mobile Update Modal -->
+  <div class="modal" id="mobileModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Update Mobile Number</div>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="mobileInput">Mobile Number</label>
+          <input type="tel" id="mobileInput" placeholder="Enter your mobile number">
+        </div>
+        <button class="submit-btn" id="updateMobileBtn">Update Number</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bank Account Modal -->
+  <div class="modal" id="bankModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Add Bank Account</div>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="accountName">Account Holder Name</label>
+          <input type="text" id="accountName" placeholder="As per bank records">
+        </div>
+        <div class="form-group">
+          <label for="accountNumber">Account Number</label>
+          <input type="text" id="accountNumber" placeholder="Enter account number">
+        </div>
+        <div class="form-group">
+          <label for="ifscCode">IFSC Code</label>
+          <input type="text" id="ifscCode" placeholder="Enter IFSC code">
+        </div>
+        <div class="form-group">
+          <label for="bankName">Bank Name</label>
+          <input type="text" id="bankName" placeholder="Enter bank name">
+        </div>
+        <button class="submit-btn" id="saveBankBtn">Save Bank Details</button>
+      </div>
+    </div>
   </div>
 
   <script>
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
       databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
       projectId: "grow-3e3a1"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
 
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        alert("Logged out!");
-        location.href = "login.html";
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    
+    // DOM references
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const userId = document.getElementById('userId');
+    const walletBalance = document.getElementById('walletBalance');
+    const vipLevel = document.getElementById('vipLevel');
+    const rechargeAmount = document.getElementById('rechargeAmount');
+    const investmentAmount = document.getElementById('investmentAmount');
+    const mobileNumber = document.getElementById('mobileNumber');
+    const bankStatus = document.getElementById('bankStatus');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const mobileModal = document.getElementById('mobileModal');
+    const bankModal = document.getElementById('bankModal');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    
+    let currentUser = null;
+    let userData = {};
+
+    // Load user data from Firebase
+    function loadUserData(uid) {
+      const userRef = db.ref("users/" + uid);
+      
+      userRef.on("value", snapshot => {
+        if (snapshot.exists()) {
+          userData = snapshot.val();
+          
+          // Set user info
+          const name = userData.name || "User";
+          userAvatar.textContent = name.charAt(0).toUpperCase();
+          userName.textContent = name;
+          userId.textContent = userData.userId || uid.substring(0, 8).toUpperCase();
+          
+          // Set wallet info
+          const wallet = userData.wallet || { recharge: 0, Earnings: 0 };
+          const totalBalance = (wallet.recharge || 0) + (wallet.Earnings || 0);
+          walletBalance.textContent = `₹${totalBalance.toFixed(2)}`;
+          rechargeAmount.textContent = `₹${(wallet.recharge || 0).toFixed(2)}`;
+          
+          // Set VIP level
+          const vip = userData.vipLevel || 0;
+          vipLevel.textContent = `VIP ${vip}`;
+          
+          // Set mobile number
+          if (userData.mobile) {
+            const mobile = userData.mobile;
+            mobileNumber.textContent = `${mobile.substring(0, 2)}••••• ${mobile.substring(7)}`;
+          } else {
+            mobileNumber.textContent = "Not set";
+          }
+          
+          // Set bank status
+          if (userData.bankAccount) {
+            bankStatus.textContent = "Added";
+          } else {
+            bankStatus.textContent = "Not added";
+          }
+          
+          // Load investments
+          loadInvestments(uid);
+        }
       });
     }
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById('userId').textContent = user.uid;
-        const userRef = db.ref("users/" + user.uid);
-        userRef.once("value").then(snapshot => {
-          const data = snapshot.val();
-          document.getElementById('mobile').textContent = data?.mobile || "N/A";
-        });
-
-        db.ref("users/" + user.uid + "/wallet").once("value").then(snapshot => {
-          const wallet = snapshot.val() || {};
-          const recharge = wallet.recharge || 0;
-          if (recharge >= 10000) {
-            document.getElementById("vipLevel").textContent = "3";
-          } else if (recharge >= 5000) {
-            document.getElementById("vipLevel").textContent = "2";
-          } else if (recharge >= 1000) {
-            document.getElementById("vipLevel").textContent = "1";
-          } else {
-            document.getElementById("vipLevel").textContent = "0";
-          }
-        });
-      } else {
-        alert("Please login first!");
-        window.location.href = "login.html";
+    
+    // Load user investments
+    function loadInvestments(uid) {
+      const investmentsRef = db.ref("purchases/" + uid);
+      
+      investmentsRef.on("value", snapshot => {
+        let totalInvestment = 0;
+        
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            const investment = child.val();
+            if (investment.status === "active") {
+              totalInvestment += investment.amount || 0;
+            }
+          });
+        }
+        
+        investmentAmount.textContent = `₹${totalInvestment.toFixed(2)}`;
+      });
+    }
+    
+    // Update mobile number
+    function updateMobileNumber() {
+      const mobileInput = document.getElementById('mobileInput').value;
+      if (!mobileInput || mobileInput.length !== 10) {
+        alert("Please enter a valid 10-digit mobile number");
+        return;
       }
+      
+      const uid = currentUser.uid;
+      db.ref("users/" + uid).update({
+        mobile: mobileInput
+      }).then(() => {
+        alert("Mobile number updated successfully!");
+        mobileModal.style.display = "none";
+      }).catch(error => {
+        alert("Error updating mobile: " + error.message);
+      });
+    }
+    
+    // Save bank details
+    function saveBankDetails() {
+      const accountName = document.getElementById('accountName').value;
+      const accountNumber = document.getElementById('accountNumber').value;
+      const ifscCode = document.getElementById('ifscCode').value;
+      const bankName = document.getElementById('bankName').value;
+      
+      if (!accountName || !accountNumber || !ifscCode || !bankName) {
+        alert("Please fill all bank details");
+        return;
+      }
+      
+      if (accountNumber.length < 9 || accountNumber.length > 18) {
+        alert("Please enter a valid account number (9-18 digits)");
+        return;
+      }
+      
+      if (ifscCode.length !== 11) {
+        alert("IFSC code must be 11 characters");
+        return;
+      }
+      
+      const uid = currentUser.uid;
+      const bankDetails = {
+        accountName,
+        accountNumber,
+        ifscCode,
+        bankName,
+        verified: false
+      };
+      
+      db.ref("users/" + uid).update({
+        bankAccount: bankDetails
+      }).then(() => {
+        alert("Bank details saved successfully! They will be verified within 24 hours.");
+        bankModal.style.display = "none";
+      }).catch(error => {
+        alert("Error saving bank details: " + error.message);
+      });
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up event listeners
+      document.getElementById('mobileBtn').addEventListener('click', () => {
+        mobileModal.style.display = "flex";
+      });
+      
+      document.getElementById('bankBtn').addEventListener('click', () => {
+        bankModal.style.display = "flex";
+      });
+      
+      document.getElementById('rechargeBtn').addEventListener('click', () => {
+        alert('Recharge feature is in development. Coming soon!');
+      });
+      
+      document.getElementById('investBtn').addEventListener('click', () => {
+        window.location.href = "investments.html";
+      });
+      
+      document.getElementById('helpBtn').addEventListener('click', () => {
+        alert('Help center will open soon!');
+      });
+      
+      document.getElementById('feedbackBtn').addEventListener('click', () => {
+        alert('Feedback form will be available soon!');
+      });
+      
+      document.getElementById('updateMobileBtn').addEventListener('click', updateMobileNumber);
+      document.getElementById('saveBankBtn').addEventListener('click', saveBankDetails);
+      
+      logoutBtn.addEventListener('click', () => {
+        firebase.auth().signOut().then(() => {
+          window.location.href = "index.html";
+        });
+      });
+      
+      // Close modals
+      closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          mobileModal.style.display = "none";
+          bankModal.style.display = "none";
+        });
+      });
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === mobileModal) mobileModal.style.display = "none";
+        if (e.target === bankModal) bankModal.style.display = "none";
+      });
+      
+      // Initialize Firebase auth
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          loadUserData(user.uid);
+        } else {
+          // Demo data for unauthenticated users
+          userAvatar.textContent = "G";
+          userName.textContent = "Guest User";
+          userId.textContent = "GUEST001";
+          walletBalance.textContent = "₹1250";
+          vipLevel.textContent = "VIP 1";
+          rechargeAmount.textContent = "₹5000";
+          investmentAmount.textContent = "₹3750";
+          mobileNumber.textContent = "+91 ••••• •••••";
+          bankStatus.textContent = "Not added";
+        }
+      });
     });
   </script>
 </body>
