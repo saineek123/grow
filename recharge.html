@@ -634,6 +634,70 @@
         max-width: 100%;
       }
     }
+
+    .history-item {
+  background: rgba(30, 30, 60, 0.7);
+  border: 1px solid rgba(0, 230, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+.history-item:hover {
+  background: rgba(40, 40, 80, 0.9);
+  border-color: rgba(0, 230, 255, 0.4);
+}
+
+.history-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.history-amount {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #00e5ff;
+}
+
+.history-date {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.history-status {
+  font-size: 0.95rem;
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Status Colors */
+.status-pending {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+.status-approved {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.status-rejected {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid #f44336;
+}
+
   </style>
 </head>
 
@@ -836,7 +900,8 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+const auth = firebase.auth(); // ✅ Add this line
+const db = firebase.database();
 
     // DOM Elements
     const step1 = document.getElementById('step1');
