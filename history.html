@@ -59,8 +59,8 @@
       font-weight: 500;
     }
     .pending { color: #ff9800; }
-    .completed { color: #28a745; }
-    .failed { color: #dc3545; }
+    .approved, .completed { color: #28a745; }
+    .rejected, .failed { color: #dc3545; }
     .no-history {
       text-align: center;
       color: #999;
@@ -111,10 +111,8 @@
 
   function formatDate(timestamp) {
     try {
-      const dateObj = typeof timestamp === "string"
-        ? new Date(timestamp)
-        : new Date(Number(timestamp));
-      return dateObj.toLocaleString('en-IN', {
+      const date = typeof timestamp === "string" ? new Date(timestamp) : new Date(Number(timestamp));
+      return date.toLocaleString('en-IN', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
@@ -126,10 +124,10 @@
     }
   }
 
-  function loadRechargeHistory(uid) {
+  function loadRechargeHistory(userId) {
     db.ref("rechargeRequests")
       .orderByChild("userId")
-      .equalTo(uid)
+      .equalTo(userId)
       .once("value", snapshot => {
         rechargeDiv.innerHTML = "";
         if (!snapshot.exists()) {
@@ -145,18 +143,19 @@
           const div = document.createElement('div');
           div.className = "history-item";
           const date = formatDate(item.timestamp);
+          const status = item.status?.toLowerCase() || "pending";
           div.innerHTML = `
             <div class="amount">₹${parseFloat(item.amount).toFixed(2)}</div>
             <div class="date">${date}</div>
-            <div class="status ${item.status}">${item.status}</div>
+            <div class="status ${status}">${status}</div>
           `;
           rechargeDiv.appendChild(div);
         });
       });
   }
 
-  function loadWithdrawHistory(uid) {
-    db.ref("withdrawals/" + uid).once("value", snapshot => {
+  function loadWithdrawHistory(userId) {
+    db.ref("withdrawals/" + userId).once("value", snapshot => {
       withdrawDiv.innerHTML = "";
       if (!snapshot.exists()) {
         withdrawDiv.innerHTML = '<div class="no-history">No withdrawal history found.</div>';
@@ -171,10 +170,11 @@
         const div = document.createElement('div');
         div.className = "history-item";
         const date = formatDate(item.timestamp);
+        const status = item.status?.toLowerCase() || "pending";
         div.innerHTML = `
           <div class="amount">₹${parseFloat(item.amount).toFixed(2)}</div>
           <div class="date">${date}</div>
-          <div class="status ${item.status}">${item.status}</div>
+          <div class="status ${status}">${status}</div>
         `;
         withdrawDiv.appendChild(div);
       });
