@@ -129,7 +129,8 @@ function loadRechargeHistory(uid) {
 
 function loadWithdrawHistory(uid) {
   const container = document.getElementById("withdrawHistory");
-  db.ref("withdraws/" + uid).once("value").then(snap => {
+  db.ref("withdrawals
+/" + uid).once("value").then(snap => {
     container.innerHTML = '';
     if (!snap.exists()) {
       container.innerHTML = "<p>No withdraw history found</p>";
@@ -160,3 +161,4 @@ function loadInvestmentHistory(uid) {
   </script>
 </body>
 </html>
+
