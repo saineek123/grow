@@ -1,555 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration | Firebase</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            position: relative;
-            animation: fadeIn 0.8s ease;
-        }
-        
-        .header {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            position: relative;
-        }
-        
-        .firebase-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #FFCA28;
-            color: #121212;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-        
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .form-container {
-            padding: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 1.1rem;
-        }
-        
-        .input-with-icon {
-            position: relative;
-        }
-        
-        .input-with-icon i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6a11cb;
-            font-size: 18px;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 15px 15px 15px 50px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-group input:focus {
-            border-color: #6a11cb;
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
-            outline: none;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #777;
-        }
-        
-        .submit-btn {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            padding: 16px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .submit-btn:hover {
-            background: linear-gradient(to right, #5a0db5, #1c68f0);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-        
-        .submit-btn::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(30deg);
-            transition: all 0.5s ease;
-        }
-        
-        .submit-btn:hover::after {
-            transform: rotate(30deg) translate(20%, 20%);
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #555;
-            font-size: 1.1rem;
-        }
-        
-        .login-link a {
-            color: #6a11cb;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .welcome-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-            z-index: 10;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .welcome-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .welcome-icon {
-            font-size: 5rem;
-            color: white;
-            margin-bottom: 30px;
-            animation: bounce 1.5s infinite;
-        }
-        
-        .welcome-text {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            animation: fadeInUp 0.8s ease;
-        }
-        
-        .user-id-display {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-size: 1.4rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin: 20px 0;
-            font-family: monospace;
-            animation: pulse 2s infinite;
-        }
-        
-        .welcome-subtext {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.3rem;
-            max-width: 80%;
-            line-height: 1.6;
-            animation: fadeInUp 1s ease;
-        }
-        
-        .countdown {
-            margin-top: 30px;
-            color: white;
-            font-size: 1.2rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 25px;
-            border-radius: 30px;
-            animation: fadeInUp 1.2s ease;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-30px);}
-            60% {transform: translateY(-15px);}
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-        }
-        
-        @media (max-width: 500px) {
-            .container {
-                border-radius: 15px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .form-container {
-                padding: 20px;
-            }
-            
-            .form-group input {
-                padding: 12px 12px 12px 45px;
-                font-size: 1rem;
-            }
-            
-            .welcome-text {
-                font-size: 2rem;
-            }
-            
-            .user-id-display {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Account</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo i {
+      font-size: 48px;
+      color: #6a11cb;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo h2 {
+      margin-top: 15px;
+      font-size: 28px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+      font-size: 15px;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+      font-size: 18px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px 15px 15px 50px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+    }
+
+    .referral-note {
+      background: #f0f5ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 5px;
+      font-size: 14px;
+      color: #4a6cf7;
+      display: flex;
+      align-items: center;
+    }
+
+    .referral-note i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 15px;
+      color: #666;
+    }
+
+    .login-link a {
+      color: #2575fc;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .benefits {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .benefits h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #444;
+    }
+
+    .benefits-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .benefit {
+      display: flex;
+      align-items: center;
+      background: #f8f9ff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .benefit i {
+      color: #6a11cb;
+      margin-right: 8px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      .logo h2 {
+        font-size: 24px;
+      }
+
+      .form-control {
+        padding: 13px 13px 13px 45px;
+      }
+
+      .btn {
+        padding: 14px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="firebase-badge">
-                <i class="fas fa-database"></i> Firebase
-            </div>
-            <h1>Create Account</h1>
-            <p>Join our community and unlock exclusive features</p>
-        </div>
-        
-        <div class="form-container">
-            <form id="registration-form">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="name" placeholder="Enter your full name" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mobile">Mobile Number</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                        <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="password" placeholder="Create a password" required minlength="6">
-                        <span class="password-toggle" id="toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="confirm-password" placeholder="Re-enter your password" required minlength="6">
-                        <span class="password-toggle" id="toggle-confirm-password">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="referral">Referral Code (Optional)</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-gift"></i>
-                        <input type="text" id="referral" placeholder="Enter referral code if any">
-                    </div>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="register-btn">
-                    <span id="btn-text">Register Now</span>
-                    <span id="btn-loader" style="display:none;">
-                        <i class="fas fa-spinner fa-spin"></i> Processing...
-                    </span>
-                </button>
-            </form>
-            
-            <div class="login-link">
-                Already have an account? <a href="#">Sign In</a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2023 Firebase Registration. All rights reserved.</p>
-        </div>
-        
-        <div class="welcome-overlay" id="welcome-overlay">
-            <div class="welcome-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="welcome-text">Registration Successful!</div>
-            
-            <div class="user-id-display" id="user-id-display">
-                ID: Loading...
-            </div>
-            
-            <div class="welcome-subtext">
-                Your account has been created in Firebase.<br>
-                Remember your unique 7-character ID for future reference.
-            </div>
-            <div class="countdown" id="countdown">
-                Redirecting in 5 seconds...
-            </div>
-        </div>
+  <div class="container">
+    <div class="logo">
+      <i class="fas fa-user-plus"></i>
+      <h2>Create Account</h2>
     </div>
 
-    <script>
-        // Replace with your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <div class="input-with-icon">
+        <i class="fas fa-phone"></i>
+        <input type="text" id="phone" class="form-control" placeholder="Enter your phone number">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <div class="input-with-icon">
+        <i class="fas fa-user"></i>
+        <input type="text" id="name" class="form-control" placeholder="Enter your name">
+      </div>
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('registration-form');
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const countdownElement = document.getElementById('countdown');
-            const togglePassword = document.getElementById('toggle-password');
-            const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
-            const userIdDisplay = document.getElementById('user-id-display');
-            const registerBtn = document.getElementById('register-btn');
-            const btnText = document.getElementById('btn-text');
-            const btnLoader = document.getElementById('btn-loader');
-            
-            // Password visibility toggle
-            togglePassword.addEventListener('click', function() {
-                const passwordInput = document.getElementById('password');
-                const icon = this.querySelector('i');
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    passwordInput.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" class="form-control" placeholder="Create a strong password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="referralCode">Referral Code (Optional)</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user-friends"></i>
+          <input type="text" id="referralCode" class="form-control" placeholder="Enter referral code if any">
+        </div>
+        <div class="referral-note">
+          <i class="fas fa-gift"></i>
+          <span>Get ₹100 bonus when you use a referral code</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="registerUser()">
+        <i class="fas fa-user-plus"></i> Register Now
+      </button>
+
+      <div class="login-link">
+        Already have an account? <a href="login.html">Sign In</a>
+      </div>
+
+      <div class="benefits">
+        <h3>Account Benefits</h3>
+        <div class="benefits-list">
+          <div class="benefit">
+            <i class="fas fa-wallet"></i> Wallet
+          </div>
+          <div class="benefit">
+            <i class="fas fa-gift"></i> Referral Bonus
+          </div>
+          <div class="benefit">
+            <i class="fas fa-shield-alt"></i> Security
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+        authDomain: "grow-3e3a1.firebaseapp.com",
+        databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+        projectId: "grow-3e3a1",
+        storageBucket: "grow-3e3a1.firebasestorage.app",
+        messagingSenderId: "285304522946",
+        appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+        measurementId: "G-Q7DPY3BF6C"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.database();
+
+      function registerUser() {
+        const phone = document.getElementById("phone").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const refCode = document.getElementById("referralCode").value.trim();
+
+        if (!phone || !password) {
+          alert("❌ Please enter phone and password");
+          return;
+        } createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            db.ref("users/" + user.uid).set({
+              name: name,
+              email: email,
+              phone: phone,
+              referralCode: user.uid,
+              referredBy: referralCode,
+              createdAt: Date.now(),
+              wallet: {
+                recharge: 0,
+                bonus: 0,
+                winning: 0,
+                total: 0
+              }
+            }).then(() => {
+              // ✅ Add this to update referrer's referral list
+              if (referralCode !== "") {
+                db.ref("users/" + referralCode + "/referrals/" + user.uid).set(true);
+              }
+
+              alert("Registration successful!");
+              window.location.href = "index.html";
             });
-            
-            toggleConfirmPassword.addEventListener('click', function() {
-                const confirmPasswordInput = document.getElementById('confirm-password');
-                const icon = this.querySelector('i');
-                
-                if (confirmPasswordInput.type === 'password') {
-                    confirmPasswordInput.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    confirmPasswordInput.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            });
-            
-            // Generate 7-character alphanumeric ID
-            function generateUserId() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let userId = '';
-                for (let i = 0; i < 7; i++) {
-                    userId += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return userId;
-            }
-            
-            // Form submission
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('name').value;
-                const mobile = document.getElementById('mobile').value;
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
-                const referral = document.getElementById('referral').value;
-                
-                // Check if passwords match
-                if (password !== confirmPassword) {
-                    alert('Passwords do not match. Please try again.');
-                    return;
-                }
-                
-                // Check mobile number format
-                if (!/^\d{10}$/.test(mobile)) {
-                    alert('Please enter a valid 10-digit mobile number.');
-                    return;
-                }
-                
-                // Show loading state on button
-                btnText.style.display = 'none';
-                btnLoader.style.display = 'block';
-                
-                try {
-                    // Generate user ID
-                    const userId = generateUserId();
-                    
-                    // Create user data object
-                    const userData = {
-                        userId: userId,
-                        name: name,
-                        mobile: mobile,
-                        password: password, // In real app, hash password before storing
-                        referral: referral || 'None',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    
-                    // Save to Firebase
-                    await db.collection('users').doc(userId).set(userData);
-                    
-                    // Show welcome overlay with generated ID
-                    userIdDisplay.textContent = `ID: ${userId}`;
-                    welcomeOverlay.classList.add('active');
-                    
-                    // Countdown and redirect
-                    let seconds = 5;
-                    countdownElement.textContent = `Redirecting in ${seconds} seconds...`;
-                    
-                    const countdownInterval = setInterval(() => {
-                        seconds--;
-                        countdownElement.textContent = `Redirecting in ${seconds} seconds...`;
-                        
-                        if (seconds <= 0) {
-                            clearInterval(countdownInterval);
-                            // In a real application, redirect to dashboard
-                            // window.location.href = 'dashboard.html';
-                            
-                            // For this demo, reset form after 5 seconds
-                            setTimeout(() => {
-                                welcomeOverlay.classList.remove('active');
-                                form.reset();
-                                btnText.style.display = 'inline';
-                                btnLoader.style.display = 'none';
-                            }, 500);
-                        }
-                    }, 1000);
-                    
-                } catch (error) {
-                    console.error('Error saving user data:', error);
-                    alert('Registration failed. Please try again.');
-                    btnText.style.display = 'inline';
-                    btnLoader.style.display = 'none';
-                }
-            });
-        });
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+
+      }
     </script>
 </body>
+
 </html>
