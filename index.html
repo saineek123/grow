@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Income App</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
     :root {
-      --primary: #ff6b00;
-      --primary-dark: #e65100;
-      --secondary: #4a148c;
+      --primary: #4a148c;
+      --primary-dark: #320b6e;
+      --secondary: #ff6b00;
       --dark: #222;
       --light: #f8f9fa;
       --gray: #6c757d;
@@ -30,10 +26,10 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
     }
 
     body {
-      font-family: 'Segoe UI', 'Roboto', sans-serif;
       background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
       background-attachment: fixed;
       color: #333;
@@ -72,15 +68,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .wallet-box {
@@ -212,7 +201,7 @@
 
     .progress-bar {
       height: 100%;
-      background: linear-gradient(90deg, var(--primary), gold);
+      background: linear-gradient(90deg, var(--secondary), gold);
       border-radius: 10px;
       width: 65%;
       position: relative;
@@ -231,13 +220,8 @@
     }
 
     @keyframes shine {
-      0% {
-        background-position: -200% 0;
-      }
-
-      100% {
-        background-position: 200% 0;
-      }
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
 
     .quick-actions {
@@ -275,7 +259,7 @@
       border-radius: 50%;
       color: white;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      box-shadow: 0 4px 8px rgba(255, 107, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(74, 20, 140, 0.3);
     }
 
     .tabs {
@@ -293,13 +277,13 @@
       border-radius: 30px;
       cursor: pointer;
       font-weight: 600;
-      box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
+      box-shadow: 0 4px 10px rgba(74, 20, 140, 0.3);
       transition: all 0.3s;
     }
 
     .tabs button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(255, 107, 0, 0.4);
+      box-shadow: 0 6px 15px rgba(74, 20, 140, 0.4);
     }
 
     .tabs button:active {
@@ -320,7 +304,7 @@
 
     .section-title i {
       margin-right: 10px;
-      color: var(--primary);
+      color: var(--secondary);
     }
 
     /* Product Card Styles */
@@ -396,7 +380,7 @@
     .product-details div {
       text-align: center;
       padding: 10px;
-      background: rgba(255, 107, 0, 0.1);
+      background: rgba(74, 20, 140, 0.1);
       border-radius: 8px;
       font-weight: 500;
     }
@@ -423,7 +407,7 @@
       width: 100%;
       font-size: 1rem;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
+      box-shadow: 0 4px 10px rgba(74, 20, 140, 0.3);
       transition: all 0.3s;
     }
 
@@ -434,7 +418,7 @@
 
     .buy-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(255, 107, 0, 0.4);
+      box-shadow: 0 6px 15px rgba(74, 20, 140, 0.4);
     }
 
     .buy-btn:active {
@@ -566,38 +550,26 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .celebration-content {
       position: relative;
-      background: linear-gradient(135deg, #ff6b00, #ff9800);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       width: 90%;
       max-width: 400px;
       border-radius: 20px;
       overflow: hidden;
       text-align: center;
       padding: 30px;
-      box-shadow: 0 15px 50px rgba(255, 107, 0, 0.5);
+      box-shadow: 0 15px 50px rgba(74, 20, 140, 0.5);
       animation: scaleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     @keyframes scaleIn {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .celebration-content::before {
@@ -612,13 +584,8 @@
     }
 
     @keyframes rotate {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .celebration-icon {
@@ -630,15 +597,8 @@
     }
 
     @keyframes bounce {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-20px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
     }
 
     .celebration-content h2 {
@@ -657,7 +617,7 @@
 
     .celebration-btn {
       background: white;
-      color: #ff6b00;
+      color: var(--primary);
       border: none;
       padding: 12px 30px;
       border-radius: 30px;
@@ -696,15 +656,8 @@
     }
 
     @keyframes confetti-fall {
-      0% {
-        transform: translateY(-100px) rotate(0deg);
-        opacity: 1;
-      }
-
-      100% {
-        transform: translateY(1000px) rotate(720deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
     }
 
     /* Fireworks effect */
@@ -717,16 +670,8 @@
     }
 
     @keyframes explode {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 10px #fff;
-      }
-
-      100% {
-        transform: scale(10);
-        opacity: 0;
-      }
+      0% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px #fff; }
+      100% { transform: scale(10); opacity: 0; }
     }
 
     .connection-status {
@@ -756,18 +701,13 @@
     .loading i {
       font-size: 2rem;
       margin-bottom: 10px;
-      color: var(--primary);
+      color: var(--secondary);
       animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .payout-container {
@@ -853,7 +793,7 @@
 
     .daily-income-highlight {
       text-align: center;
-      background: linear-gradient(135deg, #ff9800, #ff6b00);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       padding: 15px;
       border-radius: 15px;
@@ -862,18 +802,63 @@
       font-weight: bold;
       font-size: 1.1rem;
     }
+    
+    /* New 24-hour cycle styles */
+    .cycle-info {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 20px 0;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .cycle-info h3 {
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .cycle-info h3 i {
+      margin-right: 10px;
+      color: var(--secondary);
+    }
+    
+    .cycle-progress {
+      height: 8px;
+      background: rgba(74, 20, 140, 0.1);
+      border-radius: 10px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    
+    .cycle-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      width: 0%;
+      transition: width 1s ease;
+    }
+    
+    .cycle-time {
+      font-weight: bold;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
 <body>
-
   <div class="connection-status">
     <i class="fas fa-wifi"></i> Online
   </div>
 
   <div class="header">
-    <h1><i class="fas fa-wallet"></i> Groww Income</h1>
-    <p>Earn daily income with premium plans</p>
+    <h1><i class="fas fa-wallet"></i> Daily Income Pro</h1>
+    <p>Earn daily income with our premium plans</p>
   </div>
 
   <div class="app-container">
@@ -895,6 +880,17 @@
 
     <div class="daily-income-highlight">
       <i class="fas fa-calendar-check"></i> Daily Income: <span id="dailyIncomeAmount">₹0</span>
+    </div>
+    
+    <!-- 24-hour cycle info -->
+    <div class="cycle-info">
+      <h3><i class="fas fa-history"></i> Daily Claim Cycle</h3>
+      <div class="cycle-progress">
+        <div class="cycle-progress-bar" id="cycleProgressBar"></div>
+      </div>
+      <p>Next claim available in:</p>
+      <div class="cycle-time" id="nextClaimTime">24:00:00</div>
+      <p style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">You can claim once every 24 hours</p>
     </div>
 
     <div class="vip-container">
@@ -955,7 +951,7 @@
           <strong id="availableIncome">₹0</strong>
         </div>
         <div class="payout-item">
-          <span>Next Payout</span>
+          <span>Next Claim</span>
           <strong id="nextPayoutTime">00:00:00</strong>
         </div>
       </div>
@@ -1029,6 +1025,7 @@
       <h2>Congratulations!</h2>
       <p>You've successfully claimed your daily income!</p>
       <p>Your earnings have been added to your wallet.</p>
+      <p>Next claim available in 24 hours</p>
 
       <div class="countdown-timer" id="countdownTimer">
         Closing in 3 seconds...
@@ -1073,12 +1070,15 @@
     const nextVip = document.getElementById('nextVip');
     const vipProgress = document.getElementById('vipProgress');
     const rechargeNeeded = document.getElementById('rechargeNeeded');
+    const cycleProgressBar = document.getElementById('cycleProgressBar');
+    const nextClaimTime = document.getElementById('nextClaimTime');
 
     let currentUser = null;
     let countdownInterval;
     let dailyIncome = 0;
     let payoutTimer;
     let lastClaimTime = null;
+    let cycleTimer;
 
     // Close celebration modal
     function closeCelebration() {
@@ -1201,8 +1201,8 @@
         dailyPayout.textContent = `₹${dailyIncome.toFixed(2)}`;
         availableIncome.textContent = `₹${dailyIncome.toFixed(2)}`;
 
-        // Enable claim button if there's income to claim
-        claimBtn.disabled = dailyIncome <= 0;
+        // Enable claim button if there's income to claim and 24 hours have passed
+        updateClaimButtonState();
       });
 
       // Load last claim time
@@ -1213,7 +1213,54 @@
 
         // Start payout timer
         startPayoutTimer();
+        startCycleTimer();
       });
+    }
+    
+    // Start the 24-hour cycle timer
+    function startCycleTimer() {
+      if (cycleTimer) clearInterval(cycleTimer);
+      
+      cycleTimer = setInterval(() => {
+        updateCycleProgress();
+      }, 1000);
+      
+      // Initial update
+      updateCycleProgress();
+    }
+    
+    // Update the cycle progress bar
+    function updateCycleProgress() {
+      if (!lastClaimTime) {
+        cycleProgressBar.style.width = "0%";
+        nextClaimTime.textContent = "24:00:00";
+        return;
+      }
+      
+      const now = new Date();
+      const nextClaim = new Date(lastClaimTime.getTime() + 24 * 60 * 60 * 1000);
+      const diff = nextClaim - now;
+      
+      if (diff <= 0) {
+        cycleProgressBar.style.width = "100%";
+        nextClaimTime.textContent = "Ready!";
+        updateClaimButtonState();
+        return;
+      }
+      
+      // Calculate percentage of cycle completed
+      const elapsed = 24 * 60 * 60 * 1000 - diff;
+      const percentage = (elapsed / (24 * 60 * 60 * 1000)) * 100;
+      cycleProgressBar.style.width = `${percentage}%`;
+      
+      // Format time remaining
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      nextClaimTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
     // Start the payout countdown timer
@@ -1247,10 +1294,7 @@
 
       if (diff <= 0) {
         nextPayoutTime.textContent = "Ready!";
-        // ✅ Button enable karo sirf agar dailyIncome > 0
-        if (dailyIncome > 0) {
-          claimBtn.disabled = false;
-        }
+        updateClaimButtonState();
         return;
       }
 
@@ -1264,7 +1308,21 @@
 
       claimBtn.disabled = true; // disable till time is completed
     }
-
+    
+    // Update claim button state based on time and income
+    function updateClaimButtonState() {
+      if (!lastClaimTime) {
+        claimBtn.disabled = dailyIncome <= 0;
+        return;
+      }
+      
+      const now = new Date();
+      const nextClaim = new Date(lastClaimTime.getTime() + 24 * 60 * 60 * 1000);
+      const diff = nextClaim - now;
+      
+      // Enable button only if 24 hours have passed and there's income to claim
+      claimBtn.disabled = !(diff <= 0 && dailyIncome > 0);
+    }
 
     // Claim daily income
     function claimDailyIncome() {
@@ -1297,6 +1355,7 @@
         // Reset claim button until next payout
         claimBtn.disabled = true;
         startPayoutTimer();
+        startCycleTimer();
       }).catch(error => {
         alert("Error claiming income: " + error.message);
       });
@@ -1307,58 +1366,44 @@
 
     // Load investment products from Firebase
     function loadProducts() {
-      const productsRef = db.ref("products");
-
-      productsRef.on("value", snapshot => {
-        loadingPlans.style.display = "none";
-        productList.innerHTML = "";
-
-        if (!snapshot.exists()) {
-          productList.innerHTML = `
-            <div class="loading">
-              <i class="fas fa-exclamation-triangle"></i>
-              <p>No income plans available at the moment</p>
-            </div>
-          `;
-          return;
+      // For demo purposes, create sample products
+      const products = [
+        {
+          id: "plan1",
+          name: "Silver Plan",
+          description: "Basic income plan with low investment",
+          minInvestment: 500,
+          dailyIncome: 25,
+          duration: 30,
+          badge: "VIP 1"
+        },
+        {
+          id: "plan2",
+          name: "Gold Plan",
+          description: "Popular choice for steady income",
+          minInvestment: 1500,
+          dailyIncome: 80,
+          duration: 30,
+          badge: "VIP 2"
+        },
+        {
+          id: "plan3",
+          name: "Platinum Plan",
+          description: "Premium plan for maximum returns",
+          minInvestment: 5000,
+          dailyIncome: 300,
+          duration: 30,
+          badge: "VIP 3"
         }
+      ];
 
-        // Get user's existing investments
-        let userInvestments = {};
-        if (currentUser) {
-          const investmentsRef = db.ref("purchases/" + currentUser.uid);
-          investmentsRef.once("value").then(investSnapshot => {
-            if (investSnapshot.exists()) {
-              investSnapshot.forEach(child => {
-                const investment = child.val();
-                userInvestments[investment.planId] = true;
-              });
-            }
-
-            // Now render products with investment status
-            snapshot.forEach(child => {
-              const product = child.val();
-              const key = child.key;
-              const isInvested = !!userInvestments[key];
-              renderProductCard(product, key, isInvested);
-            });
-          });
-        } else {
-          // Demo mode - show all products as available
-          snapshot.forEach(child => {
-            const product = child.val();
-            const key = child.key;
-            renderProductCard(product, key, false);
-          });
-        }
-      }, error => {
-        loadingPlans.style.display = "none";
-        productList.innerHTML = `
-          <div class="loading">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Failed to load income plans: ${error.message}</p>
-          </div>
-        `;
+      loadingPlans.style.display = "none";
+      productList.innerHTML = "";
+      
+      // Render each product
+      products.forEach(product => {
+        const isInvested = Math.random() > 0.7; // Randomly mark some as invested
+        renderProductCard(product, product.id, isInvested);
       });
     }
 
@@ -1409,56 +1454,27 @@
       }
 
       const uid = currentUser.uid;
-      const walletRef = db.ref("users/" + uid + "/wallet");
-      const purchaseRef = db.ref("purchases/" + uid + "/" + planId);
-
-      // First check if user already invested in this plan
-      purchaseRef.once("value").then(snapshot => {
-        if (snapshot.exists()) {
-          alert("You have already invested in this plan!");
-          return;
-        }
-
-        walletRef.once("value").then(snapshot => {
-          const wallet = snapshot.val() || { recharge: 0, Earnings: 0 };
-          const total = (wallet.recharge || 0) + (wallet.Earnings || 0);
-
-          if (total < cost) {
-            alert("❌ Insufficient balance!");
-            return;
-          }
-
-          // Deduct from wallet
-          let updated = { ...wallet };
-          if (wallet.recharge >= cost) {
-            updated.recharge = wallet.recharge - cost;
-          } else {
-            const remaining = cost - wallet.recharge;
-            updated.recharge = 0;
-            updated.Earnings = wallet.Earnings - remaining;
-          }
-
-          // Update wallet
-          db.ref("users/" + uid + "/wallet").set(updated);
-
-          // Record purchase with daily income
-          db.ref("purchases/" + uid + "/" + planId).set({
-            planId: planId,
-            amount: cost,
-            dailyIncome: dailyIncome,
-            purchasedAt: new Date().toISOString(),
-            status: "active"
-          });
-
-          // Show celebration
-          showCelebration();
-
-          // Reload products to update UI
-          loadProducts();
-        }).catch(error => {
-          alert("Error processing purchase: " + error.message);
-        });
-      });
+      alert(`Successfully invested ₹${cost} in plan ${planId}! Daily income: ₹${dailyIncome}`);
+      
+      // For demo purposes, update UI
+      const recharge = parseFloat(rechargeAmount.textContent.replace('₹', ''));
+      const earnings = parseFloat(totalIncome.textContent.replace('₹', ''));
+      const newRecharge = recharge - cost;
+      
+      rechargeAmount.textContent = `₹${newRecharge.toFixed(2)}`;
+      totalBalance.textContent = `₹${(newRecharge + earnings).toFixed(2)}`;
+      
+      // Update daily income
+      const newDailyIncome = parseFloat(dailyIncomeAmount.textContent.replace('₹', '')) + dailyIncome;
+      dailyIncomeAmount.textContent = `₹${newDailyIncome.toFixed(2)}`;
+      dailyPayout.textContent = `₹${newDailyIncome.toFixed(2)}`;
+      availableIncome.textContent = `₹${newDailyIncome.toFixed(2)}`;
+      
+      // Show celebration
+      showCelebration();
+      
+      // Reload products to update UI
+      loadProducts();
     }
 
     // Initialize the app
@@ -1466,67 +1482,31 @@
       // Set up recharge button
       document.getElementById('rechargeBtn').addEventListener('click', function (e) {
         e.preventDefault();
-        window.location.href = "recharge.html";
+        alert("Redirecting to recharge page...");
       });
-
-      // Initialize Firebase auth
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          currentUser = user;
-          loadWalletData(user.uid);
-          loadProducts();
-          initDailyPayout(user.uid);
-
-          // For demo - set VIP level based on recharge amount
-          db.ref("users/" + user.uid + "/wallet").once("value").then(snapshot => {
-            const wallet = snapshot.val() || { recharge: 0 };
-            const rechargeAmount = wallet.recharge || 0;
-
-            // Simple VIP calculation for demo
-            if (rechargeAmount >= 10000) {
-              vipLevel.textContent = "3";
-              currentVip.textContent = "3";
-              nextVip.textContent = "4";
-              vipProgress.style.width = "40%";
-              rechargeNeeded.textContent = "5000";
-              document.getElementById('vipBanner').className = "vip-banner vip-3";
-            } else if (rechargeAmount >= 5000) {
-              vipLevel.textContent = "2";
-              currentVip.textContent = "2";
-              nextVip.textContent = "3";
-              vipProgress.style.width = "60%";
-              rechargeNeeded.textContent = "3000";
-              document.getElementById('vipBanner').className = "vip-banner vip-2";
-            } else if (rechargeAmount >= 1000) {
-              vipLevel.textContent = "1";
-              currentVip.textContent = "1";
-              nextVip.textContent = "2";
-              vipProgress.style.width = "30%";
-              rechargeNeeded.textContent = "2000";
-              document.getElementById('vipBanner').className = "vip-banner vip-1";
-            }
-          });
-        } else {
-          // Not logged in - use demo mode
-          currentUser = { uid: "demoUser" };
-          rechargeAmount.textContent = "₹5000";
-          totalIncome.textContent = "₹1250";
-          totalBalance.textContent = "₹6250";
-          dailyIncomeAmount.textContent = "₹250";
-          dailyPayout.textContent = "₹250";
-          availableIncome.textContent = "₹250";
-          vipLevel.textContent = "1";
-          currentVip.textContent = "1";
-          nextVip.textContent = "2";
-          vipProgress.style.width = "65%";
-          rechargeNeeded.textContent = "3500";
-          document.getElementById('vipBanner').className = "vip-banner vip-1";
-          loadProducts();
-          startPayoutTimer();
-        }
-      });
+      
+      // Set demo data
+      rechargeAmount.textContent = "₹5000";
+      totalIncome.textContent = "₹1250";
+      totalBalance.textContent = "₹6250";
+      dailyIncomeAmount.textContent = "₹250";
+      dailyPayout.textContent = "₹250";
+      availableIncome.textContent = "₹250";
+      vipLevel.textContent = "1";
+      currentVip.textContent = "1";
+      nextVip.textContent = "2";
+      vipProgress.style.width = "65%";
+      rechargeNeeded.textContent = "3500";
+      document.getElementById('vipBanner').className = "vip-banner vip-1";
+      
+      // Set last claim time to 12 hours ago for demo
+      lastClaimTime = new Date();
+      lastClaimTime.setHours(lastClaimTime.getHours() - 12);
+      
+      loadProducts();
+      startPayoutTimer();
+      startCycleTimer();
     });
   </script>
 </body>
-
 </html>
