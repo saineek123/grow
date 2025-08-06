@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,8 +72,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .wallet-box {
@@ -347,7 +355,7 @@
       text-align: center;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     }
-    
+
     .already-invested {
       position: absolute;
       top: 10px;
@@ -418,7 +426,7 @@
       box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
       transition: all 0.3s;
     }
-    
+
     .buy-btn.already-invested-btn {
       background: linear-gradient(135deg, #9e9e9e, #757575);
       cursor: not-allowed;
@@ -558,8 +566,13 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .celebration-content {
@@ -576,8 +589,15 @@
     }
 
     @keyframes scaleIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .celebration-content::before {
@@ -587,13 +607,18 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
       animation: rotate 20s linear infinite;
     }
 
     @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .celebration-icon {
@@ -605,20 +630,27 @@
     }
 
     @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
     }
 
     .celebration-content h2 {
       font-size: 2rem;
       color: white;
       margin: 15px 0;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .celebration-content p {
       font-size: 1.2rem;
-      color: rgba(255,255,255,0.9);
+      color: rgba(255, 255, 255, 0.9);
       margin-bottom: 25px;
       line-height: 1.5;
     }
@@ -632,13 +664,13 @@
       font-size: 1.1rem;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
     }
 
     .celebration-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
 
     .celebration-btn:active {
@@ -650,7 +682,7 @@
       font-weight: bold;
       color: white;
       margin-top: 15px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 
     /* Confetti effect */
@@ -664,8 +696,15 @@
     }
 
     @keyframes confetti-fall {
-      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(1000px) rotate(720deg);
+        opacity: 0;
+      }
     }
 
     /* Fireworks effect */
@@ -678,10 +717,18 @@
     }
 
     @keyframes explode {
-      0% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px #fff; }
-      100% { transform: scale(10); opacity: 0; }
+      0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 10px #fff;
+      }
+
+      100% {
+        transform: scale(10);
+        opacity: 0;
+      }
     }
-    
+
     .connection-status {
       position: fixed;
       top: 10px;
@@ -694,30 +741,35 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
       background: #28a745;
       color: white;
     }
-    
+
     .loading {
       text-align: center;
       padding: 20px;
       color: white;
       font-size: 1.2rem;
     }
-    
+
     .loading i {
       font-size: 2rem;
       margin-bottom: 10px;
       color: var(--primary);
       animation: spin 1s linear infinite;
     }
-    
+
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
-    
+
     .payout-container {
       background: rgba(255, 255, 255, 0.95);
       border-radius: 15px;
@@ -725,53 +777,53 @@
       margin: 25px 0;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
-    
+
     .payout-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
     }
-    
+
     .payout-title {
       font-size: 1.2rem;
       color: var(--primary-dark);
       font-weight: bold;
     }
-    
+
     .payout-amount {
       font-size: 1.5rem;
       font-weight: bold;
       color: var(--success);
     }
-    
+
     .payout-details {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin-bottom: 15px;
     }
-    
+
     .payout-item {
       background: rgba(40, 167, 69, 0.1);
       padding: 10px;
       border-radius: 8px;
       text-align: center;
     }
-    
+
     .payout-item span {
       display: block;
       font-size: 0.9rem;
       color: var(--gray);
       margin-bottom: 5px;
     }
-    
+
     .payout-item strong {
       display: block;
       font-size: 1.1rem;
       color: var(--dark);
     }
-    
+
     .claim-btn {
       background: linear-gradient(135deg, var(--success), #1e7e34);
       color: white;
@@ -786,19 +838,19 @@
       box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
       transition: all 0.3s;
     }
-    
+
     .claim-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
     }
-    
+
     .claim-btn:disabled {
       background: var(--gray);
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
     }
-    
+
     .daily-income-highlight {
       text-align: center;
       background: linear-gradient(135deg, #ff9800, #ff6b00);
@@ -840,7 +892,7 @@
         <span>Total Balance</span>
       </div>
     </div>
-    
+
     <div class="daily-income-highlight">
       <i class="fas fa-calendar-check"></i> Daily Income: <span id="dailyIncomeAmount">₹0</span>
     </div>
@@ -890,13 +942,13 @@
       <button class="active">Daily Income</button>
       <button>Benefits Program</button>
     </div>
-    
+
     <div class="payout-container">
       <div class="payout-header">
         <div class="payout-title"><i class="fas fa-calendar-day"></i> Daily Income</div>
         <div class="payout-amount" id="dailyPayout">₹0</div>
       </div>
-      
+
       <div class="payout-details">
         <div class="payout-item">
           <span>Available</span>
@@ -907,7 +959,7 @@
           <strong id="nextPayoutTime">00:00:00</strong>
         </div>
       </div>
-      
+
       <button class="claim-btn" id="claimBtn" disabled>
         <i class="fas fa-hand-holding-usd"></i> Claim Daily Income
       </button>
@@ -977,11 +1029,11 @@
       <h2>Congratulations!</h2>
       <p>You've successfully claimed your daily income!</p>
       <p>Your earnings have been added to your wallet.</p>
-      
+
       <div class="countdown-timer" id="countdownTimer">
         Closing in 3 seconds...
       </div>
-      
+
       <button class="celebration-btn" id="closeCelebration">
         <i class="fas fa-check-circle"></i> Continue Now
       </button>
@@ -1001,7 +1053,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
-    
+
     // DOM references
     const rechargeAmount = document.getElementById('rechargeAmount');
     const totalIncome = document.getElementById('earningsAmount');
@@ -1021,7 +1073,7 @@
     const nextVip = document.getElementById('nextVip');
     const vipProgress = document.getElementById('vipProgress');
     const rechargeNeeded = document.getElementById('rechargeNeeded');
-    
+
     let currentUser = null;
     let countdownInterval;
     let dailyIncome = 0;
@@ -1040,7 +1092,7 @@
     function createConfetti() {
       const colors = ['#ff6b00', '#ff9800', '#4CAF50', '#2196F3', '#9C27B0', '#FFEB3B'];
       const container = document.body;
-      
+
       for (let i = 0; i < 150; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
@@ -1051,7 +1103,7 @@
         confetti.style.width = (Math.random() * 10 + 5) + 'px';
         confetti.style.height = (Math.random() * 10 + 5) + 'px';
         container.appendChild(confetti);
-        
+
         // Remove after animation completes
         setTimeout(() => {
           if (confetti.parentNode) {
@@ -1065,7 +1117,7 @@
     function createFireworks() {
       const container = document.body;
       const colors = ['#ff6b00', '#ff9800', '#FFEB3B', '#4CAF50', '#2196F3'];
-      
+
       for (let i = 0; i < 20; i++) {
         const firework = document.createElement('div');
         firework.className = 'firework';
@@ -1074,7 +1126,7 @@
         firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         firework.style.animationDelay = Math.random() * 1 + 's';
         container.appendChild(firework);
-        
+
         // Remove after animation completes
         setTimeout(() => {
           if (firework.parentNode) {
@@ -1089,24 +1141,24 @@
       celebrationModal.style.display = 'flex';
       createConfetti();
       createFireworks();
-      
+
       let seconds = 3;
       countdownTimer.textContent = `Closing in ${seconds} seconds...`;
-      
+
       countdownInterval = setInterval(() => {
         seconds--;
         countdownTimer.textContent = `Closing in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
-        
+
         if (seconds <= 0) {
           closeCelebration();
         }
       }, 1000);
-      
+
       // Create more fireworks periodically
       const fireworksInterval = setInterval(() => {
         createFireworks();
       }, 1500);
-      
+
       // Stop after 10 seconds
       setTimeout(() => {
         clearInterval(fireworksInterval);
@@ -1127,14 +1179,14 @@
         totalBalance.textContent = `₹${total.toFixed(2)}`;
       });
     }
-    
+
     // Initialize daily income payout system
     function initDailyPayout(uid) {
       // Get user's daily income from their investments
       const investmentsRef = db.ref("purchases/" + uid);
       investmentsRef.on("value", snapshot => {
         dailyIncome = 0;
-        
+
         if (snapshot.exists()) {
           snapshot.forEach(child => {
             const investment = child.val();
@@ -1144,33 +1196,32 @@
             }
           });
         }
-        
+
         dailyIncomeAmount.textContent = `₹${dailyIncome.toFixed(2)}`;
         dailyPayout.textContent = `₹${dailyIncome.toFixed(2)}`;
         availableIncome.textContent = `₹${dailyIncome.toFixed(2)}`;
-        
+
         // Enable claim button if there's income to claim
         claimBtn.disabled = dailyIncome <= 0;
       });
-      
+
       // Load last claim time
       const userRef = db.ref("users/" + uid);
       userRef.once("value").then(snapshot => {
         const userData = snapshot.val() || {};
         lastClaimTime = userData.lastClaim ? new Date(userData.lastClaim) : null;
-        
+
         // Start payout timer
         startPayoutTimer();
       });
     }
-    
+
     // Start the payout countdown timer
     function startPayoutTimer() {
       if (payoutTimer) clearInterval(payoutTimer);
-      
-      // Set next payout time
+
       let nextPayout;
-      
+
       if (lastClaimTime) {
         // 24 hours from last claim
         nextPayout = new Date(lastClaimTime.getTime() + 24 * 60 * 60 * 1000);
@@ -1181,64 +1232,68 @@
         nextPayout.setDate(nextPayout.getDate() + 1);
         nextPayout.setHours(0, 0, 0, 0);
       }
-      
+
       updatePayoutTimer(nextPayout);
-      
-      // Update timer every second
+
       payoutTimer = setInterval(() => {
         updatePayoutTimer(nextPayout);
       }, 1000);
     }
-    
+
     // Update the payout timer display
     function updatePayoutTimer(targetTime) {
       const now = new Date();
       const diff = targetTime - now;
-      
+
       if (diff <= 0) {
-        // Time to claim income!
         nextPayoutTime.textContent = "Ready!";
-        claimBtn.disabled = dailyIncome <= 0;
+        // ✅ Button enable karo sirf agar dailyIncome > 0
+        if (dailyIncome > 0) {
+          claimBtn.disabled = false;
+        }
         return;
       }
-      
-      // Calculate hours, minutes, seconds
+
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      claimBtn.disabled = true;
+
+      nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+      claimBtn.disabled = true; // disable till time is completed
     }
-    
+
+
     // Claim daily income
     function claimDailyIncome() {
       if (!currentUser || dailyIncome <= 0) return;
-      
+
       const uid = currentUser.uid;
       const walletRef = db.ref("users/" + uid + "/wallet");
       const userRef = db.ref("users/" + uid);
-      
+
       walletRef.once("value").then(snapshot => {
         const wallet = snapshot.val() || { recharge: 0, Earnings: 0 };
         const newEarnings = (wallet.Earnings || 0) + dailyIncome;
-        
+
         // Update wallet
         db.ref("users/" + uid + "/wallet").set({
           ...wallet,
           Earnings: newEarnings
         });
-        
+
         // Update last claim time
         const now = new Date();
         lastClaimTime = now;
         userRef.update({
           lastClaim: now.toISOString()
         });
-        
+
         // Show celebration
         showCelebration();
-        
+
         // Reset claim button until next payout
         claimBtn.disabled = true;
         startPayoutTimer();
@@ -1246,18 +1301,18 @@
         alert("Error claiming income: " + error.message);
       });
     }
-    
+
     // Add event listener to claim button
     claimBtn.addEventListener('click', claimDailyIncome);
 
     // Load investment products from Firebase
     function loadProducts() {
       const productsRef = db.ref("products");
-      
+
       productsRef.on("value", snapshot => {
         loadingPlans.style.display = "none";
         productList.innerHTML = "";
-        
+
         if (!snapshot.exists()) {
           productList.innerHTML = `
             <div class="loading">
@@ -1267,7 +1322,7 @@
           `;
           return;
         }
-        
+
         // Get user's existing investments
         let userInvestments = {};
         if (currentUser) {
@@ -1279,7 +1334,7 @@
                 userInvestments[investment.planId] = true;
               });
             }
-            
+
             // Now render products with investment status
             snapshot.forEach(child => {
               const product = child.val();
@@ -1306,12 +1361,12 @@
         `;
       });
     }
-    
+
     // Render product card with investment status
     function renderProductCard(product, key, isInvested) {
       const card = document.createElement("div");
       card.className = "product-card";
-      
+
       card.innerHTML = `
         ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
         ${isInvested ? `<div class="already-invested">Invested</div>` : ''}
@@ -1331,13 +1386,13 @@
           ${isInvested ? 'Already Invested' : `Invest Now - ₹${product.minInvestment}`}
         </button>
       `;
-      
+
       productList.appendChild(card);
-      
+
       // Add event listener if not invested
       if (!isInvested) {
         const button = card.querySelector('.buy-btn');
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
           const planId = this.getAttribute('data-id');
           const cost = parseFloat(this.getAttribute('data-cost'));
           const dailyIncome = parseFloat(this.getAttribute('data-income'));
@@ -1385,7 +1440,7 @@
 
           // Update wallet
           db.ref("users/" + uid + "/wallet").set(updated);
-          
+
           // Record purchase with daily income
           db.ref("purchases/" + uid + "/" + planId).set({
             planId: planId,
@@ -1397,7 +1452,7 @@
 
           // Show celebration
           showCelebration();
-          
+
           // Reload products to update UI
           loadProducts();
         }).catch(error => {
@@ -1407,13 +1462,13 @@
     }
 
     // Initialize the app
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Set up recharge button
-      document.getElementById('rechargeBtn').addEventListener('click', function(e) {
+      document.getElementById('rechargeBtn').addEventListener('click', function (e) {
         e.preventDefault();
-         window.location.href = "recharge.html";
+        window.location.href = "recharge.html";
       });
-      
+
       // Initialize Firebase auth
       auth.onAuthStateChanged(user => {
         if (user) {
@@ -1421,12 +1476,12 @@
           loadWalletData(user.uid);
           loadProducts();
           initDailyPayout(user.uid);
-          
+
           // For demo - set VIP level based on recharge amount
           db.ref("users/" + user.uid + "/wallet").once("value").then(snapshot => {
             const wallet = snapshot.val() || { recharge: 0 };
             const rechargeAmount = wallet.recharge || 0;
-            
+
             // Simple VIP calculation for demo
             if (rechargeAmount >= 10000) {
               vipLevel.textContent = "3";
@@ -1473,6 +1528,5 @@
     });
   </script>
 </body>
+
 </html>
-
-
