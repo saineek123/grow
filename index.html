@@ -223,8 +223,13 @@
     }
 
     @keyframes shine {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
     }
 
     .quick-actions {
@@ -805,32 +810,6 @@
       font-weight: bold;
       font-size: 1.1rem;
     }
-    
-    /* Debug panel for testing */
-    .debug-panel {
-      position: fixed;
-      bottom: 60px;
-      right: 10px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      z-index: 1000;
-      display: none;
-    }
-    
-    .debug-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      margin: 5px 0;
-      cursor: pointer;
-      display: block;
-      width: 100%;
-    }
   </style>
 </head>
 
@@ -1009,14 +988,6 @@
     </div>
   </div>
 
-  <!-- Debug panel for testing -->
-  <div class="debug-panel" id="debugPanel">
-    <h3>Debug Tools</h3>
-    <button class="debug-btn" id="resetClaim">Reset Claim Timer</button>
-    <button class="debug-btn" id="addFunds">Add ₹1000</button>
-    <button class="debug-btn" id="simulateClaim">Simulate Claim</button>
-  </div>
-
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -1050,7 +1021,6 @@
     const nextVip = document.getElementById('nextVip');
     const vipProgress = document.getElementById('vipProgress');
     const rechargeNeeded = document.getElementById('rechargeNeeded');
-    const debugPanel = document.getElementById('debugPanel');
     
     let currentUser = null;
     let countdownInterval;
@@ -1179,23 +1149,8 @@
         dailyPayout.textContent = `₹${dailyIncome.toFixed(2)}`;
         availableIncome.textContent = `₹${dailyIncome.toFixed(2)}`;
         
-        // Enable claim button if there's income to claim and payout time has passed
-        const now = new Date();
-        if (lastClaimTime) {
-          const timeSinceLastClaim = now - lastClaimTime;
-          const twentyFourHours = 24 * 60 * 60 * 1000;
-          if (timeSinceLastClaim >= twentyFourHours) {
-            claimBtn.disabled = dailyIncome <= 0;
-          }
-        } else {
-          // First time claim - enable at midnight
-          const nextMidnight = new Date();
-          nextMidnight.setDate(nextMidnight.getDate() + 1);
-          nextMidnight.setHours(0, 0, 0, 0);
-          if (now >= nextMidnight) {
-            claimBtn.disabled = dailyIncome <= 0;
-          }
-        }
+        // Enable claim button if there's income to claim
+        claimBtn.disabled = dailyIncome <= 0;
       });
       
       // Load last claim time
@@ -1459,34 +1414,6 @@
          window.location.href = "recharge.html";
       });
       
-      // Debug tools
-      document.getElementById('resetClaim').addEventListener('click', function() {
-        lastClaimTime = null;
-        startPayoutTimer();
-        alert("Claim timer reset!");
-      });
-      
-      document.getElementById('addFunds').addEventListener('click', function() {
-        if (!currentUser) {
-          alert("Demo mode: Added ₹1000 to recharge balance");
-          const current = parseFloat(rechargeAmount.textContent.replace('₹', ''));
-          rechargeAmount.textContent = `₹${(current + 1000).toFixed(2)}`;
-          const total = parseFloat(totalBalance.textContent.replace('₹', ''));
-          totalBalance.textContent = `₹${(total + 1000).toFixed(2)}`;
-        } else {
-          alert("This feature only works in demo mode");
-        }
-      });
-      
-      document.getElementById('simulateClaim').addEventListener('click', function() {
-        claimDailyIncome();
-      });
-      
-      // Toggle debug panel on double tap
-      document.addEventListener('dblclick', function() {
-        debugPanel.style.display = debugPanel.style.display === 'block' ? 'none' : 'block';
-      });
-      
       // Initialize Firebase auth
       auth.onAuthStateChanged(user => {
         if (user) {
@@ -1539,8 +1466,6 @@
           vipProgress.style.width = "65%";
           rechargeNeeded.textContent = "3500";
           document.getElementById('vipBanner').className = "vip-banner vip-1";
-          dailyIncome = 250; // Set daily income for demo
-          lastClaimTime = null;
           loadProducts();
           startPayoutTimer();
         }
