@@ -1196,26 +1196,35 @@
       }, 1000);
     }
     
-    // Update the payout timer display
-    function updatePayoutTimer(targetTime) {
-      const now = new Date();
-      const diff = targetTime - now;
-      
-      if (diff <= 0) {
-        // Time to claim income!
-        nextPayoutTime.textContent = "Ready!";
-        claimBtn.disabled = dailyIncome <= 0;
-        return;
-      }
-      
-      // Calculate hours, minutes, seconds
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+   function updatePayoutTimer(targetTime) {
+  const now = new Date();
+  const diff = targetTime - now;
+
+  if (diff <= 0) {
+    // Check if already claimed today
+    const today = now.toISOString().split("T")[0];
+    const lastDate = lastClaimTime ? lastClaimTime.toISOString().split("T")[0] : null;
+
+    if (lastDate === today) {
+      nextPayoutTime.textContent = "Claimed";
       claimBtn.disabled = true;
+    } else {
+      nextPayoutTime.textContent = "Ready!";
+      claimBtn.disabled = dailyIncome <= 0;
     }
+    return;
+  }
+
+  // Timer countdown
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  claimBtn.disabled = true;
+}
+
     
     // Claim daily income
     function claimDailyIncome() {
