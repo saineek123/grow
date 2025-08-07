@@ -1132,6 +1132,8 @@
     // Initialize daily income payout system
     function initDailyPayout(uid) {
       // Get user's daily income from their investments
+      const userRef = db.ref("users/" + uid);
+
       const investmentsRef = db.ref("purchases/" + uid);
       investmentsRef.on("value", snapshot => {
         dailyIncome = 0;
