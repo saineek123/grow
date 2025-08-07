@@ -1491,6 +1491,8 @@
 
 function autoClaimDailyIncomeIfNeeded() {
   if (!currentUser || dailyIncome <= 0) return;
+  if (lastClaimDate === today) return; // Already claimed
+
 
   const uid = currentUser.uid;
   const now = new Date();
