@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1154,14 +1155,19 @@
       });
       
       // Load last claim time
-      const userRef = db.ref("users/" + uid);
       userRef.once("value").then(snapshot => {
-        const userData = snapshot.val() || {};
-        lastClaimTime = userData.lastClaim ? new Date(userData.lastClaim) : null;
-        
-        // Start payout timer
-        startPayoutTimer();
-      });
+  const userData = snapshot.val() || {};
+  if (userData.lastClaim) {
+    lastClaimTime = new Date(userData.lastClaim);
+  } else {
+    // 🔥 Default: allow claim now (set old date)
+    lastClaimTime = new Date(Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
+    userRef.update({
+      lastClaim: lastClaimTime.toISOString()
+    });
+  }
+  startPayoutTimer();
+});
     }
     
     // Start the payout countdown timer
@@ -1509,7 +1515,7 @@ function autoClaimDailyIncomeIfNeeded() {
     }
   });
 }
-</script>
+
 
   </script>
 </body>
