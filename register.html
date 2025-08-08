@@ -343,85 +343,85 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
-      authDomain: "grow-3e3a1.firebaseapp.com",
-      databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
-      projectId: "grow-3e3a1",
-      storageBucket: "grow-3e3a1.appspot.com",
-      messagingSenderId: "285304522946",
-      appId: "1:285304522946:web:c423e49a8e0968ce63535b",
-      measurementId: "G-Q7DPY3BF6C"
-    };
+ <!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
+    authDomain: "grow-3e3a1.firebaseapp.com",
+    databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
+    projectId: "grow-3e3a1",
+    storageBucket: "grow-3e3a1.appspot.com",
+    messagingSenderId: "285304522946",
+    appId: "1:285304522946:web:c423e49a8e0968ce63535b",
+    measurementId: "G-Q7DPY3BF6C"
+  };
 
-    function registerUser() {
-      const phone = document.getElementById("phone").value.trim();
-      const name = document.getElementById("name").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const confirmPassword = document.getElementById("confirmPassword").value.trim();
-      const referralCode = document.getElementById("referralCode").value.trim();
-      const registerButton = document.getElementById("registerButton");
-      const successAnimation = document.getElementById("successAnimation");
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-      if (!phone || !name || !password || !confirmPassword) {
-        alert("❌ सभी जानकारी भरें");
-        return;
-      }
+  function registerUser() {
+    const phone = document.getElementById("phone").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+    const referralCode = document.getElementById("referralCode").value.trim();
+    const registerButton = document.getElementById("registerButton");
+    const successAnimation = document.getElementById("successAnimation");
 
-      if (password !== confirmPassword) {
-        alert("❌ पासवर्ड मैच नहीं कर रहा");
-        return;
-      }
-
-      // Show loading spinner
-      registerButton.classList.add("loading");
-
-      const fakeEmail = phone + "@example.com";
-
-      // Simulate API call with delay for demo purposes
-      setTimeout(() => {
-        auth.createUserWithEmailAndPassword(fakeEmail, password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            db.ref("users/" + user.uid).set({
-              name: name,
-              phone: phone,
-              email: fakeEmail,
-              referralCode: user.uid,
-              referredBy: referralCode,
-              createdAt: Date.now(),
-              wallet: {
-                recharge: 0,
-                bonus: 0,
-                winning: 0,
-                total: 0
-              }
-            }).then(() => {
-              if (referralCode !== "") {
-                db.ref("users/" + referralCode + "/referrals/" + user.uid).set(true);
-              }
-              
-              // Hide loading spinner and show success animation
-              registerButton.classList.remove("loading");
-              successAnimation.classList.add("show");
-              
-              // Redirect after animation
-              setTimeout(() => {
-                window.location.href = "index.html";
-              }, 2000);
-            });
-          })
-          .catch((error) => {
-            registerButton.classList.remove("loading");
-            alert("❌ " + error.message);
-          });
-      }, 1500);
+    if (!phone || !name || !password || !confirmPassword) {
+      alert("❌ सभी जानकारी भरें");
+      return;
     }
-  </script>
+
+    if (password !== confirmPassword) {
+      alert("❌ पासवर्ड मैच नहीं कर रहा");
+      return;
+    }
+
+    registerButton.classList.add("loading");
+
+    // Check if user already exists
+    db.ref("users/" + phone).once("value", snapshot => {
+      if (snapshot.exists()) {
+        registerButton.classList.remove("loading");
+        alert("❌ यह मोबाइल नंबर पहले से रजिस्टर है");
+      } else {
+        // Save new user
+        db.ref("users/" + phone).set({
+          name: name,
+          phone: phone,
+          password: password,
+          referralCode: phone,
+          referredBy: referralCode || "",
+          createdAt: Date.now(),
+          wallet: {
+            recharge: 0,
+            bonus: 0,
+            winning: 0,
+            total: 0
+          }
+        }).then(() => {
+          // If referred, save referral data
+          if (referralCode) {
+            db.ref("users/" + referralCode + "/referrals/" + phone).set(true);
+          }
+
+          registerButton.classList.remove("loading");
+          successAnimation.classList.add("show");
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 2000);
+        }).catch((error) => {
+          registerButton.classList.remove("loading");
+          alert("❌ " + error.message);
+        });
+      }
+    });
+  }
+</script>
 </body>
 </html>
