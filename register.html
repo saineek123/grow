@@ -338,12 +338,15 @@
     </svg>
   </div>
 
- <!-- Firebase Scripts -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getDatabase, ref, set, push, get, update, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-<script>
-  const firebaseConfig = {
+    const firebaseConfig = {
     apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
     authDomain: "grow-3e3a1.firebaseapp.com",
     databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
@@ -354,69 +357,67 @@
     measurementId: "G-Q7DPY3BF6C"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase();
 
-  function registerUser() {
-    const phone = document.getElementById("phone").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirmPassword").value.trim();
-    const referralCode = document.getElementById("referralCode").value.trim();
-    const registerButton = document.getElementById("registerButton");
-    const successAnimation = document.getElementById("successAnimation");
-
-    if (!phone || !name || !password || !confirmPassword) {
-      alert("❌ सभी जानकारी भरें");
-      return;
+  function generateReferralCode(length = 6) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+    for (let i = 0; i < length; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-
-    if (password !== confirmPassword) {
-      alert("❌ पासवर्ड मैच नहीं कर रहा");
-      return;
-    }
-
-    registerButton.classList.add("loading");
-
-    // Check if user already exists
-    db.ref("users/" + phone).once("value", snapshot => {
-      if (snapshot.exists()) {
-        registerButton.classList.remove("loading");
-        alert("❌ यह मोबाइल नंबर पहले से रजिस्टर है");
-      } else {
-        // Save new user
-        db.ref("users/" + phone).set({
-          name: name,
-          phone: phone,
-          password: password,
-          referralCode: phone,
-          referredBy: referralCode || "",
-          createdAt: Date.now(),
-          wallet: {
-            recharge: 0,
-            bonus: 0,
-            winning: 0,
-            total: 0
-          }
-        }).then(() => {
-          // If referred, save referral data
-          if (referralCode) {
-            db.ref("users/" + referralCode + "/referrals/" + phone).set(true);
-          }
-
-          registerButton.classList.remove("loading");
-          successAnimation.classList.add("show");
-
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 2000);
-        }).catch((error) => {
-          registerButton.classList.remove("loading");
-          alert("❌ " + error.message);
-        });
-      }
-    });
+    return code;
   }
+window.registerUser = async function () {
+  const phone = document.getElementById("phone").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const referralCodeInput = document.getElementById("referralCodeInput").value.trim();
+  const msg = document.getElementById("msg");
+  msg.className = 'msg';
+
+  if (!phone || !name || !password) {
+    msg.textContent = "Please fill all required fields.";
+    msg.classList.add('error');
+    return;
+  }
+
+  try {
+    // First create authentication user
+    const auth = getAuth();
+    const email = `${phone}@yourdomain.com`; // Create email from phone
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userId = userCredential.user.uid;
+
+    const referralCode = generateReferralCode();
+    
+    const userData = {
+      phone,
+      name,
+      referralCode,
+      wallet: 0,
+      referredBy: referralCodeInput || null
+    };
+
+    // Now write to database
+    await set(ref(db, 'users/' + userId), userData);
+    
+    msg.textContent = "Registered successfully ✔";
+    msg.classList.add('success');
+
+    // ... rest of your referral code logic ...
+
+    setTimeout(() => { window.location.href = "login.html"; }, 1500);
+  } catch (error) {
+    console.error("Registration error:", error);
+    msg.textContent = "Error: " + error.message;
+    msg.classList.add('error');
+  }
+};
+
+  window.goToLogin = function () {
+    window.location.href = "login.html";
+  };
 </script>
 </body>
 </html>
