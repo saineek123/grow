@@ -404,7 +404,7 @@
   </div>
 
   <div class="header">
-    <h1><i class="fas fa-money-bill-wave"></i> Withdraw Funds</h1>
+    <h1><i class="fas fa-money-bill-wave"></i> Withdraw </h1>
     <p>Withdraw your earnings to bank account</p>
   </div>
 
@@ -457,7 +457,7 @@
         <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw">
       </div>
       
-      <div class="min-amount">Minimum withdrawal amount: ₹100</div>
+      <div class="min-amount">Minimum withdrawal amount: ₹310</div>
       
       <button class="withdraw-btn" id="withdrawBtn">
         <i class="fas fa-paper-plane"></i> Request Withdrawal
@@ -629,8 +629,8 @@
         return false;
       }
       
-      if (amount < 100) {
-        showMessage("Minimum withdrawal amount is ₹100", "error");
+      if (amount < 310) {
+        showMessage("Minimum withdrawal amount is ₹310", "error");
         return false;
       }
       
