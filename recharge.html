@@ -799,7 +799,7 @@
 
         <div class="qr-container" id="qrContainer">
           <div class="qr-placeholder">
-            <img src="qr.upi.jpg" alt="QR Code">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=grow@examplebank&pn=Grow%20Investment&am=1000&cu=INR" alt="QR Code">
           </div>
           <p>Scan this QR code with any UPI app to pay</p>
         </div>
@@ -890,15 +890,15 @@
             <div class="upi-info">
               <div class="upi-row">
                 <span class="upi-label">UPI ID:</span>
-                <span class="upi-value">9119698596@ptsbi</span>
-                <button class="copy-btn" onclick="copyToClipboard('9119698596@ptsbi')">
+                <span class="upi-value">grow@examplebank</span>
+                <button class="copy-btn" onclick="copyToClipboard('grow@examplebank')">
                   <i class="fas fa-copy"></i>
                 </button>
               </div>
               <div class="upi-row">
                 <span class="upi-label">Account Name:</span>
-                <span class="upi-value">miss nabirunnisha</span>
-                <button class="copy-btn" onclick="copyToClipboard('miss nabirunnisha')">
+                <span class="upi-value">Grow Investment</span>
+                <button class="copy-btn" onclick="copyToClipboard('Grow Investment')">
                   <i class="fas fa-copy"></i>
                 </button>
               </div>
@@ -1041,7 +1041,6 @@
     </div>
   </div>
   <script>
-    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
@@ -1052,22 +1051,17 @@
       appId: "1:285304522946:web:c423e49a8e0968ce63535b"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+const auth = firebase.auth(); // ✅ Add this line
+const db = firebase.database();
 
     // DOM Elements
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
     const step3 = document.getElementById('step3');
-    const step4 = document.getElementById('step4');
     const step1Indicator = document.getElementById('step1-indicator');
     const step2Indicator = document.getElementById('step2-indicator');
     const step3Indicator = document.getElementById('step3-indicator');
-    const step4Indicator = document.getElementById('step4-indicator');
-    const qrContainer = document.getElementById('qrContainer');
-    const qrAmount = document.getElementById('qrAmount');
 
     const amountInput = document.getElementById('amount');
     const amountOptions = document.querySelectorAll('.amount-option');
@@ -1079,8 +1073,6 @@
 
     const nextStep1Btn = document.getElementById('nextStep1');
     const prevStep2Btn = document.getElementById('prevStep2');
-    const prevStep3Btn = document.getElementById('prevStep3');
-    const paidBtn = document.getElementById('paidBtn');
     const submitRechargeBtn = document.getElementById('submitRecharge');
     const newRechargeBtn = document.getElementById('newRecharge');
     const goToDashboardBtn = document.getElementById('goToDashboard');
@@ -1094,10 +1086,17 @@
 
     let selectedAmount = 500;
     let userId;
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    userId = user.uid;
+    loadRechargeHistory(); // Load only after auth
+  } else {
+    alert("Please login to continue");
+    window.location.href = "login.html";
+  }
+});
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      // Amount options selection
       amountOptions.forEach(option => {
         option.addEventListener('click', function () {
           amountOptions.forEach(opt => opt.classList.remove('selected'));
@@ -1107,13 +1106,11 @@
         });
       });
 
-      // Amount input listener
       amountInput.addEventListener('input', function () {
         selectedAmount = parseInt(this.value) || 0;
         amountOptions.forEach(opt => opt.classList.remove('selected'));
       });
 
-      // File upload handling
       fileUploadArea.addEventListener('click', function () {
         fileInput.click();
       });
@@ -1131,27 +1128,22 @@
         }
       });
 
-      // Navigation buttons
       nextStep1Btn.addEventListener('click', goToStep2);
       prevStep2Btn.addEventListener('click', goToStep1);
-      prevStep3Btn.addEventListener('click', goToStep2);
-      paidBtn.addEventListener('click', goToStep3);
       submitRechargeBtn.addEventListener('click', submitRecharge);
       newRechargeBtn.addEventListener('click', resetForm);
       goToDashboardBtn.addEventListener('click', () => window.location.href = 'index.html');
       cancelBtn.addEventListener('click', () => window.location.href = 'index.html');
 
-      // Select first amount option by default
       amountOptions[0].classList.add('selected');
+      loadRechargeHistory();
     });
 
-    // Step navigation functions
     function goToStep1() {
       step1.classList.add('active');
       step2.classList.remove('active');
       step1Indicator.classList.add('active');
       step2Indicator.classList.remove('active');
-      qrContainer.classList.remove('visible');
     }
 
     function goToStep2() {
@@ -1164,28 +1156,16 @@
       step2.classList.add('active');
       step1Indicator.classList.remove('active');
       step2Indicator.classList.add('active');
-      
-      // Show QR code with animation
-      qrContainer.classList.add('visible');
-      qrAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}`;
-      
-      // Update QR code image with new amount
-      const qrImg = document.querySelector('.qr-placeholder img');
-      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=grow@examplebank&pn=Grow%20Investment&am=${selectedAmount}&cu=INR`;
     }
 
-    function goToStep3() {
-      step2.classList.remove('active');
-      step3.classList.add('active');
-      step2Indicator.classList.remove('active');
-      step3Indicator.classList.add('active');
-    }
-
-    // Submit recharge request
     async function submitRecharge() {
       const utr = utrInput.value.trim();
       if (!utr) {
         showNotification('❌ Please enter UTR number', 'error');
+        return;
+      }
+      if (!fileInput.files[0]) {
+        showNotification('❌ Please upload UTR proof (only for reference)', 'error');
         return;
       }
 
@@ -1211,11 +1191,12 @@
           transactionId: transactionId,
           timestamp: new Date(),
           createdAt: Date.now()
+
         };
 
         await db.ref("rechargeRequests").push(rechargeData);
 
-        // Update confirmation details
+
         confirmationId.textContent = transactionId;
         confirmationAmount.textContent = `₹${selectedAmount.toLocaleString('en-IN')}.00`;
         confirmationBonus.textContent = `₹${bonus.toLocaleString('en-IN')}.00`;
@@ -1228,13 +1209,13 @@
           minute: '2-digit'
         }) + ' IST';
 
-        // Go to confirmation step
-        step3.classList.remove('active');
-        step4.classList.add('active');
-        step3Indicator.classList.remove('active');
-        step4Indicator.classList.add('active');
+        step2.classList.remove('active');
+        step3.classList.add('active');
+        step2Indicator.classList.remove('active');
+        step3Indicator.classList.add('active');
 
         showNotification('✅ Recharge request submitted successfully!', 'success');
+        loadRechargeHistory();
       } catch (error) {
         console.error("Error:", error);
         showNotification(`❌ Error: ${error.message}`, 'error');
@@ -1243,8 +1224,72 @@
         submitRechargeBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
       }
     }
+async function loadRechargeHistory() {
+  const historyContainer = document.getElementById('rechargeHistory');
+  historyContainer.innerHTML = '<p class="loading">Loading history...</p>';
 
-    // Reset form for new recharge
+  try {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      historyContainer.innerHTML = '<p class="error">User not logged in</p>';
+      return;
+    }
+
+    const snapshot = await db.ref("rechargeRequests")
+      .orderByChild("userId")
+      .equalTo(userId)
+      .limitToLast(5)
+      .once("value");
+
+    if (!snapshot.exists()) {
+      historyContainer.innerHTML = '<p class="no-history">No recharge history found</p>';
+      return;
+    }
+
+    historyContainer.innerHTML = '';
+
+    snapshot.forEach(child => {
+      const data = child.val();
+      const historyItem = document.createElement('div');
+      historyItem.className = `history-item ${data.status}`;
+
+      const date = new Date(data.timestamp || Date.now());
+      const formattedDate = date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+
+      let statusClass = 'status-pending';
+      let statusText = 'Pending';
+
+      if (data.status === 'approved') {
+        statusClass = 'status-approved';
+        statusText = 'Approved';
+      } else if (data.status === 'rejected') {
+        statusClass = 'status-rejected';
+        statusText = 'Rejected';
+      }
+
+      historyItem.innerHTML = `
+        <div class="history-details">
+          <div class="history-amount">₹${(data.amount || 0).toLocaleString('en-IN')}</div>
+          <div class="history-date">${formattedDate}</div>
+        </div>
+        <div class="history-status ${statusClass}">
+          ${statusText}
+        </div>
+      `;
+
+      historyContainer.appendChild(historyItem);
+    });
+  } catch (error) {
+    console.error("History load error:", error);
+    historyContainer.innerHTML = '<p class="error">Error loading recharge history</p>';
+  }
+}
+
+
     function resetForm() {
       amountInput.value = '500';
       selectedAmount = 500;
@@ -1256,14 +1301,12 @@
       fileUploadArea.style.backgroundColor = 'rgba(16, 25, 54, 0.3)';
       amountOptions.forEach(opt => opt.classList.remove('selected'));
       amountOptions[0].classList.add('selected');
-      step4.classList.remove('active');
+      step3.classList.remove('active');
       step1.classList.add('active');
-      step4Indicator.classList.remove('active');
+      step3Indicator.classList.remove('active');
       step1Indicator.classList.add('active');
-      qrContainer.classList.remove('visible');
     }
 
-    // Show notification
     function showNotification(message, type = 'info') {
       const existing = document.querySelector('.notification');
       if (existing) existing.remove();
@@ -1284,17 +1327,8 @@
         setTimeout(() => notification.remove(), 300);
       }, 3000);
     }
-
-    // Copy to clipboard function
-    function copyToClipboard(text) {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      showNotification('✅ Copied to clipboard!', 'success');
-    }
   </script>
+
 </body>
+
 </html>
