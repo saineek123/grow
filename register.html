@@ -338,8 +338,7 @@
     </svg>
   </div>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -372,55 +371,50 @@
         alert("❌ सभी जानकारी भरें");
         return;
       }
-
       if (password !== confirmPassword) {
         alert("❌ पासवर्ड मैच नहीं कर रहा");
         return;
       }
 
-      // Show loading spinner
-      registerButton.classList.add("loading");
-
+      registerButton.disabled = true;
       const fakeEmail = phone + "@example.com";
 
-      // Simulate API call with delay for demo purposes
-      setTimeout(() => {
-        auth.createUserWithEmailAndPassword(fakeEmail, password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            db.ref("users/" + user.uid).set({
-              name: name,
-              phone: phone,
-              email: fakeEmail,
-              referralCode: user.uid,
-              referredBy: referralCode,
-              createdAt: Date.now(),
-              wallet: {
-                recharge: 0,
-                bonus: 0,
-                winning: 0,
-                total: 0
-              }
-            }).then(() => {
-              if (referralCode !== "") {
-                db.ref("users/" + referralCode + "/referrals/" + user.uid).set(true);
-              }
-              
-              // Hide loading spinner and show success animation
-              registerButton.classList.remove("loading");
-              successAnimation.classList.add("show");
-              
-              // Redirect after animation
-              setTimeout(() => {
-                window.location.href = "index.html";
-              }, 2000);
-            });
-          })
-          .catch((error) => {
-            registerButton.classList.remove("loading");
-            alert("❌ " + error.message);
+      auth.createUserWithEmailAndPassword(fakeEmail, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          db.ref("users/" + user.uid).set({
+            name: name,
+            phone: phone,
+            email: fakeEmail,
+            referralCode: user.uid,
+            referredBy: referralCode,
+            createdAt: Date.now(),
+            wallet: { recharge: 0, bonus: 0, winning: 0, total: 0 }
+          }).then(() => {
+            if (referralCode !== "") {
+              // Save referral record
+              db.ref("users/" + referralCode + "/referrals/" + user.uid).set(true);
+
+              // Bonus credit
+              const bonusAmount = 50; // Change if needed
+              db.ref("users/" + referralCode + "/wallet").once("value").then(snapshot => {
+                let wallet = snapshot.val() || { recharge: 0, bonus: 0, winning: 0, total: 0 };
+                wallet.bonus += bonusAmount;
+                wallet.total += bonusAmount;
+                db.ref("users/" + referralCode + "/wallet").set(wallet);
+              });
+            }
+
+            successAnimation.classList.add("show");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 2000);
           });
-      }, 1500);
+        })
+        .catch((error) => {
+          registerButton.disabled = false;
+          alert("❌ " + error.message);
+        });
     }
   </script>
 </body>
