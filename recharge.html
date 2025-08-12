@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -505,6 +504,63 @@
       border-left-color: #e74c3c;
     }
 
+    /* UPI ID and Copy Button Styles */
+    .upi-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+      gap: 10px;
+      background: rgba(16, 25, 54, 0.5);
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(249, 168, 37, 0.2);
+      max-width: 300px;
+      margin: 15px auto;
+      transition: all 0.3s;
+    }
+
+    .upi-id {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f9a825;
+      letter-spacing: 0.5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .copy-btn {
+      background: rgba(249, 168, 37, 0.1);
+      border: 1px solid rgba(249, 168, 37, 0.2);
+      color: #f9a825;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .copy-btn:hover {
+      background: rgba(249, 168, 37, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .copy-btn.copied {
+      background: rgba(46, 204, 113, 0.2);
+      border-color: rgba(46, 204, 113, 0.3);
+      color: #2ecc71;
+    }
+
+    .copy-btn.copied i {
+      color: #2ecc71;
+    }
+
     @media (max-width: 768px) {
       .card-body {
         padding: 20px;
@@ -533,6 +589,11 @@
 
       .card-header {
         padding: 25px 20px;
+      }
+      
+      .upi-container {
+        padding: 10px 15px;
+        max-width: 250px;
       }
     }
 
@@ -761,6 +822,13 @@
                 <img src="qr.upi.jpg" alt="QR Code">
               </div>
               <p>Scan this QR code to pay using UPI</p>
+              <!-- UPI ID and Copy Button -->
+              <div class="upi-container" id="upiContainer">
+                <div class="upi-id" id="upiText">9119698596@ptsbi</div>
+                <button class="copy-btn" id="copyUpiBtn">
+                  <i class="fas fa-copy"></i> Copy
+                </button>
+              </div>
             </div>
           </div>
           
@@ -864,6 +932,7 @@
       </div>
     </div>
   </div>
+  
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
@@ -904,6 +973,11 @@
     const confirmationDate = document.getElementById('confirmation-date');
     const confirmationBonus = document.getElementById('confirmation-bonus');
 
+    // UPI elements
+    const upiText = document.getElementById('upiText');
+    const copyUpiBtn = document.getElementById('copyUpiBtn');
+    const upiContainer = document.getElementById('upiContainer');
+
     let selectedAmount = 500;
     let userId;
 
@@ -938,6 +1012,9 @@
       newRechargeBtn.addEventListener('click', resetForm);
       goToDashboardBtn.addEventListener('click', () => window.location.href = 'index.html');
       cancelBtn.addEventListener('click', () => window.location.href = 'index.html');
+      
+      // Add event listener for copy UPI button
+      copyUpiBtn.addEventListener('click', copyUpiToClipboard);
 
       amountOptions[0].classList.add('selected');
     });
@@ -1117,6 +1194,30 @@
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
       }, 3000);
+    }
+    
+    // Copy UPI ID to clipboard function
+    function copyUpiToClipboard() {
+      const upiId = upiText.innerText;
+      
+      navigator.clipboard.writeText(upiId)
+        .then(() => {
+          // Visual feedback
+          copyUpiBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          copyUpiBtn.classList.add('copied');
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            copyUpiBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+            copyUpiBtn.classList.remove('copied');
+          }, 2000);
+          
+          showNotification('✅ UPI ID copied to clipboard!', 'success');
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+          showNotification('❌ Failed to copy UPI ID', 'error');
+        });
     }
   </script>
 </body>
