@@ -415,6 +415,32 @@
       cursor: pointer;
       margin-top: 10px;
     }
+    
+    /* Added style for Telegram support item */
+    .telegram-support {
+      position: relative;
+    }
+    
+    .telegram-support::after {
+      content: "Click to open Telegram";
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 136, 204, 0.9);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    
+    .telegram-support:hover::after {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -519,7 +545,8 @@
     <div class="action-section">
       <h2 class="section-title"><i class="fas fa-headset"></i> Support</h2>
       <div class="action-list">
-        <a href="https://t.me/@Manxamit" target="_blank" style="text-decoration: none; color: inherit;">
+        <!-- Fixed Telegram URL (removed extra @) -->
+        <a href="https://t.me/Manxamit" target="_blank" style="text-decoration: none; color: inherit;" class="telegram-support">
           <div class="action-item">
             <div class="action-icon" style="background: linear-gradient(135deg, #0088cc, #2AABEE);">
               <i class="fab fa-telegram"></i>
@@ -807,9 +834,9 @@
       document.getElementById('investBtn').addEventListener('click', () => {
         window.location.href = "investments.html";
       });
-      
+
       document.getElementById('helpBtn').addEventListener('click', () => {
-        alert('Help center will open soon!');
+         window.location.href = "https://t.me/Manxamit";
       });
       
       document.getElementById('feedbackBtn').addEventListener('click', () => {
@@ -861,4 +888,3 @@
   </script>
 </body>
 </html>
-
