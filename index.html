@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +10,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
-    /* Existing styles remain the same */
-     :root {
+    :root {
       --primary: #ff6b00;
       --primary-dark: #e65100;
       --secondary: #4a148c;
@@ -811,105 +811,45 @@
       font-weight: bold;
       font-size: 1.1rem;
     }
-    /* New styles for product images */
-    .product-image-container {
-      width: 100%;
-      height: 180px;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .product-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    
-    .product-card:hover .product-image {
-      transform: scale(1.05);
-    }
-    
-    .product-image-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      color: white;
-      padding: 10px;
-    }
-    
-    .product-image-title {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin: 0;
-    }
-    
-    /* Adjustments to existing elements */
-    .product-card {
-      padding: 15px; /* Slightly reduced padding */
-    }
-    
-    .product-card h3 {
-      margin: 10px 0; /* Adjusted margin */
-    }
-    
-    /* New badge for popular products */
-    .popular-badge {
-      position: absolute;
-      top: 10px;
-      left: -30px;
-      background: linear-gradient(135deg, #ff5722, #e64a19);
-      color: white;
-      padding: 5px 30px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      transform: rotate(-45deg);
-      width: 120px;
-      text-align: center;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-      z-index: 2;
-    }
+  
   </style>
 </head>
+
 <body>
   <!-- Important Notice Modal -->
-  <div id="importantModal" style="
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.85);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:5000;
-  ">
-    <div style="background:#fff; color:#000; padding:20px; border-radius:10px; max-width:400px; text-align:center;">
-      <h2 style="margin-bottom:10px;">Important Notice</h2>
-      <p style="font-size:14px; line-height:1.4;">
-        कृपया ध्यान से पढ़ें:  
-        Dear user, after your recharge is successful, please wait for 10 minutes, your money is absolutely safe, do not worry
-      </p>
-      <p style="font-size:12px; color:#555; margin-top:15px;">
-        Please read carefully: 
-        Dear user, after your recharge is successful, please wait for 10 minutes, your money is absolutely safe, do not worry
-      </p>
-      <p style="font-size:12px; color:#555; margin-top:15px;">
-       Dear user, while withdrawing, please check your account number carefully, if it is wrong then it will be your responsibility
-      </p>
-      <p style="font-size:12px; color:#555; margin-top:15px;">
-      Withdrawal may take some time, please wait for 24 hours
-      </p>
-      <button id="importantOk" style="margin-top:15px; padding:8px 20px; background:#ff6b00; color:#fff; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">
-        OK
-      </button>
-    </div>
+<div id="importantModal" style="
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.85);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:5000;
+">
+  <div style="background:#fff; color:#000; padding:20px; border-radius:10px; max-width:400px; text-align:center;">
+    <h2 style="margin-bottom:10px;">Important Notice</h2>
+    <p style="font-size:14px; line-height:1.4;">
+      कृपया ध्यान से पढ़ें:  
+      Dear user, after your recharge is successful, please wait for 10 minutes, your money is absolutely safe, do not worry
+    </p>
+    <p style="font-size:12px; color:#555; margin-top:15px;">
+      Please read carefully: 
+      Dear user, after your recharge is successful, please wait for 10 minutes, your money is absolutely safe, do not worry
+    </p>
+    <p style="font-size:12px; color:#555; margin-top:15px;">
+     Dear user, while withdrawing, please check your account number carefully, if it is wrong then it will be your responsibility
+    </p>
+    <p style="font-size:12px; color:#555; margin-top:15px;">
+    Withdrawal may take some time, please wait for 24 hours
+    </p>
+    <button id="importantOk" style="margin-top:15px; padding:8px 20px; background:#ff6b00; color:#fff; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">
+      OK
+    </button>
   </div>
+</div>
+
 
   <div class="connection-status">
     <i class="fas fa-wifi"></i> Online
@@ -1085,16 +1025,17 @@
   </div>
 
   <script>
-    // Show important modal on page load
-    window.addEventListener("load", function(){
-      document.body.style.overflow = "hidden"; // stop scrolling before ok
-      document.getElementById("importantModal").style.display = "flex";
-    });
 
-    document.getElementById("importantOk").addEventListener("click", function(){
-      document.getElementById("importantModal").style.display = "none";
-      document.body.style.overflow = "auto"; // allow scrolling after ok
-    });
+    // Show important modal on page load
+window.addEventListener("load", function(){
+  document.body.style.overflow = "hidden"; // stop scrolling before ok
+  document.getElementById("importantModal").style.display = "flex";
+});
+
+document.getElementById("importantOk").addEventListener("click", function(){
+  document.getElementById("importantModal").style.display = "none";
+  document.body.style.overflow = "auto"; // allow scrolling after ok
+});
 
     // Firebase configuration
     const firebaseConfig = {
@@ -1332,6 +1273,7 @@
     .toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   claimBtn.disabled = true;
 }
+
     
     // Claim daily income
     function claimDailyIncome() {
@@ -1434,33 +1376,10 @@
       const card = document.createElement("div");
       card.className = "product-card";
       
-      // Default images for each plan type
-      let imageUrl = "https://via.placeholder.com/300x180/ff6b00/ffffff?text=Income+Plan";
-      
-      // Assign different images based on plan type
-      if (product.type === "silver") {
-        imageUrl = "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=2070&auto=format&fit=crop";
-      } else if (product.type === "gold") {
-        imageUrl = "https://images.unsplash.com/photo-1628348070889-cb656235b4eb?q=80&w=2070&auto=format&fit=crop";
-      } else if (product.type === "platinum") {
-        imageUrl = "https://images.unsplash.com/photo-1628348068029-5a8e43e4d3f9?q=80&w=2070&auto=format&fit=crop";
-      } else if (product.type === "diamond") {
-        imageUrl = "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=2070&auto=format&fit=crop";
-      }
-      
       card.innerHTML = `
         ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
         ${isInvested ? `<div class="already-invested">Invested</div>` : ''}
-        ${product.isPopular ? `<div class="popular-badge">POPULAR</div>` : ''}
-        
-        <div class="product-image-container">
-          <img src="${imageUrl}" alt="${product.name}" class="product-image">
-          <div class="product-image-overlay">
-            <h3 class="product-image-title">${product.name}</h3>
-          </div>
-        </div>
-        
-        <h3><i class="fas ${product.icon || 'fa-box'}"></i> ${product.name}</h3>
+        <h3><i class="fas fa-box"></i> ${product.name}</h3>
         <p style="color: var(--gray); margin-bottom: 15px;">${product.description}</p>
         <div class="product-details">
           <div><span>₹${product.minInvestment}</span>Min Investment</div>
@@ -1619,42 +1538,45 @@
       });
     });
 
-    function autoClaimDailyIncomeIfNeeded() {
-      if (!currentUser || dailyIncome <= 0) return;
-      if (lastClaimDate === today) return; // Already claimed
+function autoClaimDailyIncomeIfNeeded() {
+  if (!currentUser || dailyIncome <= 0) return;
+  if (lastClaimDate === today) return; // Already claimed
 
-      const uid = currentUser.uid;
-      const now = new Date();
-      const today = now.toISOString().split("T")[0]; // yyyy-mm-dd
 
-      const userRef = db.ref("users/" + uid);
-      userRef.once("value").then(snapshot => {
-        const userData = snapshot.val() || {};
-        const lastClaimDate = userData.lastClaim ? userData.lastClaim.split("T")[0] : null;
+  const uid = currentUser.uid;
+  const now = new Date();
+  const today = now.toISOString().split("T")[0]; // yyyy-mm-dd
 
-        // Check if not already claimed today and time is after 12:10 AM
-        if (lastClaimDate !== today && now.getHours() === 0 && now.getMinutes() >= 10) {
-          const walletRef = db.ref("users/" + uid + "/wallet");
+  const userRef = db.ref("users/" + uid);
+  userRef.once("value").then(snapshot => {
+    const userData = snapshot.val() || {};
+    const lastClaimDate = userData.lastClaim ? userData.lastClaim.split("T")[0] : null;
 
-          walletRef.once("value").then(walletSnap => {
-            const wallet = walletSnap.val() || {};
-            const currentEarnings = wallet.Earnings || 0;
+    // Check if not already claimed today and time is after 12:10 AM
+    if (lastClaimDate !== today && now.getHours() === 0 && now.getMinutes() >= 10) {
+      const walletRef = db.ref("users/" + uid + "/wallet");
 
-            walletRef.update({
-              ...wallet,
-              Earnings: currentEarnings + dailyIncome
-            });
+      walletRef.once("value").then(walletSnap => {
+        const wallet = walletSnap.val() || {};
+        const currentEarnings = wallet.Earnings || 0;
 
-            userRef.update({
-              lastClaim: now.toISOString()
-            });
+        walletRef.update({
+          ...wallet,
+          Earnings: currentEarnings + dailyIncome
+        });
 
-            console.log("✅ Auto daily income added");
-            showCelebration(); // Bonus animation/sound
-          });
-        }
+        userRef.update({
+          lastClaim: now.toISOString()
+        });
+
+        console.log("✅ Auto daily income added");
+        showCelebration(); // Bonus animation/sound
       });
     }
+  });
+}
+
+
   </script>
 </body>
 </html>
