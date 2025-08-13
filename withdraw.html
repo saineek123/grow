@@ -457,7 +457,7 @@
         <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw">
       </div>
       
-      <div class="min-amount">Minimum withdrawal amount: ₹310</div>
+      <div class="min-amount">Minimum withdrawal amount: ₹210</div>
       
       <button class="withdraw-btn" id="withdrawBtn">
         <i class="fas fa-paper-plane"></i> Request Withdrawal
@@ -629,8 +629,8 @@
         return false;
       }
       
-      if (amount < 310) {
-        showMessage("Minimum withdrawal amount is ₹310", "error");
+      if (amount < 210) {
+        showMessage("Minimum withdrawal amount is ₹210", "error");
         return false;
       }
       
@@ -717,3 +717,4 @@
   </script>
 </body>
 </html>
+
