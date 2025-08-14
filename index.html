@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -811,6 +810,16 @@
       font-weight: bold;
       font-size: 1.1rem;
     }
+    
+    /* NEW STYLE FOR PRODUCT IMAGES */
+    .product-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
   
   </style>
 </head>
@@ -1025,17 +1034,16 @@
   </div>
 
   <script>
-
     // Show important modal on page load
-window.addEventListener("load", function(){
-  document.body.style.overflow = "hidden"; // stop scrolling before ok
-  document.getElementById("importantModal").style.display = "flex";
-});
+    window.addEventListener("load", function(){
+      document.body.style.overflow = "hidden"; // stop scrolling before ok
+      document.getElementById("importantModal").style.display = "flex";
+    });
 
-document.getElementById("importantOk").addEventListener("click", function(){
-  document.getElementById("importantModal").style.display = "none";
-  document.body.style.overflow = "auto"; // allow scrolling after ok
-});
+    document.getElementById("importantOk").addEventListener("click", function(){
+      document.getElementById("importantModal").style.display = "none";
+      document.body.style.overflow = "auto"; // allow scrolling after ok
+    });
 
     // Firebase configuration
     const firebaseConfig = {
@@ -1205,18 +1213,18 @@ document.getElementById("importantOk").addEventListener("click", function(){
       
       // Load last claim time
       userRef.once("value").then(snapshot => {
-  const userData = snapshot.val() || {};
-  if (userData.lastClaim) {
-    lastClaimTime = new Date(userData.lastClaim);
-  } else {
-    // 🔥 Default: allow claim now (set old date)
-    lastClaimTime = new Date(Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
-    userRef.update({
-      lastClaim: lastClaimTime.toISOString()
-    });
-  }
-  startPayoutTimer();
-});
+        const userData = snapshot.val() || {};
+        if (userData.lastClaim) {
+          lastClaimTime = new Date(userData.lastClaim);
+        } else {
+          // 🔥 Default: allow claim now (set old date)
+          lastClaimTime = new Date(Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
+          userRef.update({
+            lastClaim: lastClaimTime.toISOString()
+          });
+        }
+        startPayoutTimer();
+      });
     }
     
     // Start the payout countdown timer
@@ -1245,35 +1253,34 @@ document.getElementById("importantOk").addEventListener("click", function(){
       }, 1000);
     }
     
-   function updatePayoutTimer(targetTime) {
-  const now = new Date();
-  const diff = targetTime - now;
+    function updatePayoutTimer(targetTime) {
+      const now = new Date();
+      const diff = targetTime - now;
 
-  if (diff <= 0) {
-    // Check if already claimed today
-    const today = now.toISOString().split("T")[0];
-    const lastDate = lastClaimTime ? lastClaimTime.toISOString().split("T")[0] : null;
+      if (diff <= 0) {
+        // Check if already claimed today
+        const today = now.toISOString().split("T")[0];
+        const lastDate = lastClaimTime ? lastClaimTime.toISOString().split("T")[0] : null;
 
-    if (lastDate === today) {
-      nextPayoutTime.textContent = "Claimed";
+        if (lastDate === today) {
+          nextPayoutTime.textContent = "Claimed";
+          claimBtn.disabled = true;
+        } else {
+          nextPayoutTime.textContent = "Ready!";
+          claimBtn.disabled = dailyIncome <= 0;
+        }
+        return;
+      }
+
+      // Timer countdown
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes
+        .toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       claimBtn.disabled = true;
-    } else {
-      nextPayoutTime.textContent = "Ready!";
-      claimBtn.disabled = dailyIncome <= 0;
     }
-    return;
-  }
-
-  // Timer countdown
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-  
-  nextPayoutTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes
-    .toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  claimBtn.disabled = true;
-}
-
     
     // Claim daily income
     function claimDailyIncome() {
@@ -1371,7 +1378,7 @@ document.getElementById("importantOk").addEventListener("click", function(){
       });
     }
     
-    // Render product card with investment status
+    // Render product card with investment status and image
     function renderProductCard(product, key, isInvested) {
       const card = document.createElement("div");
       card.className = "product-card";
@@ -1379,7 +1386,13 @@ document.getElementById("importantOk").addEventListener("click", function(){
       card.innerHTML = `
         ${product.badge ? `<div class="vip-badge">${product.badge}</div>` : ''}
         ${isInvested ? `<div class="already-invested">Invested</div>` : ''}
-        <h3><i class="fas fa-box"></i> ${product.name}</h3>
+        
+        <!-- FIXED: Added product image here -->
+        ${product.imageUrl ? `
+          <img src="${product.imageUrl}" class="product-image" alt="${product.name}">
+        ` : ''}
+        
+        <h3><i class="${product.icon || 'fas fa-box'}"></i> ${product.name}</h3>
         <p style="color: var(--gray); margin-bottom: 15px;">${product.description}</p>
         <div class="product-details">
           <div><span>₹${product.minInvestment}</span>Min Investment</div>
@@ -1538,45 +1551,42 @@ document.getElementById("importantOk").addEventListener("click", function(){
       });
     });
 
-function autoClaimDailyIncomeIfNeeded() {
-  if (!currentUser || dailyIncome <= 0) return;
-  if (lastClaimDate === today) return; // Already claimed
+    function autoClaimDailyIncomeIfNeeded() {
+      if (!currentUser || dailyIncome <= 0) return;
+      if (lastClaimDate === today) return; // Already claimed
 
+      const uid = currentUser.uid;
+      const now = new Date();
+      const today = now.toISOString().split("T")[0]; // yyyy-mm-dd
 
-  const uid = currentUser.uid;
-  const now = new Date();
-  const today = now.toISOString().split("T")[0]; // yyyy-mm-dd
+      const userRef = db.ref("users/" + uid);
+      userRef.once("value").then(snapshot => {
+        const userData = snapshot.val() || {};
+        const lastClaimDate = userData.lastClaim ? userData.lastClaim.split("T")[0] : null;
 
-  const userRef = db.ref("users/" + uid);
-  userRef.once("value").then(snapshot => {
-    const userData = snapshot.val() || {};
-    const lastClaimDate = userData.lastClaim ? userData.lastClaim.split("T")[0] : null;
+        // Check if not already claimed today and time is after 12:10 AM
+        if (lastClaimDate !== today && now.getHours() === 0 && now.getMinutes() >= 10) {
+          const walletRef = db.ref("users/" + uid + "/wallet");
 
-    // Check if not already claimed today and time is after 12:10 AM
-    if (lastClaimDate !== today && now.getHours() === 0 && now.getMinutes() >= 10) {
-      const walletRef = db.ref("users/" + uid + "/wallet");
+          walletRef.once("value").then(walletSnap => {
+            const wallet = walletSnap.val() || {};
+            const currentEarnings = wallet.Earnings || 0;
 
-      walletRef.once("value").then(walletSnap => {
-        const wallet = walletSnap.val() || {};
-        const currentEarnings = wallet.Earnings || 0;
+            walletRef.update({
+              ...wallet,
+              Earnings: currentEarnings + dailyIncome
+            });
 
-        walletRef.update({
-          ...wallet,
-          Earnings: currentEarnings + dailyIncome
-        });
+            userRef.update({
+              lastClaim: now.toISOString()
+            });
 
-        userRef.update({
-          lastClaim: now.toISOString()
-        });
-
-        console.log("✅ Auto daily income added");
-        showCelebration(); // Bonus animation/sound
+            console.log("✅ Auto daily income added");
+            showCelebration(); // Bonus animation/sound
+          });
+        }
       });
     }
-  });
-}
-
-
   </script>
 </body>
 </html>
