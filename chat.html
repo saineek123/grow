@@ -3,67 +3,475 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Live Chat</title>
+  <title>Premium Live Support Chat</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; background:#f4f4f9; }
-    .chat-box { max-width:500px; margin:40px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-    #messages { height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px; margin-bottom:10px; }
-    .msg { padding:8px 12px; margin:5px 0; border-radius:8px; max-width:75%; }
-    .user { background:#d1ffd6; text-align:right; margin-left:auto; }
-    .admin { background:#e1e1e1; text-align:left; margin-right:auto; }
-    input, button { padding:10px; margin:5px 0; width:100%; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .chat-container {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      height: 700px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .chat-header {
+      background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 22px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chat-header h2 {
+      font-weight: 600;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+    
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: #4ae08c;
+      border-radius: 50%;
+      margin-right: 8px;
+      box-shadow: 0 0 8px #4ae08c;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f8f9fc;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(#ccc 1px, transparent 1px),
+        radial-gradient(#ccc 1px, transparent 1px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+    
+    .message {
+      max-width: 80%;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      border-radius: 20px;
+      position: relative;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .user-message {
+      background: linear-gradient(to right, #2575fc 0%, #6a11cb 100%);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 6px;
+    }
+    
+    .admin-message {
+      background: white;
+      color: #333;
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+      border: 1px solid #eaeaea;
+    }
+    
+    .message-time {
+      font-size: 0.7rem;
+      margin-top: 6px;
+      opacity: 0.8;
+      text-align: right;
+    }
+    
+    .admin-message .message-time {
+      text-align: left;
+    }
+    
+    .chat-input-container {
+      padding: 20px;
+      background: #fff;
+      border-top: 1px solid #eaeaea;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    #username {
+      padding: 14px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      width: 30%;
+      outline: none;
+      transition: all 0.3s;
+      background: #f9f9f9;
+    }
+    
+    #username:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.1);
+    }
+    
+    #msgInput {
+      flex: 1;
+      padding: 14px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      background: #f9f9f9;
+    }
+    
+    #msgInput:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.1);
+    }
+    
+    .send-button {
+      background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+    }
+    
+    .send-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(106, 17, 203, 0.4);
+    }
+    
+    .send-button:active {
+      transform: translateY(0);
+    }
+    
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin: 10px 15px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+      border-left: 4px solid #c62828;
+      box-shadow: 0 3px 10px rgba(198, 40, 40, 0.1);
+    }
+    
+    .welcome-note {
+      text-align: center;
+      color: #666;
+      margin: 20px 0;
+      font-size: 0.95rem;
+      padding: 12px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .typing-indicator {
+      display: none;
+      background: white;
+      color: #666;
+      align-self: flex-start;
+      padding: 14px 18px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eaeaea;
+    }
+    
+    .typing-indicator span {
+      height: 8px;
+      width: 8px;
+      float: left;
+      margin: 0 1px;
+      background-color: #9E9EA1;
+      display: block;
+      border-radius: 50%;
+      opacity: 0.4;
+    }
+    
+    .typing-indicator span:nth-of-type(1) {
+      animation: typing 1s infinite;
+    }
+    
+    .typing-indicator span:nth-of-type(2) {
+      animation: typing 1s 0.33s infinite;
+    }
+    
+    .typing-indicator span:nth-of-type(3) {
+      animation: typing 1s 0.66s infinite;
+    }
+    
+    @keyframes typing {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    .chat-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    /* Scrollbar styling */
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+      border-radius: 10px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #6a11cb;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 480px) {
+      .chat-container {
+        height: 100vh;
+        max-width: 100%;
+        border-radius: 0;
+      }
+      
+      #username {
+        width: 25%;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="chat-box">
-    <h2>💬 Live Support Chat</h2>
-    <input type="text" id="username" placeholder="Enter your name">
-    <div id="messages"></div>
-    <input type="text" id="msgInput" placeholder="Type your message">
-    <button onclick="sendMessage()">Send</button>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2><i class="fas fa-comment-dots"></i> Premium Support</h2>
+      <div class="status">
+        <div class="status-dot"></div>
+        <span>Connected • Online</span>
+      </div>
+      <div class="chat-profile">
+        <div class="profile-img">
+          <i class="fas fa-user"></i>
+        </div>
+        <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">
+          Customer Support
+        </div>
+      </div>
+    </div>
+    
+    <div class="error-message" id="errorMsg">
+      <i class="fas fa-exclamation-circle"></i> 
+      <span id="errorText"></span>
+    </div>
+    
+    <div class="chat-messages" id="messages">
+      <div class="welcome-note">
+        <i class="fas fa-gift" style="color: #6a11cb; margin-right: 8px;"></i>
+        Welcome to our premium support! We're here to help you with any questions.
+      </div>
+    </div>
+    
+    <div class="typing-indicator" id="typingIndicator">
+      <span></span>
+      <span></span>
+      <span></span>
+      <div style="clear: both; margin-left: 12px; font-size: 0.8rem;">Support is typing...</div>
+    </div>
+    
+    <div class="chat-input-container">
+      <input type="text" id="username" placeholder="Your name" value="Guest">
+      <input type="text" id="msgInput" placeholder="Type your message...">
+      <button class="send-button" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
   </div>
 
   <script>
-    // 🔥 Firebase Config (yaha apna config paste karo)
-     // Firebase configuration
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD7mrPd_JFePxDLA4YifSaYfCsZHCZ7V-E",
       authDomain: "grow-3e3a1.firebaseapp.com",
       databaseURL: "https://grow-3e3a1-default-rtdb.firebaseio.com",
       projectId: "grow-3e3a1"
     };
-    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Firebase
+    try {
+      firebase.initializeApp(firebaseConfig);
+    } catch (error) {
+      showError("Firebase initialization error: " + error.message);
+    }
+    
     const db = firebase.database();
-
-    const userId = "user_" + Math.random().toString(36).substr(2,9);
+    const errorMsg = document.getElementById("errorMsg");
+    const errorText = document.getElementById("errorText");
     const messagesDiv = document.getElementById("messages");
+    const msgInput = document.getElementById("msgInput");
+    const usernameInput = document.getElementById("username");
+    const typingIndicator = document.getElementById("typingIndicator");
+    let currentUserId = null;
+
+    // Enable sending message with Enter key
+    msgInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    // Anonymous authentication
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        currentUserId = user.uid;
+        listenMessages();
+      } else {
+        firebase.auth().signInAnonymously().catch(err => {
+          showError("Authentication error: " + err.message);
+        });
+      }
+    });
+
+    function showError(message) {
+      errorText.textContent = message;
+      errorMsg.style.display = 'block';
+      setTimeout(() => {
+        errorMsg.style.display = 'none';
+      }, 5000);
+    }
 
     function sendMessage() {
-      const userName = document.getElementById("username").value || "Guest";
-      const text = document.getElementById("msgInput").value.trim();
-      if(text === "") return;
+      const userName = usernameInput.value.trim() || "Guest";
+      const text = msgInput.value.trim();
+      
+      if (!text || !currentUserId) return;
 
-      const msgRef = db.ref("chats/" + userId + "/messages").push();
+      // Show typing indicator
+      typingIndicator.style.display = 'block';
+      
+      const msgRef = db.ref("chats/" + currentUserId + "/messages").push();
+      
       msgRef.set({
         sender: "user",
         text: text,
-        time: new Date().toLocaleTimeString()
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }).catch(error => {
+        showError("Message send failed: " + error.message);
       });
-
-      db.ref("chats/" + userId + "/userName").set(userName);
-      document.getElementById("msgInput").value = "";
+      
+      // Store username
+      db.ref("chats/" + currentUserId + "/userName").set(userName)
+        .catch(error => console.error("Username save error:", error));
+      
+      msgInput.value = "";
+      
+      // Hide typing indicator after a delay
+      setTimeout(() => {
+        typingIndicator.style.display = 'none';
+      }, 1000);
     }
 
-    db.ref("chats/" + userId + "/messages").on("child_added", snap => {
-      const msg = snap.val();
+    function listenMessages() {
+      db.ref("chats/" + currentUserId + "/messages").on("child_added", snap => {
+        const msg = snap.val();
+        const div = document.createElement("div");
+        
+        div.className = msg.sender === "user" ? "message user-message" : "message admin-message";
+        div.innerHTML = `
+          ${msg.text}
+          <div class="message-time">${msg.time}</div>
+        `;
+        
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        typingIndicator.style.display = 'none';
+      });
+    }
+
+    // Simulate initial admin message after a delay
+    setTimeout(() => {
       const div = document.createElement("div");
-      div.className = "msg " + msg.sender;
-      div.textContent = msg.text + " (" + msg.time + ")";
+      div.className = "message admin-message";
+      div.innerHTML = `
+        Hello! Thanks for reaching out. How can we help you today?
+        <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+      `;
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    });
+    }, 2000);
   </script>
 </body>
 </html>
