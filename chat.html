@@ -23,63 +23,62 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0;
+      padding: 20px;
     }
     
     .chat-container {
       width: 100%;
-      max-width: 100%;
+      max-width: 420px;
       background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      height: 700px;
       backdrop-filter: blur(10px);
-      border: none;
-      border-radius: 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .chat-header {
       background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
       color: white;
-      padding: 16px 20px;
+      padding: 22px;
       text-align: center;
       position: relative;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      min-height: 80px;
     }
     
     .chat-header h2 {
       font-weight: 600;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
     }
     
     .status {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 4px;
-      font-size: 0.8rem;
+      margin-top: 6px;
+      font-size: 0.85rem;
       opacity: 0.9;
     }
     
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: #4ae08c;
       border-radius: 50%;
-      margin-right: 6px;
+      margin-right: 8px;
       box-shadow: 0 0 8px #4ae08c;
     }
     
     .chat-messages {
       flex: 1;
-      padding: 15px;
+      padding: 20px;
       overflow-y: auto;
       background: #f8f9fc;
       display: flex;
@@ -92,15 +91,14 @@
     }
     
     .message {
-      max-width: 85%;
-      padding: 12px 16px;
-      margin-bottom: 15px;
-      border-radius: 18px;
+      max-width: 80%;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      border-radius: 20px;
       position: relative;
-      line-height: 1.4;
+      line-height: 1.5;
       animation: fadeIn 0.3s ease;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      font-size: 0.95rem;
     }
     
     @keyframes fadeIn {
@@ -124,8 +122,8 @@
     }
     
     .message-time {
-      font-size: 0.65rem;
-      margin-top: 5px;
+      font-size: 0.7rem;
+      margin-top: 6px;
       opacity: 0.8;
       text-align: right;
     }
@@ -135,20 +133,20 @@
     }
     
     .chat-input-container {
-      padding: 15px;
+      padding: 20px;
       background: #fff;
       border-top: 1px solid #eaeaea;
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: center;
     }
     
     #username {
-      padding: 12px 14px;
+      padding: 14px 16px;
       border: 1px solid #e0e0e0;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      width: 25%;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      width: 30%;
       outline: none;
       transition: all 0.3s;
       background: #f9f9f9;
@@ -161,10 +159,10 @@
     
     #msgInput {
       flex: 1;
-      padding: 12px 14px;
+      padding: 14px 16px;
       border: 1px solid #e0e0e0;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
       outline: none;
       transition: all 0.3s;
       background: #f9f9f9;
@@ -180,15 +178,14 @@
       color: white;
       border: none;
       border-radius: 50%;
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       transition: all 0.3s;
       box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
-      flex-shrink: 0;
     }
     
     .send-button:hover {
@@ -203,10 +200,10 @@
     .error-message {
       background: #ffebee;
       color: #c62828;
-      padding: 10px 14px;
-      border-radius: 10px;
-      margin: 8px 12px;
-      font-size: 0.85rem;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin: 10px 15px;
+      font-size: 0.9rem;
       text-align: center;
       display: none;
       border-left: 4px solid #c62828;
@@ -216,11 +213,11 @@
     .welcome-note {
       text-align: center;
       color: #666;
-      margin: 15px 0;
-      font-size: 0.9rem;
-      padding: 10px;
+      margin: 20px 0;
+      font-size: 0.95rem;
+      padding: 12px;
       background: white;
-      border-radius: 10px;
+      border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
     
@@ -229,17 +226,17 @@
       background: white;
       color: #666;
       align-self: flex-start;
-      padding: 12px 16px;
-      border-radius: 18px;
-      margin-bottom: 12px;
-      font-size: 0.85rem;
+      padding: 14px 18px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
       border: 1px solid #eaeaea;
     }
     
     .typing-indicator span {
-      height: 7px;
-      width: 7px;
+      height: 8px;
+      width: 8px;
       float: left;
       margin: 0 1px;
       background-color: #9E9EA1;
@@ -269,25 +266,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 8px;
+      margin-top: 10px;
     }
     
     .profile-img {
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      margin-right: 8px;
-      font-size: 1.1rem;
+      margin-right: 10px;
+      font-size: 1.2rem;
     }
     
     /* Scrollbar styling */
     .chat-messages::-webkit-scrollbar {
-      width: 5px;
+      width: 6px;
     }
     
     .chat-messages::-webkit-scrollbar-track {
@@ -304,91 +301,16 @@
       background: #6a11cb;
     }
     
-    /* Mobile-specific improvements */
-    @media (max-width: 768px) {
-      body {
-        padding: 0;
-      }
-      
-      .chat-container {
-        border-radius: 0;
-        height: 100vh;
-      }
-      
-      .chat-header {
-        padding: 14px 16px;
-      }
-      
-      .chat-header h2 {
-        font-size: 1.3rem;
-      }
-      
-      .message {
-        max-width: 90%;
-        padding: 10px 14px;
-        font-size: 0.9rem;
-      }
-      
-      .chat-input-container {
-        padding: 12px;
-      }
-      
-      #username, #msgInput {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-      }
-      
-      .send-button {
-        width: 42px;
-        height: 42px;
-      }
-      
-      /* Better touch targets */
-      .send-button, #username, #msgInput {
-        min-height: 44px; /* Minimum touch target size */
-      }
-    }
-    
+    /* Responsive design */
     @media (max-width: 480px) {
+      .chat-container {
+        height: 100vh;
+        max-width: 100%;
+        border-radius: 0;
+      }
+      
       #username {
         width: 25%;
-        min-width: 70px;
-      }
-      
-      .chat-header h2 {
-        font-size: 1.2rem;
-      }
-      
-      .status {
-        font-size: 0.75rem;
-      }
-      
-      .welcome-note {
-        font-size: 0.85rem;
-        margin: 10px 0;
-      }
-    }
-    
-    /* Prevent zoom on input focus for iOS */
-    @media screen and (max-width: 768px) {
-      input, textarea {
-        font-size: 16px !important; /* Prevents zoom on focus in iOS */
-      }
-    }
-    
-    /* Safe area insets for notched phones */
-    @supports(padding: max(0px)) {
-      .chat-header, .chat-input-container {
-        padding-left: max(15px, env(safe-area-inset-left));
-        padding-right: max(15px, env(safe-area-inset-right));
-      }
-      
-      .chat-header {
-        padding-top: max(16px, env(safe-area-inset-top));
-      }
-      
-      .chat-input-container {
-        padding-bottom: max(15px, env(safe-area-inset-bottom));
       }
     }
   </style>
@@ -405,7 +327,7 @@
         <div class="profile-img">
           <i class="fas fa-user"></i>
         </div>
-        <div style="color: rgba(255,255,255,0.9); font-size: 0.85rem;">
+        <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">
           Customer Support
         </div>
       </div>
@@ -427,7 +349,7 @@
       <span></span>
       <span></span>
       <span></span>
-      <div style="clear: both; margin-left: 12px; font-size: 0.75rem;">Support is typing...</div>
+      <div style="clear: both; margin-left: 12px; font-size: 0.8rem;">Support is typing...</div>
     </div>
     
     <div class="chat-input-container">
