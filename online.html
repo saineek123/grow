@@ -346,8 +346,8 @@
         <h2 class="section-title"><i class="fas fa-comments"></i> Support Channels</h2>
         
         <div class="support-channels">
-          <a href="https://wa.me/" target="_blank" class="channel whatsapp">
-            <i class="fab fa-whatsapp"></i>
+         <a href="javascript:void(0)" onclick="openJotForm()" class="channel telegram">
+            <i class="fas fa-headset"></i>
             <div class="channel-content">
               <h3>WhatsApp Support</h3>
               <p>Chat with our support team instantly</p>
@@ -355,16 +355,17 @@
             </div>
           </a>
           
-          <a href="https://t.me/" target="_blank" class="channel telegram">
-            <i class="fab fa-telegram"></i>
+          <!-- ✅ Telegram हटाकर JotForm Live Support -->
+          <a href="javascript:void(0)" onclick="openJotForm()" class="channel telegram">
+            <i class="fas fa-headset"></i>
             <div class="channel-content">
-              <h3>Telegram Support</h3>
-              <p>Get quick responses via Telegram</p>
+              <h3>Live Support</h3>
+              <p>Click here to chat with our support team</p>
               <div class="status-badge online">Online Now</div>
             </div>
           </a>
           
-          <a href="mailto:arrrr9@gmail.com" class="channel email">
+          <a href="mailto:amitarrrr9@gmail.com" class="channel email">
             <i class="fas fa-envelope"></i>
             <div class="channel-content">
               <h3>Email Support</h3>
@@ -397,7 +398,7 @@
   </div>
 
   <script>
-    // Priority selection
+    // Priority selection         
     const priorityButtons = document.querySelectorAll('.priority-btn');
     let selectedPriority = 'medium';
     
@@ -457,7 +458,17 @@
       }, 2000);
     }
   </script>
+
+  <!-- ✅ JotForm Embed Script -->
+  <script src='https://cdn.jotfor.ms/agent/embedjs/0199418ea7c57651b1bec7d395b6b6084e4d/embed.js'></script>
+  <script>
+    function openJotForm() {
+      if (window.JF_ChatWidget) {
+        window.JF_ChatWidget.open();
+      } else {
+        alert("Support chat is loading, please try again in a moment.");
+      }
+    }
+  </script>
 </body>
 </html>
-
-
