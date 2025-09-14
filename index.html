@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -258,6 +260,10 @@
             font-weight: 500;
             transition: transform 0.3s;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .quick-actions a:hover {
@@ -430,14 +436,16 @@
         .buy-btn.already-invested-btn {
             background: linear-gradient(135deg, #9e9e9e, #757575);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .buy-btn:hover {
+        .buy-btn:hover:not(.already-invested-btn) {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(255, 107, 0, 0.4);
         }
 
-        .buy-btn:active {
+        .buy-btn:active:not(.already-invested-btn) {
             transform: translateY(0);
         }
 
@@ -653,6 +661,7 @@
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 25px;
             line-height: 1.5;
+            margin-top: 10px;
         }
 
         .celebration-btn {
@@ -758,6 +767,7 @@
             margin-bottom: 10px;
             color: var(--primary);
             animation: spin 1s linear infinite;
+            display: block;
         }
 
         @keyframes spin {
@@ -872,6 +882,75 @@
             margin-bottom: 15px;
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
+
+        .download-banner {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ff6b00, #e65100);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 6000;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .download-banner a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-banner a i {
+            font-size: 1rem;
+        }
+
+        .download-banner:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animation for entry */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Download Button */
+        .header-download-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .header-download-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -890,7 +969,7 @@
 ">
         <div style="background:#fff; color:#000; padding:20px; border-radius:10px; max-width:400px; text-align:center;">
             <h2 style="margin-bottom:10px;">Important Notice</h2>
-           
+
             <p style="font-size:12px; color:#555; margin-top:15px;">
                 Please read carefully:
                 Dear user, after your recharge is successful, please wait for 10 minutes, your money is absolutely safe,
@@ -910,14 +989,12 @@
         </div>
     </div>
 
-
-    <div class="connection-status">
-        <i class="fas fa-wifi"></i> Online
-    </div>
-
     <div class="header">
         <h1><i class="fas fa-wallet"></i> GROW DAILY</h1>
         <p>Earn daily income with premium plans</p>
+        <a href="https://drive.google.com/file/d/1fcmOgar0wpsvtCoL00IQV4YoHf9aEM91/view?usp=drive_link" class="header-download-btn">
+            <i class="fas fa-download"></i> Download App
+        </a>
     </div>
 
     <div class="app-container">
@@ -1643,7 +1720,5 @@
 </body>
 
 </html>
-
-
 
 
