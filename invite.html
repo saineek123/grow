@@ -575,7 +575,7 @@
       userRef.once("value").then(snapshot => {
         const userData = snapshot.val() || {};
         referralCode = userData.referralCode || 'DEFAULT123';
-        referralLink.value = `https://saineek123.github.io/grow/register.html?ref=${referralCode}`;
+        referralLink.value = `https://drowdaily.github.io/growdaily.in/?ref=${referralCode}`;
         
         // Set referral stats
         totalReferrals.textContent = userData.referralCount || 0;
@@ -710,4 +710,3 @@
   </script>
 </body>
 </html>
-
